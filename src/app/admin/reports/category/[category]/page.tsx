@@ -26,10 +26,17 @@ import { notFound } from 'next/navigation';
 
 // Helper function to convert param to ReportType enum key
 const getReportTypeFromParam = (param: string): ReportType | undefined => {
-    const reportTypeKey = Object.keys(ReportType).find(key => key === param) as keyof typeof ReportType | undefined;
+    // This finds the key in ReportType enum that matches the param (e.g., "WasteManagement")
+    const reportTypeKey = Object.keys(ReportType).find(key => key.toLowerCase() === param.toLowerCase()) as keyof typeof ReportType | undefined;
     if (reportTypeKey) {
         return ReportType[reportTypeKey];
     }
+    // Also check if the param matches the value (e.g., "Waste Management")
+    const reportTypeValueKey = Object.keys(ReportType).find(key => ReportType[key as keyof typeof ReportType].toLowerCase() === param.toLowerCase()) as keyof typeof ReportType | undefined;
+    if(reportTypeValueKey) {
+      return ReportType[reportTypeValueKey];
+    }
+
     return undefined;
 }
 
