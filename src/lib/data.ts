@@ -1,5 +1,5 @@
 import type { User, Report, Zone } from './types';
-import { ReportStatus, ReportType } from './types';
+import { ReportStatus, ReportType, ReportPriority } from './types';
 
 export const users: User[] = [
   {
@@ -32,6 +32,7 @@ export const reports: Report[] = [
     description: 'Major waterlogging near the central park. Traffic is completely blocked.',
     location: { lat: 28.6139, lng: 77.2090 },
     status: ReportStatus.New,
+    priority: ReportPriority.High,
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
     mediaUrl: 'https://picsum.photos/seed/100/600/400',
     resolutionDeadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
@@ -43,6 +44,7 @@ export const reports: Report[] = [
     description: 'A large pothole has formed on the main street, causing issues for commuters.',
     location: { lat: 28.6145, lng: 77.2100 },
     status: ReportStatus.Assigned,
+    priority: ReportPriority.Medium,
     assignedAdminId: 'admin1',
     timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     resolutionDeadline: new Date(Date.now() + 12 * 60 * 60 * 1000).toISOString(),
@@ -54,6 +56,7 @@ export const reports: Report[] = [
     description: 'Small fire reported in a dumpster behind the supermarket.',
     location: { lat: 28.6150, lng: 77.2110 },
     status: ReportStatus.InProgress,
+    priority: ReportPriority.Critical,
     assignedAdminId: 'admin1',
     timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     mediaUrl: 'https://picsum.photos/seed/101/600/400',
@@ -66,6 +69,7 @@ export const reports: Report[] = [
     description: 'Minor traffic accident involving two cars. No major injuries reported but causing a jam.',
     location: { lat: 28.6155, lng: 77.2120 },
     status: ReportStatus.Resolved,
+    priority: ReportPriority.Low,
     assignedAdminId: 'admin1',
     timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     mediaUrl: 'https://picsum.photos/seed/102/600/400',

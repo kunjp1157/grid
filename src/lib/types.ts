@@ -14,6 +14,13 @@ export enum ReportStatus {
   Overdue = 'Overdue'
 }
 
+export enum ReportPriority {
+    Low = 'Low',
+    Medium = 'Medium',
+    High = 'High',
+    Critical = 'Critical'
+}
+
 export enum ReportType {
   Waterlogging = 'Waterlogging',
   Fire = 'Fire',
@@ -40,6 +47,7 @@ export type Report = {
     lng: number;
   };
   status: ReportStatus;
+  priority: ReportPriority;
   timestamp: string;
   mediaUrl?: string;
   assignedAdminId?: string;
