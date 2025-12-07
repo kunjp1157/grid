@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useActionState } from 'react';
-import { login } from '@/actions/auth';
+import { signup } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,10 +15,10 @@ import { AlertCircle } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import Link from 'next/link';
 
-export default function LoginPage() {
+export default function SignupPage() {
   const { t } = useTranslation();
   const [role, setRole] = useState<'citizen' | 'admin'>('citizen');
-  const [state, formAction] = useActionState(login, undefined);
+  const [state, formAction] = useActionState(signup, undefined);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-muted/40">
@@ -30,29 +30,26 @@ export default function LoginPage() {
           <div className="flex justify-center mb-4">
             <Logo className="h-8 w-8" />
           </div>
-          <CardTitle className="text-3xl font-bold">{t('login.title')}</CardTitle>
-          <CardDescription>{t('login.subtitle')}</CardDescription>
+          <CardTitle className="text-3xl font-bold">{t('signup.title')}</CardTitle>
+          <CardDescription>{t('signup.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
           <form action={formAction} className="space-y-6">
             <div className="space-y-2">
+              <Label htmlFor="name">{t('signup.nameLabel')}</Label>
+              <Input id="name" name="name" type="text" placeholder={t('signup.namePlaceholder')} required />
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="email">{t('login.emailLabel')}</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder={role === 'citizen' ? 'citizen@example.com' : 'admin@example.com'}
-                defaultValue={role === 'citizen' ? 'citizen@example.com' : 'admin@example.com'}
-                required
-              />
+              <Input id="email" name="email" type="email" placeholder="you@example.com" required />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">{t('login.passwordLabel')}</Label>
-              <Input id="password" name="password" type="password" defaultValue="password" required />
+              <Input id="password" name="password" type="password" required />
             </div>
 
             <div className="space-y-3">
-              <Label>{t('login.roleLabel')}</Label>
+              <Label>{t('signup.roleLabel')}</Label>
               <RadioGroup
                 name="role"
                 value={role}
@@ -74,17 +71,17 @@ export default function LoginPage() {
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{t('login.error')}</AlertDescription>
+                <AlertDescription>{state.error}</AlertDescription>
               </Alert>
             )}
 
             <Button type="submit" className="w-full !mt-8 bg-accent hover:bg-accent/90">
-              {t('login.submitButton')}
+              {t('signup.submitButton')}
             </Button>
           </form>
         </CardContent>
         <CardFooter className="flex justify-center text-sm">
-          <p>{t('login.noAccount')} <Link href="/signup" className="font-semibold text-primary underline-offset-4 hover:underline">{t('login.signUp')}</Link></p>
+            <p>{t('signup.hasAccount')} <Link href="/" className="font-semibold text-primary underline-offset-4 hover:underline">{t('login.submitButton')}</Link></p>
         </CardFooter>
       </Card>
     </main>

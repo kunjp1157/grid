@@ -10,7 +10,18 @@
     "roleCitizen": "Citizen",
     "roleAdmin": "Admin",
     "submitButton": "Login",
-    "error": "Invalid credentials. Please try again."
+    "error": "Invalid credentials. Please try again.",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign Up"
+  },
+  "signup": {
+    "title": "Create an Account",
+    "subtitle": "Join The Grid to report and manage crises.",
+    "nameLabel": "Full Name",
+    "namePlaceholder": "John Doe",
+    "roleLabel": "Sign up as",
+    "submitButton": "Sign Up",
+    "hasAccount": "Already have an account?"
   },
   "header": {
     "toggleSidebar": "Toggle sidebar",

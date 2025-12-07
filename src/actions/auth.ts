@@ -36,6 +36,46 @@ export async function login(formData: FormData) {
   }
 }
 
+export async function signup(formData: FormData) {
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const role = formData.get("role") as "citizen" | "admin";
+
+  if (users.find(u => u.email === email)) {
+    return { error: "User with this email already exists." };
+  }
+
+  const newUser: User = {
+    id: `user-${Date.now()}`,
+    name,
+    email,
+    role,
+  };
+
+  users.push(newUser);
+
+  const userCookie = JSON.stringify({
+    id: newUser.id,
+    name: newUser.name,
+    email: newUser.email,
+    role: newUser.role,
+  });
+
+  cookies().set("user", userCookie, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+    path: "/",
+  });
+
+  if (newUser.role === "admin") {
+    redirect("/admin");
+  } else {
+    redirect("/dashboard");
+  }
+}
+
+
 export async function logout() {
   cookies().delete("user");
   redirect("/");
