@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useState, useActionState } from 'react';
 import { login } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,7 +16,7 @@ import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 export default function LoginPage() {
   const { t } = useTranslation();
   const [role, setRole] = useState<'citizen' | 'admin'>('citizen');
-  const [state, formAction] = useFormState(login, undefined);
+  const [state, formAction] = useActionState(login, undefined);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-muted/40">
