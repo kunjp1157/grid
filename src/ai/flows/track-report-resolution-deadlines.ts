@@ -43,8 +43,9 @@ const checkOverduePrompt = ai.definePrompt({
   Report ID: {{{reportId}}}
   Resolution Deadline: {{{resolutionDeadline}}}
   Current Status: {{{status}}}
+  Current Time: ${new Date().toISOString()}
 
-  Output only a boolean value indicating if the report is overdue.`,
+  Is the report overdue? Respond with only a boolean value.`,
 });
 
 const triggerAlertTool = ai.defineTool({
@@ -71,7 +72,8 @@ const trackReportResolutionDeadlineFlow = ai.defineFlow(
     outputSchema: TrackReportResolutionDeadlineOutputSchema,
   },
   async input => {
-    const {output: {isOverdue}} = await checkOverduePrompt(input);
+    const {output} = await checkOverduePrompt(input);
+    const isOverdue = output?.isOverdue ?? false;
 
     let alertTriggered = false;
     if (isOverdue) {

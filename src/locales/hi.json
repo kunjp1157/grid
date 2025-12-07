@@ -96,7 +96,8 @@
       "submittedBy": "द्वारा प्रस्तुत",
       "date": "तारीख",
       "actions": "कार्रवाई",
-      "details": "विवरण"
+      "details": "विवरण",
+      "assignedAdmin": "सौंपा गया व्यवस्थापक"
     },
     "reportDetails": {
       "title": "रिपोर्ट विवरण",

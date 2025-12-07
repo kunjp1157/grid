@@ -96,7 +96,8 @@
       "submittedBy": "Submitted By",
       "date": "Date",
       "actions": "Actions",
-      "details": "Details"
+      "details": "Details",
+      "assignedAdmin": "Assigned Admin"
     },
     "reportDetails": {
       "title": "Report Details",

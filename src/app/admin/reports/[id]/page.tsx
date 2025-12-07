@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from 'react';
+import { use } from 'react';
 import { reports, users } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -31,13 +30,13 @@ import Image from 'next/image';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { use } from 'react';
 
 export default function ReportDetailsPage({ params }: { params: { id: string } }) {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const resolvedParams = use(params);
   
-  const report = reports.find(r => r.id === params.id);
+  const report = reports.find(r => r.id === resolvedParams.id);
   
   const [currentStatus, setCurrentStatus] = useState(report?.status || ReportStatus.New);
   const [isCheckingOverdue, setIsCheckingOverdue] = useState(false);
@@ -108,7 +107,10 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">{t('admin.reportDetails.title')}</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">{t('admin.reportDetails.title')} #{report.id.substring(0, 7)}</h1>
+        <ReportStatusBadge status={currentStatus} />
+      </div>
 
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
@@ -116,14 +118,14 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
             <CardHeader>
               <div className="flex items-center gap-3">
                 <ReportTypeIcon type={report.type} className="w-6 h-6 text-muted-foreground" />
-                <CardTitle>{t(`reportTypes.${report.type.replace(/\s/g, '')}`)}</CardTitle>
+                <CardTitle>{t(`reportTypes.${Object.keys(ReportType).find(key => ReportType[key as keyof typeof ReportType] === report.type)}`)}</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">{report.description}</p>
             </CardContent>
             {report.mediaUrl && (
-                 <CardFooter>
+                 <CardContent>
                     <div className="w-full">
                         <p className="text-sm font-medium mb-2">{t('admin.reportDetails.media')}</p>
                          <Image
@@ -135,7 +137,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                             data-ai-hint="crisis photo"
                         />
                     </div>
-                 </CardFooter>
+                 </CardContent>
             )}
           </Card>
           
@@ -167,12 +169,9 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
         <div className="md:col-span-1 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{t('admin.reportDetails.status')}</CardTitle>
+              <CardTitle>{t('admin.reportDetails.updateStatus')}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <ReportStatusBadge status={currentStatus} />
-              <div>
-                <label className="text-sm font-medium">{t('admin.reportDetails.updateStatus')}</label>
+            <CardContent>
                 <Select value={currentStatus} onValueChange={(value) => handleStatusChange(value as ReportStatus)}>
                   <SelectTrigger>
                     <SelectValue />
@@ -183,12 +182,14 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardContent className="pt-6">
+            <CardHeader>
+                <CardTitle>Report Information</CardTitle>
+            </CardHeader>
+            <CardContent>
               <ul className="space-y-3 text-sm">
                 <li className="flex justify-between">
                   <span className="text-muted-foreground">{t('admin.reportDetails.reportedBy')}</span>
@@ -201,7 +202,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                 </li>
                 <Separator />
                 <li className="flex justify-between">
-                  <span className="text-muted-foreground">{t('admin.reports.submittedBy')}</span>
+                  <span className="text-muted-foreground">{t('admin.reports.assignedAdmin')}</span>
                   <span>{admin?.name || 'Unassigned'}</span>
                 </li>
                  <Separator />
@@ -210,9 +211,13 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                   <span>{report.resolutionDeadline ? formatDate(report.resolutionDeadline) : 'N/A'}</span>
                 </li>
                 <Separator />
-                <li className="flex justify-between">
+                <li className="flex justify-between items-center">
                   <span className="text-muted-foreground">{t('admin.reportDetails.location')}</span>
-                  <span className="font-mono text-xs">{report.location.lat}, {report.location.lng}</span>
+                  <Button variant="link" size="sm" asChild>
+                    <a href={`https://www.google.com/maps?q=${report.location.lat},${report.location.lng}`} target="_blank" rel="noopener noreferrer" className="font-mono text-xs">
+                        {report.location.lat}, {report.location.lng}
+                    </a>
+                  </Button>
                 </li>
               </ul>
             </CardContent>
