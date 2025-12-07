@@ -12,7 +12,7 @@ import {
 import { Header } from '@/components/shared/Header';
 import { getUser } from '@/actions/auth';
 import { Logo } from '@/components/shared/Logo';
-import { LayoutDashboard, Files, Map } from 'lucide-react';
+import { LayoutDashboard, Files, Map, BarChart } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
@@ -29,6 +29,11 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Dashboard">
                 <Link href="/admin"><LayoutDashboard /><span>Dashboard</span></Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Overview">
+                <Link href="/admin/overview"><BarChart /><span>Overview</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
