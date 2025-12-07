@@ -6,6 +6,7 @@ import { LocalizationProvider } from '@/context/LocalizationContext';
 export const metadata: Metadata = {
   title: 'The Grid',
   description: 'Real-Time Public Crisis Reporting and Management System',
+  manifest: '/manifest.webmanifest'
 };
 
 export default function RootLayout({
