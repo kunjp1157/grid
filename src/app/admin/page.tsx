@@ -21,13 +21,7 @@ import { reports, users } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
-import { ReportStatus } from '@/lib/types';
-import { FileText, Hourglass, CheckCircle, AlertTriangle } from 'lucide-react';
-
-const totalReports = reports.length;
-const newReports = reports.filter(r => r.status === ReportStatus.New).length;
-const inProgressReports = reports.filter(r => r.status === ReportStatus.InProgress).length;
-const resolvedReports = reports.filter(r => r.status === ReportStatus.Resolved).length;
+import { ReportType } from '@/lib/types';
 
 export default function AdminDashboardPage() {
     const { t } = useTranslation();
@@ -36,47 +30,27 @@ export default function AdminDashboardPage() {
         return users.find(u => u.id === userId)?.name || 'Unknown User';
     }
 
+    const reportsByCategory = Object.values(ReportType).map(type => {
+        const count = reports.filter(r => r.type === type).length;
+        return { type, count };
+    });
+
     return (
         <div className="space-y-6">
             <h1 className="text-3xl font-bold">{t('admin.dashboard.title')}</h1>
             
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t('admin.dashboard.totalReports')}</CardTitle>
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{totalReports}</div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t('admin.dashboard.newReports')}</CardTitle>
-                        <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{newReports}</div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t('admin.dashboard.inProgress')}</CardTitle>
-                        <Hourglass className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{inProgressReports}</div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">{t('admin.dashboard.resolved')}</CardTitle>
-                        <CheckCircle className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{resolvedReports}</div>
-                    </CardContent>
-                </Card>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {reportsByCategory.map(({ type, count }) => (
+                    <Card key={type}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">{t(`reportTypes.${type.replace(/\s/g, '')}`)}</CardTitle>
+                            <ReportTypeIcon type={type} className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{count}</div>
+                        </CardContent>
+                    </Card>
+                ))}
             </div>
 
             <Card>
@@ -97,7 +71,7 @@ export default function AdminDashboardPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {reports.map(report => (
+                        {reports.slice(0, 5).map(report => ( // Show recent 5 reports
                         <TableRow key={report.id}>
                             <TableCell>
                                 <ReportTypeIcon type={report.type} className="h-5 w-5 text-muted-foreground" />
