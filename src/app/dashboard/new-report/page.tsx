@@ -34,6 +34,7 @@ import { useTranslation } from '@/context/LocalizationContext';
 import { geofenceAndRouteReport } from '@/ai/flows/geofence-and-route-reports';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
+import { zones } from '@/lib/data';
 
 const reportSchema = z.object({
   type: z.nativeEnum(ReportType),
@@ -71,11 +72,13 @@ export default function NewReportPage() {
         longitude: data.longitude,
       });
 
+      const zoneName = result.assignedZoneId ? zones.find(z => z.id === result.assignedZoneId)?.name : 'N/A';
+
       console.log('Geofencing result:', result);
       
       toast({
-        title: "Success",
-        description: t('citizen.newReport.success'),
+        title: "Report Submitted Successfully",
+        description: `Your report has been routed to ${zoneName || 'the appropriate department'}.`,
         variant: 'default',
       });
 
@@ -83,7 +86,7 @@ export default function NewReportPage() {
       // and redirect
       setTimeout(() => {
         router.push('/dashboard');
-      }, 1000);
+      }, 2000);
       
     } catch (error) {
       console.error(error);

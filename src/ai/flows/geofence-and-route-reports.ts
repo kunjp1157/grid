@@ -40,11 +40,13 @@ const findAdminOrZone = ai.defineTool({
   }),
 }, async (input) => {
   // TODO: Implement the logic to find the admin or zone based on the location.
-  // This is a placeholder implementation.
+  // This is a placeholder implementation. In a real app, this would query
+  // a database of zones with their geographical boundaries.
   console.log('finding admin or zone at', input.latitude, input.longitude);
+  // For demonstration, we'll return a static admin and zone.
   return {
-    adminId: 'admin123', // Replace with actual logic to determine admin ID
-    zoneId: 'zone456', // Replace with actual logic to determine zone ID
+    adminId: 'admin1', // Corresponds to Jane Smith
+    zoneId: 'zone1', // Corresponds to North Zone
   };
 });
 
@@ -59,10 +61,9 @@ Longitude: {{{longitude}}}
 
 Use the findAdminOrZone tool to find the appropriate admin or zone for this report.
 
-Return the adminId and zoneId from the tool output in the output schema.
-If neither adminId nor zoneId is returned, leave the corresponding output field empty.
-
-Report ID: {{{reportId}}}`, // Include reportId in the prompt
+Return the assignedAdminId and assignedZoneId from the tool output in the output schema.
+If the tool does not return an adminId or zoneId, you may leave the field empty.
+`,
 });
 
 const geofenceAndRouteReportFlow = ai.defineFlow(
@@ -72,7 +73,19 @@ const geofenceAndRouteReportFlow = ai.defineFlow(
     outputSchema: GeofenceAndRouteReportOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    const llmResponse = await prompt(input);
+    const toolResponse = llmResponse.toolRequest?.output;
+
+    if (!toolResponse) {
+      return {
+        assignedAdminId: undefined,
+        assignedZoneId: undefined,
+      };
+    }
+    
+    return {
+        assignedAdminId: toolResponse.adminId,
+        assignedZoneId: toolResponse.zoneId
+    }
   }
 );
