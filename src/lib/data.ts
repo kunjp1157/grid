@@ -35,6 +35,7 @@ export const reports: Report[] = [
     priority: ReportPriority.High,
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
     mediaUrl: 'https://picsum.photos/seed/100/600/400',
+    assignedAdminId: 'admin1',
     resolutionDeadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
   },
   {
@@ -52,15 +53,15 @@ export const reports: Report[] = [
   {
     id: 'report3',
     userId: 'citizen1',
-    type: ReportType.Fire,
-    description: 'Small fire reported in a dumpster behind the supermarket.',
+    type: ReportType.SewageLeak,
+    description: 'Sewage leak reported in a residential area. Foul smell and unsanitary conditions.',
     location: { lat: 28.6150, lng: 77.2110 },
-    status: ReportStatus.InProgress,
-    priority: ReportPriority.Critical,
+    status: ReportStatus.Overdue,
+    priority: ReportPriority.High,
     assignedAdminId: 'admin1',
-    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     mediaUrl: 'https://picsum.photos/seed/101/600/400',
-    resolutionDeadline: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+    resolutionDeadline: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: 'report4',
@@ -75,4 +76,16 @@ export const reports: Report[] = [
     mediaUrl: 'https://picsum.photos/seed/102/600/400',
     resolutionDeadline: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
   },
+   {
+    id: 'report5',
+    userId: 'citizen1',
+    type: ReportType.Fire,
+    description: 'Small fire reported in a dumpster behind the supermarket.',
+    location: { lat: 28.6150, lng: 77.2110 },
+    status: ReportStatus.InProgress,
+    priority: ReportPriority.Critical,
+    assignedAdminId: 'admin1',
+    timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+    resolutionDeadline: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString()
+  }
 ];
