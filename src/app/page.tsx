@@ -18,7 +18,7 @@ import Link from 'next/link';
 export default function LoginPage() {
   const { t } = useTranslation();
   const [role, setRole] = useState<'citizen' | 'admin'>('citizen');
-  const [state, formAction] = useActionState(login, undefined);
+  const [state, formAction] = useActionState(login, { error: "" });
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-muted/40">

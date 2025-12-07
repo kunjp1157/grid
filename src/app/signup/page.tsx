@@ -18,7 +18,7 @@ import Link from 'next/link';
 export default function SignupPage() {
   const { t } = useTranslation();
   const [role, setRole] = useState<'citizen' | 'admin'>('citizen');
-  const [state, formAction] = useActionState(signup, undefined);
+  const [state, formAction] = useActionState(signup, { error: "" });
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-muted/40">

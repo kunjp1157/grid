@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { users } from "@/lib/data";
 import type { User } from "@/lib/types";
 
-export async function login(formData: FormData) {
+export async function login(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
   const role = formData.get("role") as "citizen" | "admin";
 
@@ -36,7 +36,7 @@ export async function login(formData: FormData) {
   }
 }
 
-export async function signup(formData: FormData) {
+export async function signup(prevState: any, formData: FormData) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const role = formData.get("role") as "citizen" | "admin";
