@@ -1,4 +1,4 @@
-import type { User, Report, Zone } from './types';
+import type { User, Report, Zone, ChatMessage } from './types';
 import { ReportStatus, ReportType, ReportPriority } from './types';
 
 export const users: User[] = [
@@ -37,6 +37,20 @@ export const reports: Report[] = [
     mediaUrl: 'https://picsum.photos/seed/100/600/400',
     assignedAdminId: 'admin1',
     resolutionDeadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+    messages: [
+      {
+        id: 'msg1',
+        senderId: 'admin1',
+        text: 'We have received your report. A team is being dispatched. Can you confirm if the water level is rising?',
+        timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: 'msg2',
+        senderId: 'citizen1',
+        text: 'Yes, it seems to be rising slowly. The drains are completely clogged.',
+        timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+      }
+    ]
   },
   {
     id: 'report2',

@@ -37,6 +37,13 @@ export enum ReportType {
   Other = 'Other',
 }
 
+export type ChatMessage = {
+    id: string;
+    senderId: string; // 'citizen1' or 'admin1'
+    text: string;
+    timestamp: string;
+}
+
 export type Report = {
   id: string;
   userId: string;
@@ -54,6 +61,7 @@ export type Report = {
   resolutionDeadline?: string;
   rating?: number;
   feedback?: string;
+  messages?: ChatMessage[];
 };
 
 export type Zone = {

@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { use } from 'react';
 import { reports, users } from '@/lib/data';
 import { notFound } from 'next/navigation';
@@ -21,9 +22,10 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { ReportStatusBadge } from '@/components/shared/ReportStatusBadge';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
+import { ChatInterface } from '@/components/shared/ChatInterface';
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
-import { ReportStatus } from '@/lib/types';
+import { ReportStatus, Report, ChatMessage, User } from '@/lib/types';
 import { trackReportResolutionDeadline, type TrackReportResolutionDeadlineOutput } from '@/ai/flows/track-report-resolution-deadlines';
 import { sendNotification } from '@/ai/flows/send-notification';
 import Image from 'next/image';
@@ -36,7 +38,14 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
   const { toast } = useToast();
   const resolvedParams = use(params);
   
-  const report = reports.find(r => r.id === resolvedParams.id);
+  // We use local state to manage the report to see chat updates instantly
+  const [report, setReport] = useState(() => reports.find(r => r.id === resolvedParams.id));
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    // In a real app, you'd fetch the current user from an auth context
+    setCurrentUser(users.find(u => u.role === 'admin') || null);
+  }, []);
   
   const [currentStatus, setCurrentStatus] = useState(report?.status || ReportStatus.New);
   const [isCheckingOverdue, setIsCheckingOverdue] = useState(false);
@@ -48,6 +57,26 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
 
   const reporter = users.find(u => u.id === report.userId);
   const admin = users.find(u => u.id === report.assignedAdminId);
+  
+  const handleSendMessage = (text: string) => {
+    if (!currentUser) return;
+    const newMessage: ChatMessage = {
+      id: `msg-${Date.now()}`,
+      senderId: currentUser.id,
+      text,
+      timestamp: new Date().toISOString(),
+    };
+    
+    // In a real app, this would be an API call to your backend.
+    // Here, we just update the mock data in state.
+    const updatedMessages = [...(report.messages || []), newMessage];
+    setReport({ ...report, messages: updatedMessages });
+
+     toast({
+        title: "Message Sent (Simulated)",
+        description: "In a real app, this would be sent in real-time.",
+    });
+  };
 
   const handleOverdueCheck = async () => {
     if (!report.resolutionDeadline || !report.assignedAdminId) {
@@ -81,8 +110,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
 
   const handleStatusChange = async (newStatus: ReportStatus) => {
     setCurrentStatus(newStatus);
-    // In a real app, you'd save this to the database.
-    // For now, we just update the state and trigger a notification.
+    setReport(prev => prev ? {...prev, status: newStatus} : null);
     
     try {
         await sendNotification({
@@ -140,6 +168,15 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                  </CardContent>
             )}
           </Card>
+
+           {report.messages && currentUser && (
+              <ChatInterface 
+                messages={report.messages}
+                currentUser={currentUser}
+                otherUser={reporter}
+                onSendMessage={handleSendMessage}
+              />
+           )}
           
           {report.rating && (
             <Card>

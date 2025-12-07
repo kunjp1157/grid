@@ -115,7 +115,9 @@
       "isNotOverdue": "This report is not overdue.",
       "alertTriggered": "An alert has been triggered for the assigned admin.",
       "noAlert": "No alert was triggered.",
-      "errorChecking": "Error checking overdue status."
+      "errorChecking": "Error checking overdue status.",
+      "chatTitle": "Conversation with Reporter",
+      "chatPlaceholder": "Type your message..."
     }
   },
   "reportTypes": {
