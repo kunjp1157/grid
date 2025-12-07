@@ -83,10 +83,13 @@
       "totalReports": "कुल रिपोर्ट",
       "newReports": "नई",
       "inProgress": "प्रगति में",
-      "resolved": "हल"
+      "resolved": "हल",
+      "recentReports": "हाल की रिपोर्टें",
+      "viewAll": "सभी रिपोर्ट देखें"
     },
     "reports": {
-      "title": "सभी रिपोर्ट",
+      "title": "रिपोर्ट",
+      "all": "सभी सबमिट की गई रिपोर्ट",
       "id": "रिपोर्ट आईडी",
       "type": "प्रकार",
       "status": "स्थिति",

@@ -83,10 +83,13 @@
       "totalReports": "Total Reports",
       "newReports": "New",
       "inProgress": "In Progress",
-      "resolved": "Resolved"
+      "resolved": "Resolved",
+      "recentReports": "Recent Reports",
+      "viewAll": "View All Reports"
     },
     "reports": {
-      "title": "All Reports",
+      "title": "Reports",
+      "all": "All Submitted Reports",
       "id": "Report ID",
       "type": "Type",
       "status": "Status",

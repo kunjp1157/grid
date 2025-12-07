@@ -33,7 +33,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="All Reports">
-                <Link href="/admin"><Files /><span>All Reports</span></Link>
+                <Link href="/admin/reports"><Files /><span>All Reports</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
