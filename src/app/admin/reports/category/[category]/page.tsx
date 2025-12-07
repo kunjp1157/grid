@@ -23,6 +23,7 @@ import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { ReportType } from '@/lib/types';
 import { notFound } from 'next/navigation';
+import { use } from 'react';
 
 // Helper function to convert param to ReportType enum key
 const getReportTypeFromParam = (param: string): ReportType | undefined => {
@@ -43,8 +44,8 @@ const getReportTypeFromParam = (param: string): ReportType | undefined => {
 
 export default function ReportsByCategoryPage({ params }: { params: { category: string } }) {
     const { t } = useTranslation();
-
-    const reportType = getReportTypeFromParam(params.category);
+    const resolvedParams = use(params);
+    const reportType = getReportTypeFromParam(resolvedParams.category);
     
     if (!reportType) {
         notFound();
