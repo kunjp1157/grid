@@ -31,21 +31,27 @@ export default function AdminDashboardPage() {
         return users.find(u => u.id === userId)?.name || 'Unknown User';
     }
 
-    const reportsByCategory = Object.values(ReportType).map(type => {
-        const count = reports.filter(r => r.type === type).length;
-        return { type, count };
-    });
+    const reportsByCategory = Object.entries(
+      reports.reduce((acc, report) => {
+        const key = Object.keys(ReportType).find(k => ReportType[k as keyof typeof ReportType] === report.type)!;
+        if (!acc[key]) {
+          acc[key] = { type: report.type, count: 0 };
+        }
+        acc[key].count++;
+        return acc;
+      }, {} as { [key: string]: { type: ReportType; count: number } })
+    ).map(([key, value]) => ({...value, key}));
 
     return (
         <div className="space-y-6">
             <h1 className="text-3xl font-bold">{t('admin.dashboard.title')}</h1>
             
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {reportsByCategory.map(({ type, count }) => (
-                    <Link href={`/admin/reports/${type.replace(/\s/g, '')}`} key={type}>
+                {reportsByCategory.map(({ type, count, key }) => (
+                    <Link href={`/admin/reports/${key}`} key={type}>
                         <Card className="hover:bg-muted transition-colors">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">{t(`reportTypes.${type.replace(/\s/g, '')}`)}</CardTitle>
+                                <CardTitle className="text-sm font-medium">{t(`reportTypes.${key}`)}</CardTitle>
                                 <ReportTypeIcon type={type} className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
@@ -86,7 +92,7 @@ export default function AdminDashboardPage() {
                                 <ReportTypeIcon type={report.type} className="h-5 w-5 text-muted-foreground" />
                             </TableCell>
                             <TableCell className="font-mono text-xs">#{report.id.substring(0, 7)}</TableCell>
-                            <TableCell>{t(`reportTypes.${report.type.replace(/\s/g, '')}`)}</TableCell>
+                            <TableCell>{t(`reportTypes.${Object.keys(ReportType).find(key => ReportType[key as keyof typeof ReportType] === report.type)}`)}</TableCell>
                             <TableCell><ReportStatusBadge status={report.status} /></TableCell>
                             <TableCell>{getUserName(report.userId)}</TableCell>
                             <TableCell>{formatDate(report.timestamp, 'PP')}</TableCell>

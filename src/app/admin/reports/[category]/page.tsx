@@ -19,42 +19,48 @@ import { ReportStatusBadge } from '@/components/shared/ReportStatusBadge';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
 import { reports, users } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
-import { formatDate, cn } from '@/lib/utils';
+import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { ReportType } from '@/lib/types';
 import { notFound } from 'next/navigation';
 
 // Helper function to convert param to ReportType enum key
-const getReportTypeKey = (param: string): keyof typeof ReportType | undefined => {
-    const key = Object.keys(ReportType).find(k => k.replace(/\s/g, '') === param) as keyof typeof ReportType | undefined;
-    return key;
+const getReportTypeFromParam = (param: string): ReportType | undefined => {
+    const reportTypeKey = Object.keys(ReportType).find(key => key === param) as keyof typeof ReportType | undefined;
+    if (reportTypeKey) {
+        return ReportType[reportTypeKey];
+    }
+    return undefined;
 }
+
 
 export default function ReportsByCategoryPage({ params }: { params: { category: string } }) {
     const { t } = useTranslation();
 
-    const reportTypeKey = getReportTypeKey(params.category);
-    if (!reportTypeKey) {
+    const reportType = getReportTypeFromParam(params.category);
+    
+    if (!reportType) {
         notFound();
     }
     
-    const reportType = ReportType[reportTypeKey];
     const filteredReports = reports.filter(r => r.type === reportType);
 
     const getUserName = (userId: string) => {
         return users.find(u => u.id === userId)?.name || 'Unknown User';
     }
+    
+    const reportTypeKey = Object.keys(ReportType).find(key => ReportType[key as keyof typeof ReportType] === reportType);
 
     return (
         <div className="space-y-6">
             <h1 className="text-3xl font-bold flex items-center gap-3">
               <ReportTypeIcon type={reportType} className="h-8 w-8" />
-              {t(`reportTypes.${reportTypeKey}`)} Reports
+              {t(`reportTypes.${reportTypeKey || 'Other'}`)} Reports
             </h1>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>All {t(`reportTypes.${reportTypeKey}`)} Reports ({filteredReports.length})</CardTitle>
+                    <CardTitle>All {t(`reportTypes.${reportTypeKey || 'Other'}`)} Reports ({filteredReports.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <Table>
