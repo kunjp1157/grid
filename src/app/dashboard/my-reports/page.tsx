@@ -25,10 +25,17 @@ import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
 import type { User } from '@/lib/types';
 import { useEffect, useState } from 'react';
+import { ReportStatus } from '@/lib/types';
+import { FeedbackDialog } from '@/components/shared/FeedbackDialog';
+import { useToast } from '@/hooks/use-toast';
 
 export default function MyReportsPage() {
     const { t } = useTranslation();
+    const { toast } = useToast();
     const [user, setUser] = useState<User | null>(null);
+    // We'll use local state to manage reports to see feedback changes instantly
+    const [userReports, setUserReports] = useState(user ? reports.filter(r => r.userId === user.id) : []);
+
 
     useEffect(() => {
         const loadUser = async () => {
@@ -37,6 +44,7 @@ export default function MyReportsPage() {
                 if (res.ok) {
                     const userData = await res.json();
                     setUser(userData);
+                    setUserReports(reports.filter(r => r.userId === userData.id))
                 }
             } catch (error) {
                 console.error("Failed to fetch user", error);
@@ -45,7 +53,21 @@ export default function MyReportsPage() {
         loadUser();
     }, []);
 
-    const userReports = user ? reports.filter(r => r.userId === user.id) : [];
+    const handleFeedbackSubmit = (reportId: string, rating: number, feedback: string) => {
+        // In a real app, this would be an API call to your backend.
+        // Here, we just update the mock data in state.
+        const updatedReports = userReports.map(report => {
+            if (report.id === reportId) {
+                return { ...report, rating, feedback };
+            }
+            return report;
+        });
+        setUserReports(updatedReports);
+        toast({
+            title: "Feedback Submitted",
+            description: "Thank you for helping us improve our service!",
+        });
+    };
 
     if (!user) {
         return <div>Loading...</div>;
@@ -82,8 +104,11 @@ export default function MyReportsPage() {
                                 <TableCell><ReportStatusBadge status={report.status} /></TableCell>
                                 <TableCell>{formatDate(report.timestamp, 'PP')}</TableCell>
                                 <TableCell className="text-right">
-                                    {/* In a real app, this would link to a details page */}
-                                    <Button variant="outline" size="sm">{t('citizen.reports.view')}</Button>
+                                     {report.status === ReportStatus.Resolved && typeof report.rating === 'undefined' ? (
+                                        <FeedbackDialog report={report} onSubmit={handleFeedbackSubmit} />
+                                    ) : (
+                                        <Button variant="outline" size="sm" disabled>{t('citizen.reports.view')}</Button>
+                                    )}
                                 </TableCell>
                             </TableRow>
                             ))}

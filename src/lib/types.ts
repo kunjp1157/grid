@@ -52,6 +52,8 @@ export type Report = {
   mediaUrl?: string;
   assignedAdminId?: string;
   resolutionDeadline?: string;
+  rating?: number;
+  feedback?: string;
 };
 
 export type Zone = {

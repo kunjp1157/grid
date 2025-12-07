@@ -75,6 +75,8 @@ export const reports: Report[] = [
     timestamp: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     mediaUrl: 'https://picsum.photos/seed/102/600/400',
     resolutionDeadline: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+    rating: 4,
+    feedback: "The issue was resolved, but it took a bit longer than I expected. Overall, a good job."
   },
    {
     id: 'report5',
@@ -87,5 +89,17 @@ export const reports: Report[] = [
     assignedAdminId: 'admin1',
     timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
     resolutionDeadline: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString()
+  },
+  {
+    id: 'report6',
+    userId: 'citizen1',
+    type: ReportType.PowerOutage,
+    description: 'The entire block has been without power for the last 3 hours.',
+    location: { lat: 28.6160, lng: 77.2130 },
+    status: ReportStatus.Resolved,
+    priority: ReportPriority.High,
+    assignedAdminId: 'admin1',
+    timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    resolutionDeadline: new Date(Date.now() - 1.5 * 24 * 60 * 60 * 1000).toISOString(),
   }
 ];

@@ -28,7 +28,7 @@ import { trackReportResolutionDeadline, type TrackReportResolutionDeadlineOutput
 import { sendNotification } from '@/ai/flows/send-notification';
 import Image from 'next/image';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { CheckCircle, AlertCircle, Loader2, Star } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ReportDetailsPage({ params }: { params: { id: string } }) {
@@ -141,6 +141,33 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
             )}
           </Card>
           
+          {report.rating && (
+            <Card>
+                <CardHeader>
+                    <CardTitle>Resolution Feedback</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <div className="flex items-center gap-2">
+                        <span className="font-semibold">Rating:</span>
+                        <div className="flex items-center">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                                <Star key={i} className={`h-5 w-5 ${i < report.rating! ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+                            ))}
+                             <span className="ml-2 text-muted-foreground">({report.rating}/5)</span>
+                        </div>
+                    </div>
+                   {report.feedback && (
+                     <div>
+                        <p className="font-semibold">Comments:</p>
+                        <blockquote className="mt-1 border-l-2 pl-6 italic text-muted-foreground">
+                           "{report.feedback}"
+                        </blockquote>
+                    </div>
+                   )}
+                </CardContent>
+            </Card>
+          )}
+
           <Card>
             <CardHeader>
               <CardTitle>{t('admin.reportDetails.overdueCheckResult')}</CardTitle>
