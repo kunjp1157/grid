@@ -26,10 +26,12 @@ import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import { ReportStatus } from '@/lib/types';
 import { trackReportResolutionDeadline, type TrackReportResolutionDeadlineOutput } from '@/ai/flows/track-report-resolution-deadlines';
+import { sendNotification } from '@/ai/flows/send-notification';
 import Image from 'next/image';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { use } from 'react';
 
 export default function ReportDetailsPage({ params }: { params: { id: string } }) {
   const { t } = useTranslation();
@@ -77,6 +79,31 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
       setIsCheckingOverdue(false);
     }
   };
+
+  const handleStatusChange = async (newStatus: ReportStatus) => {
+    setCurrentStatus(newStatus);
+    // In a real app, you'd save this to the database.
+    // For now, we just update the state and trigger a notification.
+    
+    try {
+        await sendNotification({
+            userId: report.userId,
+            reportId: report.id,
+            message: `The status of your report #${report.id.substring(0,7)} has been updated to: ${newStatus}`
+        });
+        toast({
+            title: "Status Updated",
+            description: `Report status changed to "${newStatus}" and user notified.`,
+        });
+    } catch (error) {
+        console.error("Failed to send notification", error);
+        toast({
+            title: "Notification Error",
+            description: "The status was updated, but the notification failed to send.",
+            variant: "destructive"
+        })
+    }
+  }
 
 
   return (
@@ -126,7 +153,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                     {overdueResult.isOverdue ? <AlertCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
                   <AlertTitle>
                     {overdueResult.isOverdue ? t('admin.reportDetails.isOverdue') : t('admin.reportDetails.isNotOverdue')}
-                  </AlertTitle>
+                  </Aler tTitle>
                   <AlertDescription>
                     {overdueResult.alertTriggered ? t('admin.reportDetails.alertTriggered') : t('admin.reportDetails.noAlert')}
                   </AlertDescription>
@@ -146,7 +173,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
               <ReportStatusBadge status={currentStatus} />
               <div>
                 <label className="text-sm font-medium">{t('admin.reportDetails.updateStatus')}</label>
-                <Select value={currentStatus} onValueChange={(value) => setCurrentStatus(value as ReportStatus)}>
+                <Select value={currentStatus} onValueChange={(value) => handleStatusChange(value as ReportStatus)}>
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
