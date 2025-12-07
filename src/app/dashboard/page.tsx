@@ -23,7 +23,7 @@ import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
-import type { User } from '@/lib/types';
+import type { User, ReportType as ReportTypeEnum } from '@/lib/types';
 import { useEffect, useState } from 'react';
 
 // In a real app, you'd get the current user from an auth context or props
@@ -61,12 +61,36 @@ export default function CitizenDashboardPage() {
         return <div>Loading...</div>;
     }
 
+    const reportsByCategory = Object.values(userReports.reduce((acc, report) => {
+        if (!acc[report.type]) {
+            acc[report.type] = { type: report.type, count: 0 };
+        }
+        acc[report.type].count++;
+        return acc;
+    }, {} as { [key in ReportTypeEnum]: { type: ReportTypeEnum, count: number } }));
+
+
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold">{t('citizen.reports.title')}</h1>
+            <h1 className="text-3xl font-bold">{t('citizen.dashboard.welcome', { name: user?.name || 'Citizen' })}</h1>
+
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {reportsByCategory.map(({ type, count }) => (
+                    <Card key={type}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">{t(`reportTypes.${type.replace(/\s/g, '')}`)}</CardTitle>
+                            <ReportTypeIcon type={type} className="h-4 w-4 text-muted-foreground" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">{count}</div>
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('citizen.dashboard.welcome', { name: user?.name || 'Citizen' })}</CardTitle>
+                    <CardTitle>{t('citizen.reports.title')}</CardTitle>
                     <CardDescription>{t('citizen.dashboard.description')}</CardDescription>
                 </CardHeader>
                 <CardContent>
