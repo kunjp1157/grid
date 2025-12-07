@@ -48,7 +48,7 @@ export default function AdminDashboardPage() {
             
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {reportsByCategory.map(({ type, count, key }) => (
-                    <Link href={`/admin/reports/${key}`} key={type}>
+                    <Link href={`/admin/reports/category/${key}`} key={type}>
                         <Card className="hover:bg-muted transition-colors">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                                 <CardTitle className="text-sm font-medium">{t(`reportTypes.${key}`)}</CardTitle>
