@@ -38,12 +38,15 @@
     },
     "dashboard": {
       "welcome": "Welcome, {name}!",
-      "description": "Here are the reports you have submitted. You can track their status here.",
+      "description": "Here are your 5 most recent reports.",
       "noReportsTitle": "No Reports Yet",
-      "noReportsDescription": "You haven't submitted any reports. Get started by creating a new one."
+      "noReportsDescription": "You haven't submitted any reports. Get started by creating a new one.",
+      "recentReports": "Recent Reports",
+      "viewAll": "View All"
     },
     "reports": {
       "title": "My Reports",
+      "description": "A complete list of all the reports you have submitted.",
       "id": "Report ID",
       "type": "Type",
       "status": "Status",

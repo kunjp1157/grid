@@ -33,7 +33,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="My Reports">
-                <Link href="/dashboard"><FileText /><span>My Reports</span></Link>
+                <Link href="/dashboard/my-reports"><FileText /><span>My Reports</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
