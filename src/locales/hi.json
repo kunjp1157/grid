@@ -1,0 +1,118 @@
+{
+  "appName": "द ग्रिड",
+  "login": {
+    "title": "द ग्रिड में आपका स्वागत है",
+    "subtitle": "वास्तविक समय संकट रिपोर्टिंग और प्रबंधन।",
+    "emailLabel": "ईमेल",
+    "emailPlaceholder": "admin@example.com",
+    "passwordLabel": "पासवर्ड",
+    "roleLabel": "के रूप में लॉगिन करें",
+    "roleCitizen": "नागरिक",
+    "roleAdmin": "व्यवस्थापक",
+    "submitButton": "लॉग इन करें",
+    "error": "अमान्य क्रेडेंशियल। कृपया पुन: प्रयास करें।"
+  },
+  "header": {
+    "toggleSidebar": "साइडबार टॉगल करें",
+    "userMenu": {
+      "myProfile": "मेरी प्रोफाइल",
+      "logout": "लॉग आउट"
+    }
+  },
+  "citizen": {
+    "sidebar": {
+      "dashboard": "डैशबोर्ड",
+      "newReport": "नई रिपोर्ट",
+      "myReports": "मेरी रिपोर्ट"
+    },
+    "dashboard": {
+      "welcome": "नमस्ते, {name}!",
+      "description": "यहां वे रिपोर्ट हैं जो आपने सबमिट की हैं। आप यहां उनकी स्थिति को ट्रैक कर सकते हैं।",
+      "noReportsTitle": "अभी तक कोई रिपोर्ट नहीं",
+      "noReportsDescription": "आपने कोई रिपोर्ट सबमिट नहीं की है। एक नई रिपोर्ट बनाकर शुरुआत करें।"
+    },
+    "reports": {
+      "title": "मेरी रिपोर्ट",
+      "id": "रिपोर्ट आईडी",
+      "type": "प्रकार",
+      "status": "स्थिति",
+      "date": "तारीख",
+      "actions": "कार्रवाई",
+      "view": "देखें"
+    },
+    "newReport": {
+      "title": "एक नई रिपोर्ट सबमिट करें",
+      "description": "अपने क्षेत्र में किसी संकट या मुद्दे की रिपोर्ट करने के लिए नीचे दिए गए विवरण भरें।",
+      "typeLabel": "रिपोर्ट का प्रकार",
+      "typePlaceholder": "एक रिपोर्ट प्रकार चुनें",
+      "descriptionLabel": "विवरण",
+      "descriptionPlaceholder": "समस्या का विस्तृत विवरण प्रदान करें...",
+      "locationLabel": "स्थान",
+      "latitudeLabel": "अक्षांश",
+      "longitudeLabel": "देशांतर",
+      "mediaLabel": "मीडिया अपलोड करें",
+      "mediaButton": "फ़ाइल चुनें",
+      "submitButton": "रिपोर्ट सबमिट करें",
+      "success": "रिपोर्ट सफलतापूर्वक सबमिट की गई!",
+      "error": "रिपोर्ट सबमिट करने में विफल। कृपया पुन: प्रयास करें।"
+    }
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "डैशबोर्ड",
+      "allReports": "सभी रिपोर्ट",
+      "zones": "जोन प्रबंधित करें"
+    },
+    "dashboard": {
+      "title": "एडमिन डैशबोर्ड",
+      "description": "सभी संकट रिपोर्टों का अवलोकन।",
+      "totalReports": "कुल रिपोर्ट",
+      "newReports": "नई",
+      "inProgress": "प्रगति में",
+      "resolved": "हल"
+    },
+    "reports": {
+      "title": "सभी रिपोर्ट",
+      "id": "रिपोर्ट आईडी",
+      "type": "प्रकार",
+      "status": "स्थिति",
+      "submittedBy": "द्वारा प्रस्तुत",
+      "date": "तारीख",
+      "actions": "कार्रवाई",
+      "details": "विवरण"
+    },
+    "reportDetails": {
+      "title": "रिपोर्ट विवरण",
+      "reportedBy": "द्वारा रिपोर्ट किया गया",
+      "submittedOn": "को सबमिट किया गया",
+      "location": "स्थान",
+      "description": "विवरण",
+      "media": "संलग्न मीडिया",
+      "status": "स्थिति",
+      "updateStatus": "स्थिति अपडेट करें",
+      "deadline": "समाधान की समय सीमा",
+      "checkOverdue": "देरी की स्थिति जांचें",
+      "overdueCheckResult": "देरी की स्थिति",
+      "isOverdue": "यह रिपोर्ट अतिदेय है।",
+      "isNotOverdue": "यह रिपोर्ट अतिदेय नहीं है।",
+      "alertTriggered": "निर्दिष्ट व्यवस्थापक के लिए एक अलर्ट शुरू किया गया है।",
+      "noAlert": "कोई अलर्ट शुरू नहीं किया गया।",
+      "errorChecking": "देरी की स्थिति की जाँच में त्रुटि।"
+    }
+  },
+  "reportTypes": {
+    "Waterlogging": "जलनिकासी",
+    "Fire": "आग",
+    "Accident": "दुर्घटना",
+    "WasteManagement": "अपशिष्ट प्रबंधन",
+    "RoadDamage": "सड़क क्षति",
+    "Other": "अन्य"
+  },
+  "reportStatus": {
+    "New": "नया",
+    "Assigned": "सौंपा गया",
+    "InProgress": "प्रगति में",
+    "Resolved": "हल किया गया",
+    "Overdue": "अतिदेय"
+  }
+}

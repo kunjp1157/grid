@@ -1,0 +1,118 @@
+{
+  "appName": "The Grid",
+  "login": {
+    "title": "Welcome to The Grid",
+    "subtitle": "Real-time crisis reporting and management.",
+    "emailLabel": "Email",
+    "emailPlaceholder": "admin@example.com",
+    "passwordLabel": "Password",
+    "roleLabel": "Login as",
+    "roleCitizen": "Citizen",
+    "roleAdmin": "Admin",
+    "submitButton": "Login",
+    "error": "Invalid credentials. Please try again."
+  },
+  "header": {
+    "toggleSidebar": "Toggle sidebar",
+    "userMenu": {
+      "myProfile": "My Profile",
+      "logout": "Logout"
+    }
+  },
+  "citizen": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "newReport": "New Report",
+      "myReports": "My Reports"
+    },
+    "dashboard": {
+      "welcome": "Welcome, {name}!",
+      "description": "Here are the reports you have submitted. You can track their status here.",
+      "noReportsTitle": "No Reports Yet",
+      "noReportsDescription": "You haven't submitted any reports. Get started by creating a new one."
+    },
+    "reports": {
+      "title": "My Reports",
+      "id": "Report ID",
+      "type": "Type",
+      "status": "Status",
+      "date": "Date",
+      "actions": "Actions",
+      "view": "View"
+    },
+    "newReport": {
+      "title": "Submit a New Report",
+      "description": "Fill out the details below to report a crisis or issue in your area.",
+      "typeLabel": "Report Type",
+      "typePlaceholder": "Select a report type",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Provide a detailed description of the issue...",
+      "locationLabel": "Location",
+      "latitudeLabel": "Latitude",
+      "longitudeLabel": "Longitude",
+      "mediaLabel": "Upload Media",
+      "mediaButton": "Choose File",
+      "submitButton": "Submit Report",
+      "success": "Report submitted successfully!",
+      "error": "Failed to submit report. Please try again."
+    }
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "allReports": "All Reports",
+      "zones": "Manage Zones"
+    },
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "description": "Overview of all crisis reports.",
+      "totalReports": "Total Reports",
+      "newReports": "New",
+      "inProgress": "In Progress",
+      "resolved": "Resolved"
+    },
+    "reports": {
+      "title": "All Reports",
+      "id": "Report ID",
+      "type": "Type",
+      "status": "Status",
+      "submittedBy": "Submitted By",
+      "date": "Date",
+      "actions": "Actions",
+      "details": "Details"
+    },
+    "reportDetails": {
+      "title": "Report Details",
+      "reportedBy": "Reported by",
+      "submittedOn": "Submitted on",
+      "location": "Location",
+      "description": "Description",
+      "media": "Attached Media",
+      "status": "Status",
+      "updateStatus": "Update Status",
+      "deadline": "Resolution Deadline",
+      "checkOverdue": "Check Overdue Status",
+      "overdueCheckResult": "Overdue Status",
+      "isOverdue": "This report is overdue.",
+      "isNotOverdue": "This report is not overdue.",
+      "alertTriggered": "An alert has been triggered for the assigned admin.",
+      "noAlert": "No alert was triggered.",
+      "errorChecking": "Error checking overdue status."
+    }
+  },
+  "reportTypes": {
+    "Waterlogging": "Waterlogging",
+    "Fire": "Fire",
+    "Accident": "Accident",
+    "WasteManagement": "Waste Management",
+    "RoadDamage": "Road Damage",
+    "Other": "Other"
+  },
+  "reportStatus": {
+    "New": "New",
+    "Assigned": "Assigned",
+    "InProgress": "In Progress",
+    "Resolved": "Resolved",
+    "Overdue": "Overdue"
+  }
+}

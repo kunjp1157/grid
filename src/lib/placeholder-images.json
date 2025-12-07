@@ -1,3 +1,34 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "waterlogging-1",
+      "description": "Flooded street after heavy rain",
+      "imageUrl": "https://images.unsplash.com/photo-1639164631434-a89f79f58f06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxmbG9vZCUyMHdhdGVyfGVufDB8fHx8MTc2NTA5OTIxMXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "flood water"
+    },
+    {
+      "id": "fire-1",
+      "description": "Building on fire",
+      "imageUrl": "https://images.unsplash.com/photo-1626195424586-0d5cbf71ed95?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxidWlsZGluZyUyMGZpcmV8ZW58MHx8fHwxNzY1MDk5MjExfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "building fire"
+    },
+    {
+      "id": "accident-1",
+      "description": "Car crash on highway",
+      "imageUrl": "https://images.unsplash.com/photo-1604238390774-b07b152150b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjYXIlMjBjcmFzaHxlbnwwfHx8fDE3NjUwOTkyMTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "car crash"
+    },
+    {
+      "id": "waste-1",
+      "description": "Overflowing garbage bin on a street corner",
+      "imageUrl": "https://images.unsplash.com/photo-1659998755388-a052a35520b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxnYXJiYWdlJTIwd2FzdGV8ZW58MHx8fHwxNzY1MDk5MjEyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "garbage waste"
+    },
+    {
+      "id": "pothole-1",
+      "description": "Large pothole on a busy road",
+      "imageUrl": "https://images.unsplash.com/photo-1709934730506-fba12664d4e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxyb2FkJTIwcG90aG9sZXxlbnwwfHx8fDE3NjUwOTkyMTF8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "road pothole"
+    }
+  ]
 }
