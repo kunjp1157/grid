@@ -38,7 +38,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Manage Zones">
-                <Link href="/admin"><Map /><span>Manage Zones</span></Link>
+                <Link href="/admin/zones"><Map /><span>Manage Zones</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
