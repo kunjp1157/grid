@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useActionState } from 'react';
+import { useRouter } from 'next/navigation';
 import { signup } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,10 +16,22 @@ import { AlertCircle } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import Link from 'next/link';
 
+type SignupState = {
+  error?: string;
+  redirectTo?: string;
+}
+
 export default function SignupPage() {
   const { t } = useTranslation();
+  const router = useRouter();
   const [role, setRole] = useState<'citizen' | 'admin'>('citizen');
-  const [state, formAction] = useActionState(signup, { error: "" });
+  const [state, formAction, isPending] = useActionState<SignupState, FormData>(signup, { error: "" });
+
+  useEffect(() => {
+    if (state?.redirectTo) {
+      router.push(state.redirectTo);
+    }
+  }, [state, router]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-muted/40">
@@ -75,8 +88,8 @@ export default function SignupPage() {
               </Alert>
             )}
 
-            <Button type="submit" className="w-full !mt-8 bg-accent hover:bg-accent/90">
-              {t('signup.submitButton')}
+            <Button type="submit" className="w-full !mt-8 bg-accent hover:bg-accent/90" disabled={isPending}>
+              {isPending ? 'Signing up...' : t('signup.submitButton')}
             </Button>
           </form>
         </CardContent>

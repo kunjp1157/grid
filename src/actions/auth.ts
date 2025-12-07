@@ -1,7 +1,6 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { users } from "@/lib/data";
 import type { User } from "@/lib/types";
 
@@ -30,9 +29,9 @@ export async function login(prevState: any, formData: FormData) {
   });
 
   if (user.role === "admin") {
-    redirect("/admin");
+    return { redirectTo: "/admin" };
   } else {
-    redirect("/dashboard");
+    return { redirectTo: "/dashboard" };
   }
 }
 
@@ -69,15 +68,17 @@ export async function signup(prevState: any, formData: FormData) {
   });
 
   if (newUser.role === "admin") {
-    redirect("/admin");
+    return { redirectTo: "/admin" };
   } else {
-    redirect("/dashboard");
+    return { redirectTo: "/dashboard" };
   }
 }
 
 
 export async function logout() {
   cookies().delete("user");
+  // This redirect is safe because it's a simple server action not tied to a form state
+  const { redirect } = await import("next/navigation");
   redirect("/");
 }
 
