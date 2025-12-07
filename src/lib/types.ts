@@ -20,6 +20,13 @@ export enum ReportType {
   Accident = 'Accident',
   WasteManagement = 'Waste Management',
   RoadDamage = 'Road Damage',
+  AirPollution = 'Air Pollution',
+  WaterScarcity = 'Water Scarcity',
+  NoisePollution = 'Noise Pollution',
+  PowerOutage = 'Power Outage',
+  SewageLeak = 'Sewage Leak',
+  PublicTransportIssue = 'Public Transport Issue',
+  CrimeAndSafety = 'Crime and Safety',
   Other = 'Other',
 }
 

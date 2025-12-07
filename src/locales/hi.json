@@ -117,6 +117,13 @@
     "Accident": "दुर्घटना",
     "WasteManagement": "अपशिष्ट प्रबंधन",
     "RoadDamage": "सड़क क्षति",
+    "AirPollution": "वायु प्रदूषण",
+    "WaterScarcity": "जल संकट",
+    "NoisePollution": "ध्वनि प्रदूषण",
+    "PowerOutage": "बिजली कटौती",
+    "SewageLeak": "सीवेज रिसाव",
+    "PublicTransportIssue": "सार्वजनिक परिवहन समस्या",
+    "CrimeAndSafety": "अपराध और सुरक्षा",
     "Other": "अन्य"
   },
   "reportStatus": {
