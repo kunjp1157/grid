@@ -18,27 +18,55 @@ import {
 import { Button } from '@/components/ui/button';
 import { ReportStatusBadge } from '@/components/shared/ReportStatusBadge';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
-import { reports, users } from '@/lib/data'; // Mock data
+import { reports } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { PlusCircle } from 'lucide-react';
+import type { User } from '@/lib/types';
+import { useEffect, useState } from 'react';
 
-// In a real app, you'd get the current user ID from session
-const currentUserId = 'citizen1';
-const currentUser = users.find(u => u.id === currentUserId);
-const userReports = reports.filter(r => r.userId === currentUserId);
-
+// In a real app, you'd get the current user from an auth context or props
+async function fetchUser(): Promise<User | null> {
+    const res = await fetch('/api/user');
+    if (res.ok) {
+        return res.json();
+    }
+    return null;
+}
 
 export default function CitizenDashboardPage() {
     const { t } = useTranslation();
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        const loadUser = async () => {
+            try {
+                const res = await fetch('/api/user');
+                if (res.ok) {
+                    const userData = await res.json();
+                    setUser(userData);
+                }
+            } catch (error) {
+                console.error("Failed to fetch user", error);
+            }
+        };
+        loadUser();
+    }, []);
+
+
+    const userReports = user ? reports.filter(r => r.userId === user.id) : [];
+
+    if (!user) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="space-y-6">
             <h1 className="text-3xl font-bold">{t('citizen.reports.title')}</h1>
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('citizen.dashboard.welcome', { name: currentUser?.name || 'Citizen' })}</CardTitle>
+                    <CardTitle>{t('citizen.dashboard.welcome', { name: user?.name || 'Citizen' })}</CardTitle>
                     <CardDescription>{t('citizen.dashboard.description')}</CardDescription>
                 </CardHeader>
                 <CardContent>
