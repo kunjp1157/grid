@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useState, useMemo } from 'react';
 import {
   Card,
   CardContent,
@@ -15,19 +17,58 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
 import { ReportStatusBadge } from '@/components/shared/ReportStatusBadge';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
 import { reports, users } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
+import { ReportStatus } from '@/lib/types';
+import { format } from 'date-fns';
+import type { DateRange } from 'react-day-picker';
+import { Calendar as CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export default function AllReportsPage() {
     const { t } = useTranslation();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [date, setDate] = useState<DateRange | undefined>(undefined);
 
     const getUserName = (userId: string) => {
         return users.find(u => u.id === userId)?.name || 'Unknown User';
     }
+
+    const filteredReports = useMemo(() => {
+        return reports.filter(report => {
+            // Search term filter
+            const includesSearchTerm = searchTerm.trim() === '' || 
+                report.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                report.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+            // Status filter
+            const matchesStatus = statusFilter === 'all' || report.status === statusFilter;
+
+            // Date range filter
+            const reportDate = new Date(report.timestamp);
+            const matchesDate = !date || (
+                (!date.from || reportDate >= date.from) &&
+                (!date.to || reportDate <= date.to)
+            );
+            
+            return includesSearchTerm && matchesStatus && matchesDate;
+        });
+    }, [searchTerm, statusFilter, date]);
 
     return (
         <div className="space-y-6">
@@ -38,6 +79,62 @@ export default function AllReportsPage() {
                     <CardTitle>{t('admin.reports.all')}</CardTitle>
                 </CardHeader>
                 <CardContent>
+                    <div className="flex flex-col md:flex-row gap-4 mb-6">
+                        <Input 
+                            placeholder="Search by ID or keyword..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="max-w-sm"
+                        />
+                        <Select value={statusFilter} onValueChange={setStatusFilter}>
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Filter by status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">All Statuses</SelectItem>
+                                {Object.values(ReportStatus).map(status => (
+                                    <SelectItem key={status} value={status}>{t(`reportStatus.${status.replace(/\s/g, '')}`)}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                            <Button
+                                id="date"
+                                variant={"outline"}
+                                className={cn(
+                                "w-[300px] justify-start text-left font-normal",
+                                !date && "text-muted-foreground"
+                                )}
+                            >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                {date?.from ? (
+                                date.to ? (
+                                    <>
+                                    {format(date.from, "LLL dd, y")} -{" "}
+                                    {format(date.to, "LLL dd, y")}
+                                    </>
+                                ) : (
+                                    format(date.from, "LLL dd, y")
+                                )
+                                ) : (
+                                <span>Pick a date range</span>
+                                )}
+                            </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                                initialFocus
+                                mode="range"
+                                defaultMonth={date?.from}
+                                selected={date}
+                                onSelect={setDate}
+                                numberOfMonths={2}
+                            />
+                            </PopoverContent>
+                        </Popover>
+                    </div>
+
                     <Table>
                     <TableHeader>
                         <TableRow>
@@ -51,7 +148,7 @@ export default function AllReportsPage() {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {reports.map(report => (
+                        {filteredReports.map(report => (
                         <TableRow key={report.id}>
                             <TableCell>
                                 <ReportTypeIcon type={report.type} className="h-5 w-5 text-muted-foreground" />
