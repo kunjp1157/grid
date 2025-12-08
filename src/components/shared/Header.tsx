@@ -17,6 +17,7 @@ import { Logo } from './Logo';
 import { logout } from '@/actions/auth';
 import type { User } from '@/lib/types';
 import { useTranslation } from '@/context/LocalizationContext';
+import Link from 'next/link';
 
 interface HeaderProps {
     user: User | null;
@@ -25,6 +26,8 @@ interface HeaderProps {
 export function Header({ user }: HeaderProps) {
   const { t } = useTranslation();
   const userInitials = user?.name.split(' ').map(n => n[0]).join('') || 'U';
+
+  const profileUrl = user?.role === 'admin' ? '/admin/profile' : '/dashboard/profile';
 
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -50,7 +53,9 @@ export function Header({ user }: HeaderProps) {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>{t('header.userMenu.myProfile')}</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+                <Link href={profileUrl}>{t('header.userMenu.myProfile')}</Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <form action={logout}>
                 <button type="submit" className="w-full">

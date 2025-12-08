@@ -12,7 +12,7 @@ import {
 import { Header } from '@/components/shared/Header';
 import { getUser } from '@/actions/auth';
 import { Logo } from '@/components/shared/Logo';
-import { LayoutDashboard, PlusCircle, FileText } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, FileText, User } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
@@ -39,6 +39,11 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="New Report">
                 <Link href="/dashboard/new-report"><PlusCircle /><span>New Report</span></Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="My Profile">
+                <Link href="/dashboard/profile"><User /><span>My Profile</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
