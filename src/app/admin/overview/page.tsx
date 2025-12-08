@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo } from 'react';
@@ -8,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   AreaChart,
   BarChart,
@@ -15,6 +17,7 @@ import {
   CheckCircle,
   Clock,
   Timer,
+  Download,
 } from 'lucide-react';
 import {
   ChartContainer,
@@ -108,10 +111,40 @@ export default function OverviewDashboardPage() {
     })).reverse();
   }, []);
 
+  const handleExport = () => {
+    const headers = ['Type', 'Count'];
+    const typeData = reportsByTypeChartData.map(d => ({ Type: d.name, Count: d.count }));
+    let csvContent = "data:text/csv;charset=utf-8," 
+        + "Reports by Type\n"
+        + headers.join(",") + "\n"
+        + typeData.map(e => Object.values(e).join(",")).join("\n");
+
+    const trendHeaders = ['Date', 'Count'];
+    const trendData = reportsOverTimeChartData.map(d => ({ Date: d.date, Count: d.count }));
+    csvContent += "\n\nReports Trend (Last 30 Days)\n"
+        + trendHeaders.join(",") + "\n"
+        + trendData.map(e => Object.values(e).join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "report_analytics.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Performance Overview</h1>
+       <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Performance Overview</h1>
+        <Button onClick={handleExport} variant="outline">
+            <Download className="mr-2 h-4 w-4" />
+            Export to CSV
+        </Button>
+      </div>
+
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
