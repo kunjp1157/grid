@@ -9,7 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { ReportPriority, AllReportTypes } from '@/lib/types';
+import { ReportPriority, AllReportTypes, ReportType } from '@/lib/types';
 
 
 const CategorizeAndPrioritizeReportInputSchema = z.object({

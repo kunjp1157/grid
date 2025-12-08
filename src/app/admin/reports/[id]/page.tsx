@@ -219,7 +219,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                     {overdueResult.isOverdue ? <AlertCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
                   <AlertTitle>
                     {overdueResult.isOverdue ? t('admin.reportDetails.isOverdue') : t('admin.reportDetails.isNotOverdue')}
-                  </Aler tTitle>
+                  </AlertTitle>
                   <AlertDescription>
                     {overdueResult.alertTriggered ? t('admin.reportDetails.alertTriggered') : t('admin.reportDetails.noAlert')}
                   </AlertDescription>
