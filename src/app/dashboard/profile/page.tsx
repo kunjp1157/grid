@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { reports } from '@/lib/data';
 import { ReportStatus } from '@/lib/types';
-import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Heart, ShieldAlert } from 'lucide-react';
+import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Mail, Heart, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -123,6 +123,10 @@ export default function CitizenProfilePage() {
             <Separator />
              {isEditing ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div className="space-y-2">
+                        <Label htmlFor="email" className="flex items-center gap-2 text-muted-foreground"><Mail className="h-4 w-4" /> Email</Label>
+                        <Input id="email" name="email" type="email" value={editableUser.email} onChange={handleInputChange} placeholder="Enter email address" />
+                    </div>
                     <div className="space-y-2">
                         <Label htmlFor="mobile" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> Mobile</Label>
                         <Input id="mobile" name="mobile" value={editableUser.mobile || ''} onChange={handleInputChange} placeholder="Enter mobile number" />
