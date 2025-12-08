@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -12,6 +13,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { zones } from '@/lib/data';
 
 export default function AdminProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -32,6 +34,7 @@ export default function AdminProfilePage() {
   }, []);
 
   const userInitials = user?.name.split(' ').map(n => n[0]).join('') || 'U';
+  const zoneName = user?.zoneId ? zones.find(z => z.id === user.zoneId)?.name : null;
 
   if (!user) {
     return <div>Loading profile...</div>;
@@ -67,12 +70,12 @@ export default function AdminProfilePage() {
                 {user.role}
               </Badge>
             </li>
-            {user.role === 'admin' && user.zoneId && (
+            {user.role === 'admin' && zoneName && (
               <>
                 <Separator />
                 <li className="flex justify-between">
                     <span className="text-muted-foreground">Assigned Zone</span>
-                    <span className="font-medium">{user.zoneId}</span>
+                    <span className="font-medium">{zoneName}</span>
                 </li>
               </>
             )}
