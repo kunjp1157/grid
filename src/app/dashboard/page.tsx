@@ -23,7 +23,7 @@ import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { PlusCircle, ArrowRight } from 'lucide-react';
-import type { User, ReportType as ReportTypeEnum } from '@/lib/types';
+import type { User, ReportType } from '@/lib/types';
 import { useEffect, useState } from 'react';
 
 export default function CitizenDashboardPage() {
@@ -58,7 +58,7 @@ export default function CitizenDashboardPage() {
         }
         acc[report.type].count++;
         return acc;
-    }, {} as { [key in ReportTypeEnum]: { type: ReportTypeEnum, count: number } }));
+    }, {} as { [key in ReportType]: { type: ReportType, count: number } }));
 
 
     return (

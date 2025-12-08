@@ -1,5 +1,6 @@
+
 import type { User, Report, Zone, ChatMessage } from './types';
-import { ReportStatus, ReportType, ReportPriority } from './types';
+import { ReportStatus, ReportPriority, AllReportTypes } from './types';
 
 export const users: User[] = [
   {
@@ -28,7 +29,7 @@ export const reports: Report[] = [
   {
     id: 'report1',
     userId: 'citizen1',
-    type: ReportType.Waterlogging,
+    type: 'Waterlogging',
     description: 'Major waterlogging near the central park. Traffic is completely blocked.',
     location: { lat: 28.6139, lng: 77.2090 },
     status: ReportStatus.New,
@@ -55,7 +56,7 @@ export const reports: Report[] = [
   {
     id: 'report2',
     userId: 'citizen1',
-    type: ReportType.RoadDamage,
+    type: 'Road Damage',
     description: 'A large pothole has formed on the main street, causing issues for commuters.',
     location: { lat: 28.6145, lng: 77.2100 },
     status: ReportStatus.Assigned,
@@ -67,7 +68,7 @@ export const reports: Report[] = [
   {
     id: 'report3',
     userId: 'citizen1',
-    type: ReportType.SewageLeak,
+    type: 'Sewage Leak',
     description: 'Sewage leak reported in a residential area. Foul smell and unsanitary conditions.',
     location: { lat: 28.6150, lng: 77.2110 },
     status: ReportStatus.Overdue,
@@ -80,7 +81,7 @@ export const reports: Report[] = [
   {
     id: 'report4',
     userId: 'citizen1',
-    type: ReportType.Accident,
+    type: 'Accident',
     description: 'Minor traffic accident involving two cars. No major injuries reported but causing a jam.',
     location: { lat: 28.6155, lng: 77.2120 },
     status: ReportStatus.Resolved,
@@ -95,7 +96,7 @@ export const reports: Report[] = [
    {
     id: 'report5',
     userId: 'citizen1',
-    type: ReportType.Fire,
+    type: 'Fire',
     description: 'Small fire reported in a dumpster behind the supermarket.',
     location: { lat: 28.6150, lng: 77.2110 },
     status: ReportStatus.InProgress,
@@ -107,7 +108,7 @@ export const reports: Report[] = [
   {
     id: 'report6',
     userId: 'citizen1',
-    type: ReportType.PowerOutage,
+    type: 'Power Outage',
     description: 'The entire block has been without power for the last 3 hours.',
     location: { lat: 28.6160, lng: 77.2130 },
     status: ReportStatus.Resolved,

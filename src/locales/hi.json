@@ -57,8 +57,10 @@
     "newReport": {
       "title": "एक नई रिपोर्ट सबमिट करें",
       "description": "अपने क्षेत्र में किसी संकट या मुद्दे की रिपोर्ट करने के लिए नीचे दिए गए विवरण भरें।",
-      "typeLabel": "रिपोर्ट का प्रकार",
-      "typePlaceholder": "एक रिपोर्ट प्रकार चुनें",
+      "categoryLabel": "रिपोर्ट श्रेणी",
+      "categoryPlaceholder": "एक श्रेणी चुनें",
+      "typeLabel": "समस्या का प्रकार",
+      "typePlaceholder": "एक समस्या प्रकार चुनें",
       "descriptionLabel": "विवरण",
       "descriptionPlaceholder": "समस्या का विस्तृत विवरण प्रदान करें...",
       "locationLabel": "स्थान",
@@ -119,6 +121,14 @@
       "chatTitle": "रिपोर्टर के साथ बातचीत",
       "chatPlaceholder": "अपना संदेश टाइप करें..."
     }
+  },
+  "reportCategories": {
+    "PublicSafety": "सार्वजनिक सुरक्षा",
+    "Utilities": "उपयोगिताएँ",
+    "Infrastructure": "आधारभूत संरचना",
+    "Environment": "पर्यावरण",
+    "Transport": "परिवहन",
+    "Other": "अन्य"
   },
   "reportTypes": {
     "Waterlogging": "जलनिकासी",

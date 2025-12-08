@@ -21,8 +21,9 @@ import { reports, users } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
-import { ReportType } from '@/lib/types';
+import type { ReportType } from '@/lib/types';
 import { ArrowRight } from 'lucide-react';
+import { getCategoryForType } from '@/lib/types';
 
 export default function AdminDashboardPage() {
     const { t } = useTranslation();
@@ -33,25 +34,25 @@ export default function AdminDashboardPage() {
 
     const reportsByCategory = Object.entries(
       reports.reduce((acc, report) => {
-        const key = Object.keys(ReportType).find(k => ReportType[k as keyof typeof ReportType] === report.type)!;
-        if (!acc[key]) {
-          acc[key] = { type: report.type, count: 0 };
+        const category = getCategoryForType(report.type) || 'Other';
+        if (!acc[category]) {
+          acc[category] = { type: report.type, count: 0 };
         }
-        acc[key].count++;
+        acc[category].count++;
         return acc;
       }, {} as { [key: string]: { type: ReportType; count: number } })
-    ).map(([key, value]) => ({...value, key}));
+    ).map(([key, value]) => ({...value, category: key}));
 
     return (
         <div className="space-y-6">
             <h1 className="text-3xl font-bold">{t('admin.dashboard.title')}</h1>
             
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {reportsByCategory.map(({ type, count, key }) => (
-                    <Link href={`/admin/reports/category/${key}`} key={type}>
+                {reportsByCategory.map(({ type, count, category }) => (
+                    <Link href={`/admin/reports/category/${category}`} key={category}>
                         <Card className="hover:bg-muted transition-colors">
                             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                <CardTitle className="text-sm font-medium">{t(`reportTypes.${key}`)}</CardTitle>
+                                <CardTitle className="text-sm font-medium">{t(`reportCategories.${category.replace(/\s/g, '')}`)}</CardTitle>
                                 <ReportTypeIcon type={type} className="h-4 w-4 text-muted-foreground" />
                             </CardHeader>
                             <CardContent>
@@ -92,7 +93,7 @@ export default function AdminDashboardPage() {
                                 <ReportTypeIcon type={report.type} className="h-5 w-5 text-muted-foreground" />
                             </TableCell>
                             <TableCell className="font-mono text-xs">#{report.id.substring(0, 7)}</TableCell>
-                            <TableCell>{t(`reportTypes.${Object.keys(ReportType).find(key => ReportType[key as keyof typeof ReportType] === report.type)}`)}</TableCell>
+                            <TableCell>{t(`reportTypes.${report.type.replace(/\s/g, '')}`)}</TableCell>
                             <TableCell><ReportStatusBadge status={report.status} /></TableCell>
                             <TableCell>{getUserName(report.userId)}</TableCell>
                             <TableCell>{formatDate(report.timestamp, 'PP')}</TableCell>

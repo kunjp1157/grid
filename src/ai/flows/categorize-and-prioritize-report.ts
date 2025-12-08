@@ -9,7 +9,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import { ReportType, ReportPriority } from '@/lib/types';
+import { ReportPriority, AllReportTypes } from '@/lib/types';
 
 
 const CategorizeAndPrioritizeReportInputSchema = z.object({
@@ -19,7 +19,7 @@ const CategorizeAndPrioritizeReportInputSchema = z.object({
 export type CategorizeAndPrioritizeReportInput = z.infer<typeof CategorizeAndPrioritizeReportInputSchema>;
 
 const CategorizeAndPrioritizeReportOutputSchema = z.object({
-  category: z.nativeEnum(ReportType).describe('The most appropriate category for the report.'),
+  category: z.custom<ReportType>(val => AllReportTypes.includes(val as ReportType)).describe('The most appropriate category for the report.'),
   priority: z.nativeEnum(ReportPriority).describe('The assessed priority level for the report.'),
   reasoning: z.string().describe('A brief explanation for the chosen category and priority.'),
 });
@@ -36,7 +36,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an expert crisis management dispatcher. Your task is to analyze a new report and determine its category and priority level.
 
   Available Categories:
-  ${Object.values(ReportType).join(', ')}
+  ${AllReportTypes.join(', ')}
 
   Available Priority Levels:
   ${Object.values(ReportPriority).join(', ')}

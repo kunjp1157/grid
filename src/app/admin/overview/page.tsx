@@ -31,9 +31,10 @@ import {
   AreaChart as RechartsAreaChart,
   BarChart as RechartsBarChart,
 } from 'recharts';
-import { reports, Report, ReportStatus, ReportType } from '@/lib/data';
+import { reports, Report, ReportStatus, type ReportType } from '@/lib/data';
 import { useTranslation } from '@/context/LocalizationContext';
 import { differenceInHours, subDays } from 'date-fns';
+import { AllReportTypes } from '@/lib/types';
 
 export default function OverviewDashboardPage() {
   const { t } = useTranslation();
@@ -75,7 +76,7 @@ export default function OverviewDashboardPage() {
   }, []);
 
   const reportsByTypeChartData = useMemo(() => {
-    const data = Object.values(ReportType).map((type) => ({
+    const data = AllReportTypes.map((type) => ({
       name: t(`reportTypes.${type.replace(/\s/g, '')}`),
       count: reports.filter((r) => r.type === type).length,
     }));

@@ -57,8 +57,10 @@
     "newReport": {
       "title": "Submit a New Report",
       "description": "Fill out the details below to report a crisis or issue in your area.",
-      "typeLabel": "Report Type",
-      "typePlaceholder": "Select a report type",
+      "categoryLabel": "Report Category",
+      "categoryPlaceholder": "Select a category",
+      "typeLabel": "Issue Type",
+      "typePlaceholder": "Select an issue type",
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Provide a detailed description of the issue...",
       "locationLabel": "Location",
@@ -119,6 +121,14 @@
       "chatTitle": "Conversation with Reporter",
       "chatPlaceholder": "Type your message..."
     }
+  },
+  "reportCategories": {
+    "PublicSafety": "Public Safety",
+    "Utilities": "Utilities",
+    "Infrastructure": "Infrastructure",
+    "Environment": "Environment",
+    "Transport": "Transport",
+    "Other": "Other"
   },
   "reportTypes": {
     "Waterlogging": "Waterlogging",

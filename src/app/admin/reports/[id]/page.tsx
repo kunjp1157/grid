@@ -25,7 +25,7 @@ import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
 import { ChatInterface } from '@/components/shared/ChatInterface';
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
-import { ReportStatus, Report, ChatMessage, User } from '@/lib/types';
+import { ReportStatus, type Report, type ChatMessage, type User } from '@/lib/types';
 import { trackReportResolutionDeadline, type TrackReportResolutionDeadlineOutput } from '@/ai/flows/track-report-resolution-deadlines';
 import { sendNotification } from '@/ai/flows/send-notification';
 import Image from 'next/image';
@@ -146,7 +146,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
             <CardHeader>
               <div className="flex items-center gap-3">
                 <ReportTypeIcon type={report.type} className="w-6 h-6 text-muted-foreground" />
-                <CardTitle>{t(`reportTypes.${Object.keys(ReportType).find(key => ReportType[key as keyof typeof ReportType] === report.type)}`)}</CardTitle>
+                <CardTitle>{t(`reportTypes.${report.type.replace(/\s/g, '')}`)}</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
@@ -219,7 +219,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                     {overdueResult.isOverdue ? <AlertCircle className="h-4 w-4" /> : <CheckCircle className="h-4 w-4" />}
                   <AlertTitle>
                     {overdueResult.isOverdue ? t('admin.reportDetails.isOverdue') : t('admin.reportDetails.isNotOverdue')}
-                  </AlertTitle>
+                  </Aler tTitle>
                   <AlertDescription>
                     {overdueResult.alertTriggered ? t('admin.reportDetails.alertTriggered') : t('admin.reportDetails.noAlert')}
                   </AlertDescription>

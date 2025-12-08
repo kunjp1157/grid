@@ -29,7 +29,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { ReportType, ReportPriority } from '@/lib/types';
+import { AllReportTypes, ReportPriority, reportCategories, type ReportCategory, type ReportType } from '@/lib/types';
 import { useTranslation } from '@/context/LocalizationContext';
 import { geofenceAndRouteReport } from '@/ai/flows/geofence-and-route-reports';
 import { categorizeAndPrioritizeReport } from '@/ai/flows/categorize-and-prioritize-report';
@@ -37,11 +37,14 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { zones } from '@/lib/data';
 import { useState } from 'react';
-import { Loader2, Sparkles, AlertCircle } from 'lucide-react';
+import { Loader2, Sparkles } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const reportSchema = z.object({
-  type: z.nativeEnum(ReportType, {
+  category: z.custom<ReportCategory>(val => typeof val === 'string' && val, {
+      required_error: "Please select a category."
+  }),
+  type: z.custom<ReportType>(val => AllReportTypes.includes(val as ReportType), {
     required_error: "Please select a report type."
   }),
   description: z.string().min(10, "Description must be at least 10 characters long."),
@@ -75,6 +78,8 @@ export default function NewReportPage() {
     },
   });
 
+  const selectedCategory = form.watch('category');
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -104,7 +109,19 @@ export default function NewReportPage() {
             mediaDataUri: filePreview || undefined,
         });
 
-        form.setValue('type', result.category);
+        const category = Object.keys(reportCategories).find(cat => 
+            (reportCategories[cat as ReportCategory] as readonly ReportType[]).includes(result.category)
+        ) as ReportCategory | undefined;
+
+        if(category) {
+            form.setValue('category', category);
+            form.setValue('type', result.category);
+        } else {
+            // Fallback if category not found
+            form.setValue('category', 'Other');
+            form.setValue('type', 'Other');
+        }
+
         setAiSuggestion({ priority: result.priority, reasoning: result.reasoning });
 
     } catch (error) {
@@ -224,33 +241,61 @@ export default function NewReportPage() {
                     </Alert>
                 )}
               </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>{t('citizen.newReport.categoryLabel')}</FormLabel>
+                        <Select onValueChange={(value) => {
+                            field.onChange(value);
+                            form.resetField('type');
+                        }} value={field.value}>
+                        <FormControl>
+                            <SelectTrigger>
+                            <SelectValue placeholder={t('citizen.newReport.categoryPlaceholder')} />
+                            </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            {Object.keys(reportCategories).map(category => (
+                                <SelectItem key={category} value={category}>{t(`reportCategories.${category.replace(/\s/g, '')}`)}</SelectItem>
+                            ))}
+                        </SelectContent>
+                        </Select>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
 
+                <FormField
+                    control={form.control}
+                    name="type"
+                    render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>{t('citizen.newReport.typeLabel')}</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCategory}>
+                        <FormControl>
+                            <SelectTrigger>
+                            <SelectValue placeholder={t('citizen.newReport.typePlaceholder')} />
+                            </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                            {selectedCategory && reportCategories[selectedCategory].map(type => (
+                                <SelectItem key={type} value={type}>{t(`reportTypes.${type.replace(/\s/g, '')}`)}</SelectItem>
+                            ))}
+                        </SelectContent>
+                        </Select>
+                        <FormDescription>
+                            Select a category first.
+                        </FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                    )}
+                />
+              </div>
 
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('citizen.newReport.typeLabel')}</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('citizen.newReport.typePlaceholder')} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.values(ReportType).map(type => (
-                          <SelectItem key={type} value={type}>{t(`reportTypes.${type.replace(/\s/g, '')}`)}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>
-                        Select a category or use the auto-categorize button above.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
               <div className="space-y-4">
                 <h3 className="text-sm font-medium">{t('citizen.newReport.locationLabel')}</h3>

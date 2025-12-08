@@ -1,3 +1,4 @@
+
 export type User = {
   id: string;
   name: string;
@@ -21,21 +22,48 @@ export enum ReportPriority {
     Critical = 'Critical'
 }
 
-export enum ReportType {
-  Waterlogging = 'Waterlogging',
-  Fire = 'Fire',
-  Accident = 'Accident',
-  WasteManagement = 'Waste Management',
-  RoadDamage = 'Road Damage',
-  AirPollution = 'Air Pollution',
-  WaterScarcity = 'Water Scarcity',
-  NoisePollution = 'Noise Pollution',
-  PowerOutage = 'Power Outage',
-  SewageLeak = 'Sewage Leak',
-  PublicTransportIssue = 'Public Transport Issue',
-  CrimeAndSafety = 'Crime and Safety',
-  Other = 'Other',
+export const reportCategories = {
+  'Public Safety': [
+    'Fire',
+    'Accident',
+    'Crime and Safety'
+  ],
+  'Utilities': [
+    'Waterlogging',
+    'Power Outage',
+    'Water Scarcity',
+    'Sewage Leak'
+  ],
+  'Infrastructure': [
+    'Road Damage'
+  ],
+  'Environment': [
+    'Waste Management',
+    'Air Pollution',
+    'Noise Pollution'
+  ],
+  'Transport': [
+    'Public Transport Issue'
+  ],
+  'Other': [
+    'Other'
+  ]
+} as const;
+
+export type ReportCategory = keyof typeof reportCategories;
+export type ReportType = typeof reportCategories[ReportCategory][number];
+
+export const AllReportTypes = Object.values(reportCategories).flat();
+
+export const getCategoryForType = (type: ReportType): ReportCategory | undefined => {
+    for (const category in reportCategories) {
+        if ((reportCategories[category as ReportCategory] as readonly ReportType[]).includes(type)) {
+            return category as ReportCategory;
+        }
+    }
+    return undefined;
 }
+
 
 export type ChatMessage = {
     id: string;

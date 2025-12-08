@@ -1,4 +1,4 @@
-import { ReportType } from '@/lib/types';
+import type { ReportType } from '@/lib/types';
 import { Flame, Waves, Car, Recycle, Wrench, AlertCircle, Wind, Droplets, Ear, Zap, Biohazard, Bus, Shield } from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
 
@@ -8,29 +8,29 @@ interface ReportTypeIconProps extends LucideProps {
 
 export function ReportTypeIcon({ type, ...props }: ReportTypeIconProps) {
   switch (type) {
-    case ReportType.Waterlogging:
+    case 'Waterlogging':
       return <Waves {...props} />;
-    case ReportType.Fire:
+    case 'Fire':
       return <Flame {...props} />;
-    case ReportType.Accident:
+    case 'Accident':
       return <Car {...props} />;
-    case ReportType.WasteManagement:
+    case 'Waste Management':
         return <Recycle {...props} />
-    case ReportType.RoadDamage:
+    case 'Road Damage':
         return <Wrench {...props} />
-    case ReportType.AirPollution:
+    case 'Air Pollution':
         return <Wind {...props} />
-    case ReportType.WaterScarcity:
+    case 'Water Scarcity':
         return <Droplets {...props} />
-    case ReportType.NoisePollution:
+    case 'Noise Pollution':
         return <Ear {...props} />
-    case ReportType.PowerOutage:
+    case 'Power Outage':
         return <Zap {...props} />
-    case ReportType.SewageLeak:
+    case 'Sewage Leak':
         return <Biohazard {...props} />
-    case ReportType.PublicTransportIssue:
+    case 'Public Transport Issue':
         return <Bus {...props} />
-    case ReportType.CrimeAndSafety:
+    case 'Crime and Safety':
         return <Shield {...props} />
     default:
       return <AlertCircle {...props} />;
