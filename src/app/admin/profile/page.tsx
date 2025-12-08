@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { zones, reports } from '@/lib/data';
 import { ReportStatus } from '@/lib/types';
-import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, User as UserIcon } from 'lucide-react';
+import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, User as UserIcon, Heart, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -122,7 +122,7 @@ export default function AdminProfilePage() {
             <CardContent className="space-y-4">
             <Separator />
             {isEditing ? (
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                         <Label htmlFor="mobile" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> Mobile</Label>
                         <Input id="mobile" name="mobile" value={editableUser.mobile || ''} onChange={handleInputChange} placeholder="Enter mobile number" />
@@ -134,6 +134,18 @@ export default function AdminProfilePage() {
                      <div className="space-y-2">
                         <Label htmlFor="pincode" className="flex items-center gap-2 text-muted-foreground"><MapPin className="h-4 w-4" /> PIN Code</Label>
                         <Input id="pincode" name="pincode" value={editableUser.pincode || ''} onChange={handleInputChange} placeholder="Enter PIN code" />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="bloodGroup" className="flex items-center gap-2 text-muted-foreground"><Heart className="h-4 w-4" /> Blood Group</Label>
+                        <Input id="bloodGroup" name="bloodGroup" value={editableUser.bloodGroup || ''} onChange={handleInputChange} placeholder="e.g., O+" />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="emergencyContactName" className="flex items-center gap-2 text-muted-foreground"><ShieldAlert className="h-4 w-4" /> Emergency Contact</Label>
+                        <Input id="emergencyContactName" name="emergencyContactName" value={editableUser.emergencyContactName || ''} onChange={handleInputChange} placeholder="Contact name" />
+                    </div>
+                     <div className="space-y-2">
+                        <Label htmlFor="emergencyContactNumber" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> Emergency Contact No.</Label>
+                        <Input id="emergencyContactNumber" name="emergencyContactNumber" value={editableUser.emergencyContactNumber || ''} onChange={handleInputChange} placeholder="Contact number" />
                     </div>
                 </div>
             ) : (
@@ -151,6 +163,16 @@ export default function AdminProfilePage() {
                     <li className="flex justify-between">
                     <span className="text-muted-foreground flex items-center gap-2"><MapPin className="h-4 w-4" /> PIN Code</span>
                     <span>{user.pincode || 'N/A'}</span>
+                    </li>
+                    <Separator />
+                    <li className="flex justify-between">
+                    <span className="text-muted-foreground flex items-center gap-2"><Heart className="h-4 w-4" /> Blood Group</span>
+                    <span>{user.bloodGroup || 'N/A'}</span>
+                    </li>
+                    <Separator />
+                    <li className="flex justify-between">
+                    <span className="text-muted-foreground flex items-center gap-2"><ShieldAlert className="h-4 w-4" /> Emergency Contact</span>
+                    <span>{user.emergencyContactName || 'N/A'} ({user.emergencyContactNumber || 'N/A'})</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between items-center">

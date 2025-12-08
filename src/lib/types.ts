@@ -9,6 +9,9 @@ export type User = {
   mobile?: string;
   address?: string;
   pincode?: string;
+  bloodGroup?: string;
+  emergencyContactName?: string;
+  emergencyContactNumber?: string;
 };
 
 export enum ReportStatus {
