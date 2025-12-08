@@ -12,6 +12,7 @@ export type User = {
   bloodGroup?: string;
   emergencyContactName?: string;
   emergencyContactNumber?: string;
+  medicalConditions?: string;
 };
 
 export enum ReportStatus {

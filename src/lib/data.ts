@@ -14,6 +14,7 @@ export const users: User[] = [
     bloodGroup: 'O+',
     emergencyContactName: 'Alice Doe',
     emergencyContactNumber: '+91-9876543211',
+    medicalConditions: 'None',
   },
   {
     id: 'admin1',
@@ -27,6 +28,7 @@ export const users: User[] = [
     bloodGroup: 'A-',
     emergencyContactName: 'Bob Smith',
     emergencyContactNumber: '+91-8765432108',
+    medicalConditions: 'Allergic to penicillin',
   },
 ];
 

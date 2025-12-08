@@ -16,11 +16,12 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { zones, reports } from '@/lib/data';
 import { ReportStatus } from '@/lib/types';
-import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Mail, Heart, ShieldAlert } from 'lucide-react';
+import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Mail, Heart, ShieldAlert, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function AdminProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -51,7 +52,7 @@ export default function AdminProfilePage() {
     setIsEditing(!isEditing);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (editableUser) {
       setEditableUser({ ...editableUser, [e.target.name]: e.target.value });
     }
@@ -122,61 +123,72 @@ export default function AdminProfilePage() {
             <CardContent className="space-y-4">
             <Separator />
             {isEditing ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                        <Label htmlFor="email" className="flex items-center gap-2 text-muted-foreground"><Mail className="h-4 w-4" /> Email</Label>
-                        <Input id="email" name="email" type="email" value={editableUser.email} onChange={handleInputChange} placeholder="Enter email address" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="mobile" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> Mobile</Label>
-                        <Input id="mobile" name="mobile" value={editableUser.mobile || ''} onChange={handleInputChange} placeholder="Enter mobile number" />
+                 <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                            <Label htmlFor="email" className="flex items-center gap-2 text-muted-foreground"><Mail className="h-4 w-4" /> Email</Label>
+                            <Input id="email" name="email" type="email" value={editableUser.email} onChange={handleInputChange} placeholder="Enter email address" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="mobile" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> Mobile</Label>
+                            <Input id="mobile" name="mobile" value={editableUser.mobile || ''} onChange={handleInputChange} placeholder="Enter mobile number" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="address" className="flex items-center gap-2 text-muted-foreground"><Home className="h-4 w-4" /> Address</Label>
+                            <Input id="address" name="address" value={editableUser.address || ''} onChange={handleInputChange} placeholder="Enter full address" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="pincode" className="flex items-center gap-2 text-muted-foreground"><MapPin className="h-4 w-4" /> PIN Code</Label>
+                            <Input id="pincode" name="pincode" value={editableUser.pincode || ''} onChange={handleInputChange} placeholder="Enter PIN code" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="bloodGroup" className="flex items-center gap-2 text-muted-foreground"><Heart className="h-4 w-4" /> Blood Group</Label>
+                            <Input id="bloodGroup" name="bloodGroup" value={editableUser.bloodGroup || ''} onChange={handleInputChange} placeholder="e.g., O+" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="emergencyContactName" className="flex items-center gap-2 text-muted-foreground"><ShieldAlert className="h-4 w-4" /> Emergency Contact</Label>
+                            <Input id="emergencyContactName" name="emergencyContactName" value={editableUser.emergencyContactName || ''} onChange={handleInputChange} placeholder="Contact name" />
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="emergencyContactNumber" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> Emergency Contact No.</Label>
+                            <Input id="emergencyContactNumber" name="emergencyContactNumber" value={editableUser.emergencyContactNumber || ''} onChange={handleInputChange} placeholder="Contact number" />
+                        </div>
                     </div>
                      <div className="space-y-2">
-                        <Label htmlFor="address" className="flex items-center gap-2 text-muted-foreground"><Home className="h-4 w-4" /> Address</Label>
-                        <Input id="address" name="address" value={editableUser.address || ''} onChange={handleInputChange} placeholder="Enter full address" />
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="pincode" className="flex items-center gap-2 text-muted-foreground"><MapPin className="h-4 w-4" /> PIN Code</Label>
-                        <Input id="pincode" name="pincode" value={editableUser.pincode || ''} onChange={handleInputChange} placeholder="Enter PIN code" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="bloodGroup" className="flex items-center gap-2 text-muted-foreground"><Heart className="h-4 w-4" /> Blood Group</Label>
-                        <Input id="bloodGroup" name="bloodGroup" value={editableUser.bloodGroup || ''} onChange={handleInputChange} placeholder="e.g., O+" />
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="emergencyContactName" className="flex items-center gap-2 text-muted-foreground"><ShieldAlert className="h-4 w-4" /> Emergency Contact</Label>
-                        <Input id="emergencyContactName" name="emergencyContactName" value={editableUser.emergencyContactName || ''} onChange={handleInputChange} placeholder="Contact name" />
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="emergencyContactNumber" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> Emergency Contact No.</Label>
-                        <Input id="emergencyContactNumber" name="emergencyContactNumber" value={editableUser.emergencyContactNumber || ''} onChange={handleInputChange} placeholder="Contact number" />
+                        <Label htmlFor="medicalConditions" className="flex items-center gap-2 text-muted-foreground"><Stethoscope className="h-4 w-4" /> Medical Conditions</Label>
+                        <Textarea id="medicalConditions" name="medicalConditions" value={editableUser.medicalConditions || ''} onChange={handleInputChange} placeholder="e.g., Allergic to peanuts, Asthma" />
                     </div>
                 </div>
             ) : (
                 <ul className="space-y-3 text-sm">
                     <li className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2"><Phone className="h-4 w-4" /> Mobile</span>
-                    <span>{user.mobile || 'N/A'}</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><Phone className="h-4 w-4" /> Mobile</span>
+                        <span>{user.mobile || 'N/A'}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2"><Home className="h-4 w-4" /> Address</span>
-                    <span className='text-right'>{user.address || 'N/A'}</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><Home className="h-4 w-4" /> Address</span>
+                        <span className='text-right'>{user.address || 'N/A'}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2"><MapPin className="h-4 w-4" /> PIN Code</span>
-                    <span>{user.pincode || 'N/A'}</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><MapPin className="h-4 w-4" /> PIN Code</span>
+                        <span>{user.pincode || 'N/A'}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2"><Heart className="h-4 w-4" /> Blood Group</span>
-                    <span>{user.bloodGroup || 'N/A'}</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><Heart className="h-4 w-4" /> Blood Group</span>
+                        <span>{user.bloodGroup || 'N/A'}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between">
-                    <span className="text-muted-foreground flex items-center gap-2"><ShieldAlert className="h-4 w-4" /> Emergency Contact</span>
-                    <span>{user.emergencyContactName || 'N/A'} ({user.emergencyContactNumber || 'N/A'})</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><ShieldAlert className="h-4 w-4" /> Emergency Contact</span>
+                        <span>{user.emergencyContactName || 'N/A'} ({user.emergencyContactNumber || 'N/A'})</span>
+                    </li>
+                     <Separator />
+                    <li className="flex justify-between">
+                        <span className="text-muted-foreground flex items-center gap-2"><Stethoscope className="h-4 w-4" /> Medical Conditions</span>
+                        <span className='text-right'>{user.medicalConditions || 'N/A'}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between items-center">
