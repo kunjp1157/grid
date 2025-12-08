@@ -15,7 +15,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { zones, reports } from '@/lib/data';
 import { ReportStatus } from '@/lib/types';
-import { FileText, CheckCircle, Clock } from 'lucide-react';
+import { FileText, CheckCircle, Clock, Phone, Home, MapPin } from 'lucide-react';
 
 export default function AdminProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -77,8 +77,18 @@ export default function AdminProfilePage() {
             <Separator />
             <ul className="space-y-3 text-sm">
                 <li className="flex justify-between">
-                <span className="text-muted-foreground">User ID</span>
-                <span className="font-mono text-xs">{user.id}</span>
+                <span className="text-muted-foreground flex items-center gap-2"><Phone className="h-4 w-4" /> Mobile</span>
+                <span>{user.mobile || 'N/A'}</span>
+                </li>
+                <Separator />
+                <li className="flex justify-between">
+                <span className="text-muted-foreground flex items-center gap-2"><Home className="h-4 w-4" /> Address</span>
+                <span className='text-right'>{user.address || 'N/A'}</span>
+                </li>
+                 <Separator />
+                <li className="flex justify-between">
+                <span className="text-muted-foreground flex items-center gap-2"><MapPin className="h-4 w-4" /> PIN Code</span>
+                <span>{user.pincode || 'N/A'}</span>
                 </li>
                 <Separator />
                 <li className="flex justify-between items-center">
@@ -96,6 +106,11 @@ export default function AdminProfilePage() {
                     </li>
                 </>
                 )}
+                 <Separator />
+                <li className="flex justify-between">
+                <span className="text-muted-foreground">User ID</span>
+                <span className="font-mono text-xs">{user.id}</span>
+                </li>
             </ul>
             </CardContent>
         </Card>

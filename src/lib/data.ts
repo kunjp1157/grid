@@ -8,6 +8,9 @@ export const users: User[] = [
     name: 'John Doe',
     email: 'citizen@example.com',
     role: 'citizen',
+    mobile: '+91-9876543210',
+    address: '123, Main Street, Anytown',
+    pincode: '110001'
   },
   {
     id: 'admin1',
@@ -15,6 +18,9 @@ export const users: User[] = [
     email: 'admin@example.com',
     role: 'admin',
     zoneId: 'zone1',
+    mobile: '+91-8765432109',
+    address: '456, Admin Avenue, Govtown',
+    pincode: '110002'
   },
 ];
 

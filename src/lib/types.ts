@@ -1,10 +1,14 @@
 
+
 export type User = {
   id: string;
   name: string;
   email: string;
   role: 'citizen' | 'admin';
   zoneId?: string;
+  mobile?: string;
+  address?: string;
+  pincode?: string;
 };
 
 export enum ReportStatus {
