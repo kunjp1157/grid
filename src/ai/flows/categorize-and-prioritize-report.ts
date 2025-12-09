@@ -33,7 +33,9 @@ const prompt = ai.definePrompt({
   name: 'categorizeAndPrioritizeReportPrompt',
   input: {schema: CategorizeAndPrioritizeReportInputSchema},
   output: {schema: CategorizeAndPrioritizeReportOutputSchema},
-  prompt: `You are an expert crisis management dispatcher. Your task is to analyze a new report and determine its category and priority level.
+  prompt: `You are an expert crisis management dispatcher with advanced visual analysis capabilities. Your task is to analyze a new report, including a user-submitted photo, to determine its category and, most importantly, its priority level.
+
+  **If a photo is provided, your primary assessment should come from a detailed visual analysis of the image.** The user's text description is secondary. Assess the severity of the situation based on what you see. For example, distinguish between a minor crack and a major road collapse, or a small trash fire versus a building engulfed in flames.
 
   Available Categories:
   ${AllReportTypes.join(', ')}
@@ -47,13 +49,13 @@ const prompt = ai.definePrompt({
   Photo: {{media url=mediaDataUri}}
   {{/if}}
 
-  Based on the information, determine the most fitting category and priority.
-  - Critical: Immediate threat to life or major infrastructure. Requires instant response (e.g., major fire, building collapse, large-scale accident).
-  - High: Serious disruption or potential for harm. Requires urgent attention (e.g., waterlogging blocking a major road, power outage in a large area).
-  - Medium: Significant inconvenience or localized issue. Should be addressed soon (e.g., large pothole on a busy street, sewage leak).
-  - Low: Minor issue or inconvenience. Can be scheduled for a later time (e.g., isolated public transport issue, minor road damage).
+  Based on the visual evidence (if available) and the description, determine the most fitting category and priority. Your priority assessment should be based on this scale:
+  - Critical: Immediate threat to life, or major infrastructure collapse is visible. Requires instant response (e.g., building on fire, major accident with injuries, road collapse).
+  - High: Serious disruption or potential for widespread harm is visible. Requires urgent attention (e.g., waterlogging blocking a major road, downed power lines).
+  - Medium: Significant inconvenience or localized damage is visible. Should be addressed soon (e.g., a large, deep pothole on a busy street).
+  - Low: Minor issue or inconvenience with no immediate danger visible. Can be scheduled for a later time (e.g., small pothole, overflowing trash can).
 
-  Provide your response in the specified JSON format, including a brief reasoning for your choice.`,
+  Provide your response in the specified JSON format, including a brief reasoning for your choice that mentions the visual analysis if a photo was used.`,
 });
 
 const categorizeAndPrioritizeReportFlow = ai.defineFlow(
