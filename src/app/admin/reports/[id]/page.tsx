@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { use } from 'react';
 import { reports, users } from '@/lib/data';
 import { notFound } from 'next/navigation';
@@ -25,13 +25,15 @@ import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
 import { ChatInterface } from '@/components/shared/ChatInterface';
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
-import { ReportStatus, type Report, type ChatMessage, type User } from '@/lib/types';
+import { ReportStatus, ReportPriority, type Report, type ChatMessage, type User } from '@/lib/types';
 import { trackReportResolutionDeadline, type TrackReportResolutionDeadlineOutput } from '@/ai/flows/track-report-resolution-deadlines';
 import { sendNotification } from '@/ai/flows/send-notification';
+import { generateSop, type SopItem } from '@/ai/flows/generate-sop';
 import Image from 'next/image';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle, AlertCircle, Loader2, Star } from 'lucide-react';
+import { CheckCircle, AlertCircle, Loader2, Star, Bot } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { SopAdvisor } from '@/components/shared/SopAdvisor';
 
 export default function ReportDetailsPage({ params }: { params: { id: string } }) {
   const { t } = useTranslation();
@@ -50,6 +52,35 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
   const [currentStatus, setCurrentStatus] = useState(report?.status || ReportStatus.New);
   const [isCheckingOverdue, setIsCheckingOverdue] = useState(false);
   const [overdueResult, setOverdueResult] = useState<TrackReportResolutionDeadlineOutput | null>(null);
+
+  const [sop, setSop] = useState<SopItem[]>([]);
+  const [isGeneratingSop, setIsGeneratingSop] = useState(false);
+
+  const shouldGenerateSop = useMemo(() => {
+    return report?.priority === ReportPriority.Critical || report?.priority === ReportPriority.High;
+  }, [report?.priority]);
+  
+  useEffect(() => {
+      const fetchSop = async () => {
+          if (!report || !shouldGenerateSop) return;
+          setIsGeneratingSop(true);
+          try {
+              const result = await generateSop({
+                  reportType: report.type,
+                  priority: report.priority,
+                  description: report.description,
+              });
+              setSop(result);
+          } catch(err) {
+              console.error(err);
+              toast({ title: 'Could not generate SOP', variant: 'destructive' });
+          } finally {
+              setIsGeneratingSop(false);
+          }
+      };
+      fetchSop();
+  }, [report, shouldGenerateSop, toast]);
+
 
   if (!report) {
     notFound();
@@ -142,6 +173,11 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
 
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
+          
+          {shouldGenerateSop && (
+              <SopAdvisor sopItems={sop} isLoading={isGeneratingSop} onItemsChange={setSop} />
+          )}
+
           <Card>
             <CardHeader>
               <div className="flex items-center gap-3">
