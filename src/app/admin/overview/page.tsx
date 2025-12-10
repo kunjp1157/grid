@@ -11,8 +11,6 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
-  AreaChart,
-  BarChart,
   FileSearch,
   CheckCircle,
   Clock,
@@ -30,9 +28,8 @@ import {
   YAxis,
   Area,
   CartesianGrid,
-  ResponsiveContainer,
-  AreaChart as RechartsAreaChart,
   BarChart as RechartsBarChart,
+  AreaChart as RechartsAreaChart,
 } from 'recharts';
 import { reports } from '@/lib/data';
 import { useTranslation } from '@/context/LocalizationContext';
