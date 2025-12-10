@@ -22,7 +22,7 @@ import { reports } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, Video } from 'lucide-react';
 import type { User } from '@/lib/types';
 import { useEffect, useState } from 'react';
 import { ReportStatus } from '@/lib/types';
@@ -103,12 +103,18 @@ export default function MyReportsPage() {
                                 <TableCell>{t(`reportTypes.${report.type.replace(/\s/g, '')}`)}</TableCell>
                                 <TableCell><ReportStatusBadge status={report.status} /></TableCell>
                                 <TableCell>{formatDate(report.timestamp, 'PP')}</TableCell>
-                                <TableCell className="text-right">
+                                <TableCell className="text-right space-x-2">
                                      {report.status === ReportStatus.Resolved && typeof report.rating === 'undefined' ? (
                                         <FeedbackDialog report={report} onSubmit={handleFeedbackSubmit} />
                                     ) : (
                                         <Button variant="outline" size="sm" disabled>{t('citizen.reports.view')}</Button>
                                     )}
+                                     <Button asChild variant="secondary" size="sm">
+                                        <Link href={`/dashboard/live/${report.id}`}>
+                                            <Video className="mr-2 h-4 w-4" />
+                                            Go Live
+                                        </Link>
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                             ))}

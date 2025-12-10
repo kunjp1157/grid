@@ -34,6 +34,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CheckCircle, AlertCircle, Loader2, Star, Bot } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SopAdvisor } from '@/components/shared/SopAdvisor';
+import { LiveStreamViewer } from '@/components/shared/LiveStreamViewer';
 
 export default function ReportDetailsPage({ params }: { params: { id: string } }) {
   const { t } = useTranslation();
@@ -174,6 +175,8 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
       <div className="grid md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
           
+          <LiveStreamViewer reportId={report.id} />
+
           {shouldGenerateSop && (
               <SopAdvisor sopItems={sop} isLoading={isGeneratingSop} onItemsChange={setSop} />
           )}
