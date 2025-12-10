@@ -34,10 +34,10 @@ import {
   AreaChart as RechartsAreaChart,
   BarChart as RechartsBarChart,
 } from 'recharts';
-import { reports, Report, ReportStatus, type ReportType } from '@/lib/data';
+import { reports } from '@/lib/data';
 import { useTranslation } from '@/context/LocalizationContext';
 import { differenceInHours, subDays } from 'date-fns';
-import { AllReportTypes } from '@/lib/types';
+import { AllReportTypes, ReportStatus } from '@/lib/types';
 
 export default function OverviewDashboardPage() {
   const { t } = useTranslation();
