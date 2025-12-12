@@ -1,3 +1,4 @@
+
 import type { ReactNode } from 'react';
 import {
   SidebarProvider,
@@ -12,7 +13,7 @@ import {
 import { Header } from '@/components/shared/Header';
 import { getUser } from '@/actions/auth';
 import { Logo } from '@/components/shared/Logo';
-import { LayoutDashboard, Files, Map, BarChart, User, BookOpen } from 'lucide-react';
+import { LayoutDashboard, Files, Map, BarChart, User, BookOpen, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
@@ -39,6 +40,11 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="All Reports">
                 <Link href="/admin/reports"><Files /><span>All Reports</span></Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Rumor Control">
+                <Link href="/admin/rumor-control"><ShieldCheck /><span>Rumor Control</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>

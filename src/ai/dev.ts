@@ -1,3 +1,4 @@
+
 import { config } from 'dotenv';
 config();
 
@@ -6,3 +7,4 @@ import '@/ai/flows/track-report-resolution-deadlines.ts';
 import '@/ai/flows/send-notification.ts';
 import '@/ai/flows/categorize-and-prioritize-report.ts';
 import '@/ai/flows/generate-sop.ts';
+import '@/ai/flows/fact-check-rumor.ts';
