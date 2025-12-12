@@ -16,7 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { reports } from '@/lib/data';
 import { ReportStatus } from '@/lib/types';
-import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Mail, Heart, ShieldAlert, Stethoscope } from 'lucide-react';
+import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Mail, Heart, ShieldAlert, Stethoscope, HandHeart, Award } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -36,7 +36,7 @@ export default function CitizenProfilePage() {
         if (res.ok) {
           const userData = await res.json();
           setUser(userData);
-          setEditableUser(userData);
+          setEditableUser(JSON.parse(JSON.stringify(userData))); // Deep copy
         }
       } catch (error) {
         console.error("Failed to fetch user", error);
@@ -46,8 +46,8 @@ export default function CitizenProfilePage() {
   }, []);
 
   const handleEditToggle = () => {
-    if (!isEditing) {
-      setEditableUser(user); // Reset any stale edits
+    if (isEditing) {
+      setEditableUser(JSON.parse(JSON.stringify(user))); // Reset changes on cancel
     }
     setIsEditing(!isEditing);
   };
@@ -57,6 +57,12 @@ export default function CitizenProfilePage() {
       setEditableUser({ ...editableUser, [e.target.name]: e.target.value });
     }
   };
+
+  const handleBecomeVolunteer = () => {
+     if (editableUser) {
+      setEditableUser({ ...editableUser, isVolunteer: true });
+    }
+  }
 
   const handleSaveChanges = () => {
     setUser(editableUser);
@@ -242,6 +248,52 @@ export default function CitizenProfilePage() {
                   </div>
               </CardContent>
           </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="flex items-center gap-2"><HandHeart /> Volunteer Status</CardTitle>
+                </CardHeader>
+                <CardContent>
+                {isEditing ? (
+                    <div className="space-y-4">
+                        {editableUser.isVolunteer ? (
+                             <div className="space-y-4">
+                                <div className="flex items-center gap-2 text-green-600">
+                                    <Award className="h-5 w-5" />
+                                    <p className="font-semibold">You are a registered volunteer!</p>
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="skills">Your Skills (comma-separated)</Label>
+                                    <Input id="skills" name="skills" value={(editableUser.skills || []).join(', ')} onChange={(e) => setEditableUser({...editableUser, skills: e.target.value.split(',').map(s => s.trim())})} placeholder="e.g., First Aid, Driving" />
+                                </div>
+                                <div className="space-y-2">
+                                    <Label htmlFor="certifications">Certifications</Label>
+                                    <Input id="certifications" name="certifications" value={editableUser.certifications || ''} onChange={handleInputChange} placeholder="e.g., CPR Certified" />
+                                </div>
+                             </div>
+                        ) : (
+                            <div className='text-center'>
+                               <p className="text-sm text-muted-foreground mb-4">Join the community response team.</p>
+                               <Button onClick={handleBecomeVolunteer}>Become a Volunteer</Button>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div>
+                        {user.isVolunteer ? (
+                             <div className="space-y-3">
+                                <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Verified Volunteer</Badge>
+                                 <p className="text-sm"><strong className="text-muted-foreground">Skills:</strong> {user.skills?.join(', ') || 'Not specified'}</p>
+                                 <p className="text-sm"><strong className="text-muted-foreground">Certifications:</strong> {user.certifications || 'None'}</p>
+                            </div>
+                        ) : (
+                            <p className="text-sm text-muted-foreground">Not registered as a volunteer. You can register in edit mode.</p>
+                        )}
+                    </div>
+                )}
+                </CardContent>
+            </Card>
+
         </div>
 
       </div>

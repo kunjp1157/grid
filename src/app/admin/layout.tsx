@@ -13,7 +13,7 @@ import {
 import { Header } from '@/components/shared/Header';
 import { getUser } from '@/actions/auth';
 import { Logo } from '@/components/shared/Logo';
-import { LayoutDashboard, Files, Map, BarChart, User, BookOpen, ShieldCheck } from 'lucide-react';
+import { LayoutDashboard, Files, Map, BarChart, User, BookOpen, ShieldCheck, Megaphone } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
@@ -40,6 +40,11 @@ export default async function AdminLayout({ children }: { children: ReactNode })
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="All Reports">
                 <Link href="/admin/reports"><Files /><span>All Reports</span></Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Dispatch Center">
+                <Link href="/admin/dispatch"><Megaphone /><span>Dispatch Center</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>

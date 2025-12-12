@@ -1,6 +1,7 @@
 
-import type { User, Report, Zone, ChatMessage, CommunityResource } from './types';
-import { ReportStatus, ReportPriority, AllReportTypes } from './types';
+
+import type { User, Report, Zone, ChatMessage, CommunityResource, VolunteerTask } from './types';
+import { ReportStatus, ReportPriority, AllReportTypes, TaskStatus } from './types';
 
 export const users: User[] = [
   {
@@ -15,6 +16,9 @@ export const users: User[] = [
     emergencyContactName: 'Alice Doe',
     emergencyContactNumber: '+91-9876543211',
     medicalConditions: 'None',
+    isVolunteer: true,
+    skills: ['First Aid', 'Driving'],
+    certifications: 'CPR Certified'
   },
   {
     id: 'admin1',
@@ -29,6 +33,7 @@ export const users: User[] = [
     emergencyContactName: 'Bob Smith',
     emergencyContactNumber: '+91-8765432108',
     medicalConditions: 'Allergic to penicillin',
+    isVolunteer: false
   },
 ];
 
@@ -157,5 +162,32 @@ export const resources: CommunityResource[] = [
         description: 'Can offer temporary shelter for a family of 4 in my home.',
         location: { lat: 28.6130, lng: 77.2080 },
         timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+    }
+];
+
+export const tasks: VolunteerTask[] = [
+    {
+        id: 'task-1',
+        title: 'Sandbagging near Riverfront',
+        description: 'Need able-bodied volunteers to help fill and place sandbags to prevent minor flooding.',
+        requiredSkills: [],
+        status: TaskStatus.Open,
+        location: 'Riverfront Park',
+        volunteersNeeded: 10,
+        volunteers: [],
+        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+        id: 'task-2',
+        title: 'First Aid for Minor Injuries',
+        description: 'Seeking certified first-aid responders to assist with minor injuries at the Central Shelter.',
+        requiredSkills: ['First Aid', 'Medical'],
+        status: TaskStatus.InProgress,
+        location: 'Central Community Shelter',
+        volunteersNeeded: 4,
+        volunteers: [
+            { userId: 'citizen1', name: 'John Doe' }
+        ],
+        createdAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
     }
 ];

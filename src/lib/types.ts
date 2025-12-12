@@ -13,6 +13,9 @@ export type User = {
   emergencyContactName?: string;
   emergencyContactNumber?: string;
   medicalConditions?: string;
+  isVolunteer?: boolean;
+  skills?: string[];
+  certifications?: string;
 };
 
 export enum ReportStatus {
@@ -119,4 +122,23 @@ export type CommunityResource = {
         lng: number;
     };
     timestamp: string;
+};
+
+
+export enum TaskStatus {
+    Open = 'Open',
+    InProgress = 'In Progress',
+    Completed = 'Completed'
+}
+
+export type VolunteerTask = {
+    id: string;
+    title: string;
+    description: string;
+    requiredSkills: string[];
+    status: TaskStatus;
+    location: string;
+    volunteersNeeded: number;
+    volunteers: { userId: string; name: string }[];
+    createdAt: string;
 };

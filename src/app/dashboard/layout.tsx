@@ -15,7 +15,7 @@ import {
 import { Header } from '@/components/shared/Header';
 import { getUser } from '@/actions/auth';
 import { Logo } from '@/components/shared/Logo';
-import { LayoutDashboard, PlusCircle, FileText, User, BookOpen, Video, Siren, HeartHandshake, ContactSearch } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, FileText, User, BookOpen, Video, Siren, HeartHandshake, ContactSearch, Handshake } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
@@ -122,6 +122,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
                 <SidebarMenuButton asChild tooltip="Live Stream">
                     <Link href="/dashboard/live/report-123"><Video /><span>Live Stream</span></Link>
                 </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Volunteer Tasks">
+                <Link href="/dashboard/tasks"><Handshake /><span>Volunteer Tasks</span></Link>
+              </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Community Resources">
