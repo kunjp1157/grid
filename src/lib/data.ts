@@ -1,6 +1,6 @@
 
 
-import type { User, Report, Zone, ChatMessage, CommunityResource, VolunteerTask } from './types';
+import type { User, Report, Zone, ChatMessage, CommunityResource, VolunteerTask, BarterPost } from './types';
 import { ReportStatus, ReportPriority, AllReportTypes, TaskStatus } from './types';
 
 export const users: User[] = [
@@ -189,5 +189,29 @@ export const tasks: VolunteerTask[] = [
             { userId: 'citizen1', name: 'John Doe' }
         ],
         createdAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+    }
+];
+
+export const barterPosts: BarterPost[] = [
+    {
+        id: 'barter-1',
+        userId: 'citizen1',
+        have: '2 extra power banks, fully charged.',
+        need: 'Baby formula (any brand).',
+        timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+        id: 'barter-2',
+        userId: 'admin1',
+        have: 'A box of blankets.',
+        need: 'Canned food or dry rations.',
+        timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+        id: 'barter-3',
+        userId: 'citizen1',
+        have: 'Willing to offer transportation in my car.',
+        need: 'Some drinking water.',
+        timestamp: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(),
     }
 ];

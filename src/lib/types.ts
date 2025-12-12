@@ -142,3 +142,11 @@ export type VolunteerTask = {
     volunteers: { userId: string; name: string }[];
     createdAt: string;
 };
+
+export type BarterPost = {
+  id: string;
+  userId: string;
+  have: string;
+  need: string;
+  timestamp: string;
+};
