@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm, Controller } from 'react-hook-form';
@@ -37,7 +38,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { zones } from '@/lib/data';
 import { useState } from 'react';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, WifiOff } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const reportSchema = z.object({
@@ -53,7 +54,7 @@ const reportSchema = z.object({
   media: z.any().optional(),
 });
 
-type ReportFormValues = z.infer<typeof reportSchema>;
+export type ReportFormValues = z.infer<typeof reportSchema>;
 
 type AiSuggestion = {
     priority: ReportPriority;
@@ -134,11 +135,26 @@ export default function NewReportPage() {
 
 
   const onSubmit = async (data: ReportFormValues) => {
+    if (!navigator.onLine) {
+        // Handle offline submission
+        const offlineReports = JSON.parse(localStorage.getItem('offlineReports') || '[]');
+        const newReport = { ...data, id: `offline-${Date.now()}`, aiSuggestion, filePreview };
+        offlineReports.push(newReport);
+        localStorage.setItem('offlineReports', JSON.stringify(offlineReports));
+        
+        toast({
+            title: "You are offline",
+            description: "Your report has been saved and will be submitted automatically when you're back online.",
+            variant: "default",
+        });
+        
+        router.push('/dashboard/my-reports');
+        return;
+    }
+
     try {
-      // Simulate report creation
       const reportId = `report-${Date.now()}`;
       
-      // Call GenAI flow for geofencing
       const result = await geofenceAndRouteReport({
         reportId: reportId,
         latitude: data.latitude,
@@ -155,11 +171,7 @@ export default function NewReportPage() {
         variant: 'default',
       });
 
-      // In a real app, you would save the report to the database
-      // and redirect
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 2000);
+      router.push('/dashboard/my-reports');
       
     } catch (error) {
       console.error(error);
@@ -330,7 +342,9 @@ export default function NewReportPage() {
               </div>
 
               <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? "Submitting..." : t('citizen.newReport.submitButton')}
+                 {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                 {!navigator.onLine && <WifiOff className="mr-2 h-4 w-4" />}
+                {form.formState.isSubmitting ? "Submitting..." : (navigator.onLine ? t('citizen.newReport.submitButton') : 'Queue Report')}
               </Button>
             </form>
           </Form>
