@@ -34,7 +34,8 @@ export const reportCategories = {
   'Public Safety': [
     'Fire',
     'Accident',
-    'Crime and Safety'
+    'Crime and Safety',
+    'Voice SOS'
   ],
   'Utilities': [
     'Waterlogging',
