@@ -22,6 +22,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
+import { MedicalIdQrCode } from '@/components/shared/MedicalIdQrCode';
 
 export default function AdminProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -257,6 +258,8 @@ export default function AdminProfilePage() {
                     </div>
                 </CardContent>
             </Card>
+
+            <MedicalIdQrCode user={user} />
 
             <Card>
                 <CardHeader>
