@@ -37,6 +37,7 @@ import { useToast } from '@/hooks/use-toast';
 import { SopAdvisor } from '@/components/shared/SopAdvisor';
 import { LiveStreamViewer } from '@/components/shared/LiveStreamViewer';
 import { PredictedRisks } from '@/components/shared/PredictedRisks';
+import { LocationMap } from '@/components/shared/LocationMap';
 
 export default function ReportDetailsPage({ params }: { params: { id: string } }) {
   const { t } = useTranslation();
@@ -314,6 +315,8 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                 </Select>
             </CardContent>
           </Card>
+          
+          <LocationMap latitude={report.location.lat} longitude={report.location.lng} title="Incident Location" />
 
           <Card>
             <CardHeader>
@@ -339,15 +342,6 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                 <li className="flex justify-between">
                   <span className="text-muted-foreground">{t('admin.reportDetails.deadline')}</span>
                   <span>{report.resolutionDeadline ? formatDate(report.resolutionDeadline) : 'N/A'}</span>
-                </li>
-                <Separator />
-                <li className="flex justify-between items-center">
-                  <span className="text-muted-foreground">{t('admin.reportDetails.location')}</span>
-                  <Button variant="link" size="sm" asChild>
-                    <a href={`https://www.google.com/maps?q=${report.location.lat},${report.location.lng}`} target="_blank" rel="noopener noreferrer" className="font-mono text-xs">
-                        {report.location.lat}, {report.location.lng}
-                    </a>
-                  </Button>
                 </li>
               </ul>
             </CardContent>

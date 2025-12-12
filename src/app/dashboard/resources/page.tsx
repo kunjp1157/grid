@@ -15,6 +15,13 @@ import Link from 'next/link';
 import { PlusCircle, User, MapPin, HeartHandshake } from 'lucide-react';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
 import type { ResourceType } from '@/lib/types';
+import { LocationMap } from '@/components/shared/LocationMap';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 
 export default function CommunityResourcesPage() {
@@ -58,11 +65,22 @@ export default function CommunityResourcesPage() {
                                         <User className="h-4 w-4 text-muted-foreground" />
                                         <span>Offered by: {getUserName(resource.userId)}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 mt-2">
-                                         <MapPin className="h-4 w-4 text-muted-foreground" />
-                                        <span>Location: {resource.location.lat.toFixed(4)}, {resource.location.lng.toFixed(4)}</span>
-                                    </div>
                                </div>
+                            </CardContent>
+                            <CardContent>
+                                <Accordion type="single" collapsible>
+                                    <AccordionItem value="item-1">
+                                        <AccordionTrigger>
+                                            <div className='flex items-center gap-2 text-sm'>
+                                                <MapPin className="h-4 w-4 text-muted-foreground" />
+                                                Show on Map
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent>
+                                            <LocationMap latitude={resource.location.lat} longitude={resource.location.lng} title=''/>
+                                        </AccordionContent>
+                                    </AccordionItem>
+                                </Accordion>
                             </CardContent>
                             <CardContent>
                                 <p className="text-xs text-muted-foreground">
@@ -81,4 +99,3 @@ export default function CommunityResourcesPage() {
         </div>
     );
 }
-

@@ -40,6 +40,7 @@ import { zones } from '@/lib/data';
 import { useState } from 'react';
 import { Loader2, Sparkles, WifiOff } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { LocationMap } from '@/components/shared/LocationMap';
 
 const reportSchema = z.object({
   category: z.custom<ReportCategory>(val => typeof val === 'string' && val, {
@@ -80,6 +81,8 @@ export default function NewReportPage() {
   });
 
   const selectedCategory = form.watch('category');
+  const latitude = form.watch('latitude');
+  const longitude = form.watch('longitude');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -194,150 +197,153 @@ export default function NewReportPage() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-               <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('citizen.newReport.descriptionLabel')}</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder={t('citizen.newReport.descriptionPlaceholder')}
-                        className="resize-none"
-                        {...field}
-                        rows={5}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="media"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('citizen.newReport.mediaLabel')}</FormLabel>
-                    <FormControl>
-                        <Input type="file" accept="image/*" onChange={(e) => {
-                            field.onChange(e.target.files);
-                            handleFileChange(e);
-                        }} />
-                    </FormControl>
-                    <FormDescription>
-                      Upload a photo of the issue (optional, helps with auto-categorization).
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-8">
+                    <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>{t('citizen.newReport.descriptionLabel')}</FormLabel>
+                            <FormControl>
+                            <Textarea
+                                placeholder={t('citizen.newReport.descriptionPlaceholder')}
+                                className="resize-none"
+                                {...field}
+                                rows={5}
+                            />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    
+                    <FormField
+                        control={form.control}
+                        name="media"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>{t('citizen.newReport.mediaLabel')}</FormLabel>
+                            <FormControl>
+                                <Input type="file" accept="image/*" onChange={(e) => {
+                                    field.onChange(e.target.files);
+                                    handleFileChange(e);
+                                }} />
+                            </FormControl>
+                            <FormDescription>
+                            Upload a photo of the issue (optional, helps with auto-categorization).
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
 
-              <div className="space-y-4">
-                <Button type="button" onClick={handleAutoCategorize} disabled={isCategorizing}>
-                    {isCategorizing ? (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                        <Sparkles className="mr-2 h-4 w-4" />
-                    )}
-                    Auto-Categorize & Prioritize
-                </Button>
+                    <div className="space-y-4">
+                        <Button type="button" onClick={handleAutoCategorize} disabled={isCategorizing}>
+                            {isCategorizing ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <Sparkles className="mr-2 h-4 w-4" />
+                            )}
+                            Auto-Categorize & Prioritize
+                        </Button>
 
-                 {aiSuggestion && (
-                    <Alert>
-                      <Sparkles className="h-4 w-4" />
-                      <AlertTitle className='font-semibold'>AI Suggestion</AlertTitle>
-                      <AlertDescription>
-                        Priority set to <span className='font-semibold'>{aiSuggestion.priority}</span>. Reason: {aiSuggestion.reasoning}
-                      </AlertDescription>
-                    </Alert>
-                )}
-              </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>{t('citizen.newReport.categoryLabel')}</FormLabel>
-                        <Select onValueChange={(value) => {
-                            field.onChange(value);
-                            form.resetField('type');
-                        }} value={field.value}>
-                        <FormControl>
-                            <SelectTrigger>
-                            <SelectValue placeholder={t('citizen.newReport.categoryPlaceholder')} />
-                            </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            {Object.keys(reportCategories).map(category => (
-                                <SelectItem key={category} value={category}>{t(`reportCategories.${category.replace(/\s/g, '')}`)}</SelectItem>
-                            ))}
-                        </SelectContent>
-                        </Select>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                />
+                        {aiSuggestion && (
+                            <Alert>
+                            <Sparkles className="h-4 w-4" />
+                            <AlertTitle className='font-semibold'>AI Suggestion</AlertTitle>
+                            <AlertDescription>
+                                Priority set to <span className='font-semibold'>{aiSuggestion.priority}</span>. Reason: {aiSuggestion.reasoning}
+                            </AlertDescription>
+                            </Alert>
+                        )}
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                            control={form.control}
+                            name="category"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>{t('citizen.newReport.categoryLabel')}</FormLabel>
+                                <Select onValueChange={(value) => {
+                                    field.onChange(value);
+                                    form.resetField('type');
+                                }} value={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                    <SelectValue placeholder={t('citizen.newReport.categoryPlaceholder')} />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {Object.keys(reportCategories).map(category => (
+                                        <SelectItem key={category} value={category}>{t(`reportCategories.${category.replace(/\s/g, '')}`)}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
 
-                <FormField
-                    control={form.control}
-                    name="type"
-                    render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>{t('citizen.newReport.typeLabel')}</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCategory}>
-                        <FormControl>
-                            <SelectTrigger>
-                            <SelectValue placeholder={t('citizen.newReport.typePlaceholder')} />
-                            </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            {selectedCategory && reportCategories[selectedCategory].map(type => (
-                                <SelectItem key={type} value={type}>{t(`reportTypes.${type.replace(/\s/g, '')}`)}</SelectItem>
-                            ))}
-                        </SelectContent>
-                        </Select>
-                        <FormDescription>
-                            Select a category first.
-                        </FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                    )}
-                />
-              </div>
-
-
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium">{t('citizen.newReport.locationLabel')}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="latitude"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('citizen.newReport.latitudeLabel')}</FormLabel>
-                        <FormControl>
-                          <Input type="number" step="any" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="longitude"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('citizen.newReport.longitudeLabel')}</FormLabel>
-                        <FormControl>
-                          <Input type="number" step="any" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                        <FormField
+                            control={form.control}
+                            name="type"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>{t('citizen.newReport.typeLabel')}</FormLabel>
+                                <Select onValueChange={field.onChange} value={field.value} disabled={!selectedCategory}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                    <SelectValue placeholder={t('citizen.newReport.typePlaceholder')} />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {selectedCategory && reportCategories[selectedCategory].map(type => (
+                                        <SelectItem key={type} value={type}>{t(`reportTypes.${type.replace(/\s/g, '')}`)}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                                </Select>
+                                <FormDescription>
+                                    Select a category first.
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                    </div>
+                </div>
+                <div className="space-y-4">
+                    <h3 className="text-sm font-medium">{t('citizen.newReport.locationLabel')}</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="latitude"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>{t('citizen.newReport.latitudeLabel')}</FormLabel>
+                            <FormControl>
+                            <Input type="number" step="any" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="longitude"
+                        render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>{t('citizen.newReport.longitudeLabel')}</FormLabel>
+                            <FormControl>
+                            <Input type="number" step="any" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                        )}
+                    />
+                    </div>
+                     <LocationMap latitude={latitude} longitude={longitude} title="Location Preview" />
                 </div>
               </div>
 
