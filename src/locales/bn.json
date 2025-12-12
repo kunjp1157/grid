@@ -1,0 +1,32 @@
+
+{
+  "appName": "দ্য গ্রিড",
+  "login": {
+    "title": "দ্য গ্রিডে স্বাগতম",
+    "subtitle": "বাস্তব সময়ের সংকট প্রতিবেদন এবং ব্যবস্থাপনা।",
+    "emailLabel": "ইমেল",
+    "passwordLabel": "পাসওয়ার্ড",
+    "roleLabel": "হিসাবে লগইন করুন",
+    "roleCitizen": "নাগরিক",
+    "roleAdmin": "প্রশাসক",
+    "submitButton": "লগইন করুন",
+    "error": "অবৈধ শংসাপত্র। অনুগ্রহ করে আবার চেষ্টা করুন।",
+    "noAccount": "অ্যাকাউন্ট নেই?",
+    "signUp": "সাইন আপ করুন"
+  },
+  "reportTypes": {
+    "Waterlogging": "জলজমা",
+    "Fire": "আগুন",
+    "Accident": "দুর্ঘটনা",
+    "WasteManagement": "বর্জ্য ব্যবস্থাপনা",
+    "RoadDamage": "রাস্তার ক্ষতি",
+    "Other": "অন্যান্য"
+  },
+  "reportStatus": {
+    "New": "নতুন",
+    "Assigned": "বরাদ্দ",
+    "InProgress": "চলছে",
+    "Resolved": "সমাধান হয়েছে",
+    "Overdue": "বিলম্বিত"
+  }
+}

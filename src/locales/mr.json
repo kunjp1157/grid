@@ -1,0 +1,32 @@
+
+{
+  "appName": "द ग्रीड",
+  "login": {
+    "title": "द ग्रीडमध्ये आपले स्वागत आहे",
+    "subtitle": "रिअल-टाइम संकट अहवाल आणि व्यवस्थापन.",
+    "emailLabel": "ईमेल",
+    "passwordLabel": "पासवर्ड",
+    "roleLabel": "म्हणून लॉगिन करा",
+    "roleCitizen": "नागरिक",
+    "roleAdmin": "प्रशासक",
+    "submitButton": "लॉगिन करा",
+    "error": "अवैध क्रेडेन्शियल्स. कृपया पुन्हा प्रयत्न करा.",
+    "noAccount": "खाते नाही?",
+    "signUp": "साइन अप करा"
+  },
+  "reportTypes": {
+    "Waterlogging": "पाणी साचणे",
+    "Fire": "आग",
+    "Accident": "अपघात",
+    "WasteManagement": "कचरा व्यवस्थापन",
+    "RoadDamage": "रस्त्याचे नुकसान",
+    "Other": "इतर"
+  },
+  "reportStatus": {
+    "New": "नवीन",
+    "Assigned": "नियुक्त",
+    "InProgress": "प्रगतीपथावर",
+    "Resolved": "निराकरण झाले",
+    "Overdue": "मुदतबाह्य"
+  }
+}

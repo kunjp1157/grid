@@ -1,0 +1,32 @@
+
+{
+  "appName": "द ग्रिड",
+  "login": {
+    "title": "द ग्रिड मध्ये स्वागतम्",
+    "subtitle": "वास्तविकसमय-सङ्कट-निवेदनं प्रबन्धनं च।",
+    "emailLabel": "ईमेल",
+    "passwordLabel": "कूटशब्दः",
+    "roleLabel": "रूपेण प्रविशतु",
+    "roleCitizen": "नागरिकः",
+    "roleAdmin": "प्रशासकः",
+    "submitButton": "प्रविशतु",
+    "error": "अमान्यप्रमाणपत्राणि। कृपया पुनः प्रयतस्व।",
+    "noAccount": "खाता नास्ति वा?",
+    "signUp": "पञ्जीकरणं करोतु"
+  },
+  "reportTypes": {
+    "Waterlogging": "जलबन्धनम्",
+    "Fire": "अग्निः",
+    "Accident": "दुर्घटना",
+    "WasteManagement": "अपशिष्टप्रबन्धनम्",
+    "RoadDamage": "मार्गक्षतिः",
+    "Other": "अन्यत्"
+  },
+  "reportStatus": {
+    "New": "नवीनम्",
+    "Assigned": "नियुक्तम्",
+    "InProgress": "प्रगतौ",
+    "Resolved": "समाहितम्",
+    "Overdue": "अतिक्रान्तम्"
+  }
+}

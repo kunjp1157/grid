@@ -1,0 +1,32 @@
+
+{
+  "appName": "ਦ ਗਰਿੱਡ",
+  "login": {
+    "title": "ਦ ਗਰਿੱਡ ਵਿੱਚ ਤੁਹਾਡਾ ਸੁਆਗਤ ਹੈ",
+    "subtitle": "ਅਸਲ-ਸਮੇਂ ਦੇ ਸੰਕਟ ਦੀ ਰਿਪੋਰਟਿੰਗ ਅਤੇ ਪ੍ਰਬੰਧਨ।",
+    "emailLabel": "ਈਮੇਲ",
+    "passwordLabel": "ਪਾਸਵਰਡ",
+    "roleLabel": "ਵਜੋਂ ਲੌਗਇਨ ਕਰੋ",
+    "roleCitizen": "ਨਾਗਰਿਕ",
+    "roleAdmin": "ਪ੍ਰਬੰਧਕ",
+    "submitButton": "ਲਾਗਇਨ ਕਰੋ",
+    "error": "ਅਯੋਗ ਪ੍ਰਮਾਣ ਪੱਤਰ। ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "noAccount": "ਖਾਤਾ ਨਹੀਂ ਹੈ?",
+    "signUp": "ਸਾਈਨ ਅੱਪ ਕਰੋ"
+  },
+  "reportTypes": {
+    "Waterlogging": "ਪਾਣੀ ਭਰਨਾ",
+    "Fire": "ਅੱਗ",
+    "Accident": "ਦੁਰਘਟਨਾ",
+    "WasteManagement": "ਕੂੜਾ ਪ੍ਰਬੰਧਨ",
+    "RoadDamage": "ਸੜਕ ਦਾ ਨੁਕਸਾਨ",
+    "Other": "ਹੋਰ"
+  },
+  "reportStatus": {
+    "New": "ਨਵਾਂ",
+    "Assigned": "ਨਿਯੁਕਤ",
+    "InProgress": "ਪ੍ਰਗਤੀ ਵਿੱਚ",
+    "Resolved": "ਹੱਲ ਹੋ ਗਿਆ",
+    "Overdue": "ਬਕਾਇਆ"
+  }
+}

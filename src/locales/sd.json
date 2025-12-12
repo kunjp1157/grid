@@ -1,0 +1,32 @@
+
+{
+  "appName": "دي گرڊ",
+  "login": {
+    "title": "دي گرڊ ۾ ڀليڪار",
+    "subtitle": "ريئل ٽائيم بحران جي رپورٽنگ ۽ انتظام.",
+    "emailLabel": "ايميل",
+    "passwordLabel": "پاسورڊ",
+    "roleLabel": "جي طور تي لاگ ان ٿيو",
+    "roleCitizen": "شهري",
+    "roleAdmin": "ايڊمن",
+    "submitButton": "لاگ ان ٿيو",
+    "error": "غلط سندون. مهرباني ڪري ٻيهر ڪوشش ڪريو.",
+    "noAccount": "کاتو ناهي؟",
+    "signUp": "سائن اپ ڪريو"
+  },
+  "reportTypes": {
+    "Waterlogging": "پاڻي جو جمع ٿيڻ",
+    "Fire": "باهه",
+    "Accident": "حادثو",
+    "WasteManagement": "فضلي جو انتظام",
+    "RoadDamage": "روڊ جو نقصان",
+    "Other": "ٻيو"
+  },
+  "reportStatus": {
+    "New": "نئون",
+    "Assigned": "مقرر ڪيل",
+    "InProgress": "جاري آهي",
+    "Resolved": "حل ٿيل",
+    "Overdue": "وقت کان وڌيڪ"
+  }
+}

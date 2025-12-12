@@ -1,0 +1,32 @@
+
+{
+  "appName": "द ग्रिड",
+  "login": {
+    "title": "द ग्रिडान तुमकां येवकार",
+    "subtitle": "वास्तविक-वेळ संकट अहवाल आनी व्यवस्थापन.",
+    "emailLabel": "ईमेल",
+    "passwordLabel": "पासवर्ड",
+    "roleLabel": "म्हणून लॉगिन करा",
+    "roleCitizen": "नागरिक",
+    "roleAdmin": "प्रशासक",
+    "submitButton": "लॉगिन करा",
+    "error": "अवैध क्रेडेन्शियल्स. कृपया परत प्रयत्न करा.",
+    "noAccount": "खातें ना?",
+    "signUp": "साइन अप करा"
+  },
+  "reportTypes": {
+    "Waterlogging": "उदक सांचप",
+    "Fire": "उजो",
+    "Accident": "अपघात",
+    "WasteManagement": "कचरा व्यवस्थापन",
+    "RoadDamage": "रस्त्याचें लुकसाण",
+    "Other": "हे"
+  },
+  "reportStatus": {
+    "New": "नवें",
+    "Assigned": "नेमिल्लें",
+    "InProgress": "प्रगतींत",
+    "Resolved": "सोडयल्लें",
+    "Overdue": "वेळार"
+  }
+}

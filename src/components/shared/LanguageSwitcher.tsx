@@ -3,7 +3,9 @@
 import { useTranslation } from '@/context/LocalizationContext';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Globe } from 'lucide-react';
+import { languages } from '@/context/LocalizationContext';
 
 export function LanguageSwitcher() {
   const { language, setLanguage } = useTranslation();
@@ -17,12 +19,13 @@ export function LanguageSwitcher() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setLanguage('en')} disabled={language === 'en'}>
-          English
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setLanguage('hi')} disabled={language === 'hi'}>
-          हिंदी (Hindi)
-        </DropdownMenuItem>
+        <ScrollArea className="h-72 w-48">
+            {Object.entries(languages).map(([code, name]) => (
+                <DropdownMenuItem key={code} onClick={() => setLanguage(code)} disabled={language === code}>
+                    {name}
+                </DropdownMenuItem>
+            ))}
+        </ScrollArea>
       </DropdownMenuContent>
     </DropdownMenu>
   );

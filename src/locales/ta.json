@@ -1,0 +1,32 @@
+
+{
+  "appName": "தி கிரிட்",
+  "login": {
+    "title": "தி கிரிட்டிற்கு வரவேற்கிறோம்",
+    "subtitle": "நிகழ்நேர நெருக்கடி அறிக்கையிடல் மற்றும் மேலாண்மை.",
+    "emailLabel": "மின்னஞ்சல்",
+    "passwordLabel": "கடவுச்சொல்",
+    "roleLabel": "ஆக உள்நுழைக",
+    "roleCitizen": "குடிமகன்",
+    "roleAdmin": "நிர்வாகி",
+    "submitButton": "உள்நுழைக",
+    "error": "தவறான நற்சான்றிதழ்கள். மீண்டும் முயலவும்.",
+    "noAccount": "கணக்கு இல்லையா?",
+    "signUp": "பதிவுபெறுக"
+  },
+  "reportTypes": {
+    "Waterlogging": "நீர் தேக்கம்",
+    "Fire": "தீ",
+    "Accident": "விபத்து",
+    "WasteManagement": "கழிவு மேலாண்மை",
+    "RoadDamage": "சாலை சேதம்",
+    "Other": "மற்றவை"
+  },
+  "reportStatus": {
+    "New": "புதியது",
+    "Assigned": "ஒதுக்கப்பட்டது",
+    "InProgress": "செயலில்",
+    "Resolved": "தீர்வு காணப்பட்டது",
+    "Overdue": "காலாவதியானது"
+  }
+}

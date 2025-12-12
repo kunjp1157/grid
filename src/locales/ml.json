@@ -1,0 +1,32 @@
+
+{
+  "appName": "ദി ഗ്രിഡ്",
+  "login": {
+    "title": "ദി ഗ്രിഡിലേക്ക് സ്വാഗതം",
+    "subtitle": "തത്സമയ പ്രതിസന്ധി റിപ്പോർട്ടിംഗും മാനേജ്മെൻ്റും.",
+    "emailLabel": "ഇമെയിൽ",
+    "passwordLabel": "പാസ്വേഡ്",
+    "roleLabel": "ആയി ലോഗിൻ ചെയ്യുക",
+    "roleCitizen": "പൗരൻ",
+    "roleAdmin": "അഡ്മിൻ",
+    "submitButton": "ലോഗിൻ ചെയ്യുക",
+    "error": "അസാധുവായ ക്രെഡൻഷ്യലുകൾ. ദയവായി വീണ്ടും ശ്രമിക്കുക.",
+    "noAccount": "അക്കൗണ്ട് ഇല്ലേ?",
+    "signUp": "സൈൻ അപ്പ് ചെയ്യുക"
+  },
+  "reportTypes": {
+    "Waterlogging": "വെള്ളക്കെട്ട്",
+    "Fire": "തീ",
+    "Accident": "അപകടം",
+    "WasteManagement": "മാലിന്യ സംസ്കരണം",
+    "RoadDamage": "റോഡ് തകർച്ച",
+    "Other": "മറ്റുള്ളവ"
+  },
+  "reportStatus": {
+    "New": "പുതിയത്",
+    "Assigned": "ചുമതലപ്പെടുത്തി",
+    "InProgress": "പുരോഗതിയിൽ",
+    "Resolved": "പരിഹരിച്ചു",
+    "Overdue": "കാലഹരണപ്പെട്ടു"
+  }
+}

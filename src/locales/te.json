@@ -1,0 +1,32 @@
+
+{
+  "appName": "ది గ్రిడ్",
+  "login": {
+    "title": "ది గ్రిడ్‌కు స్వాగతం",
+    "subtitle": "నిజ-సమయ సంక్షోభ నివేదన మరియు నిర్వహణ.",
+    "emailLabel": "ఇమెయిల్",
+    "passwordLabel": "పాస్వర్డ్",
+    "roleLabel": "గా లాగిన్ అవ్వండి",
+    "roleCitizen": "పౌరుడు",
+    "roleAdmin": "నిర్వాహకుడు",
+    "submitButton": "లాగిన్",
+    "error": "తప్పుడు ఆధారాలు. దయచేసి మళ్లీ ప్రయత్నించండి.",
+    "noAccount": "ఖాతా లేదా?",
+    "signUp": "నమోదు చేసుకోండి"
+  },
+  "reportTypes": {
+    "Waterlogging": "నీటి ముంపు",
+    "Fire": "అగ్ని",
+    "Accident": "ప్రమాదం",
+    "WasteManagement": "వ్యర్థాల నిర్వహణ",
+    "RoadDamage": "రహదారి నష్టం",
+    "Other": "ఇతర"
+  },
+  "reportStatus": {
+    "New": "కొత్త",
+    "Assigned": "కేటాయించబడింది",
+    "InProgress": "ప్రగతిలో ఉంది",
+    "Resolved": "పరిష్కరించబడింది",
+    "Overdue": "గడువు ముగిసింది"
+  }
+}

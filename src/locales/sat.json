@@ -1,0 +1,32 @@
+
+{
+  "appName": "ᱫᱚ ᱜᱨᱤᱰ",
+  "login": {
+    "title": "ᱫᱚ ᱜᱨᱤᱰ ᱨᱮ ᱥᱟᱹᱜᱩᱱ ᱫᱟᱨᱟᱢ",
+    "subtitle": "real-time crisis reporting and management.",
+    "emailLabel": "ᱤᱢᱮᱞ",
+    "passwordLabel": "ᱯᱟᱥᱣਰᱰ",
+    "roleLabel": "ᱞᱮᱠᱟᱛᱮ ᱞᱚᱜᱤᱱ ᱢᱮ",
+    "roleCitizen": "ᱱᱟᱜᱟᱨᱤᱠ",
+    "roleAdmin": "ᱯᱨᱚᱥᱟᱥᱚᱠ",
+    "submitButton": "ᱞᱚᱜᱤᱱ ᱢᱮ",
+    "error": "Invalid credentials. Please try again.",
+    "noAccount": "ᱮᱠᱟᱣᱩᱱᱴ ᱵᱟᱹᱱᱩᱜᱼᱟ?",
+    "signUp": "Sign Up"
+  },
+  "reportTypes": {
+    "Waterlogging": "ᱫᱟᱜ ᱡᱟᱢᱟ",
+    "Fire": "ᱥᱮᱸᱜᱮᱞ",
+    "Accident": "ᱫᱩᱨᱜᱷᱚᱴᱚᱱᱟ",
+    "WasteManagement": "Waste Management",
+    "RoadDamage": "ରାସ୍ତା ଖରାପ",
+    "Other": "ᱮᱴᱟᱜ"
+  },
+  "reportStatus": {
+    "New": "ᱱᱟᱣᱟ",
+    "Assigned": "Assigned",
+    "InProgress": "InProgress",
+    "Resolved": "Resolved",
+    "Overdue": "Overdue"
+  }
+}

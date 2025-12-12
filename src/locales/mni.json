@@ -1,0 +1,32 @@
+
+{
+  "appName": "দি গ্রিদ",
+  "login": {
+    "title": "দি গ্রিদতা তরাম্না ওকচরি",
+    "subtitle": "real-time crisis reporting and management.",
+    "emailLabel": "ইমেল",
+    "passwordLabel": "পাসৱার্দ",
+    "roleLabel": "Login as",
+    "roleCitizen": "প্রজা",
+    "roleAdmin": "এডমিন",
+    "submitButton": "লগিন তৌ",
+    "error": "Invalid credentials. Please try again.",
+    "noAccount": "একাউন্ট লৈতে?",
+    "signUp": "Sign Up"
+  },
+  "reportTypes": {
+    "Waterlogging": "ঈশিং চিংবা",
+    "Fire": "মৈ",
+    "Accident": "অকথবা থৌদোক",
+    "WasteManagement": "Waste Management",
+    "RoadDamage": "লম্বী শোকপা",
+    "Other": "অতোপ্পা"
+  },
+  "reportStatus": {
+    "New": "অনৌবা",
+    "Assigned": "শিন্নবা",
+    "InProgress": "চত্থরি",
+    "Resolved": "ৱারোইশিনবা",
+    "Overdue": "Overdue"
+  }
+}

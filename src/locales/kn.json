@@ -1,0 +1,32 @@
+
+{
+  "appName": "ది గ్రిడ్",
+  "login": {
+    "title": "ದಿ ಗ್ರಿಡ್‌ಗೆ ಸ್ವಾಗತ",
+    "subtitle": "ನೈಜ-ಸಮಯದ ಬಿಕ್ಕಟ್ಟು ವರದಿ ಮತ್ತು ನಿರ್ವಹಣೆ.",
+    "emailLabel": "ಇಮೇಲ್",
+    "passwordLabel": "ಪಾಸ್ವರ್ಡ್",
+    "roleLabel": "ಆಗಿ ಲಾಗಿನ್ ಮಾಡಿ",
+    "roleCitizen": "ನಾಗರಿಕ",
+    "roleAdmin": "ನಿರ್ವಾಹಕ",
+    "submitButton": "ಲಾಗಿನ್ ಮಾಡಿ",
+    "error": "ಅಮಾನ್ಯ ರುಜುವಾತುಗಳು. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    "noAccount": "ಖಾತೆ ಇಲ್ಲವೇ?",
+    "signUp": "ಸೈನ್ ಅಪ್ ಮಾಡಿ"
+  },
+  "reportTypes": {
+    "Waterlogging": "ನೀರು ನಿಲ್ಲುವಿಕೆ",
+    "Fire": "ಬೆಂಕಿ",
+    "Accident": "ಅಪಘಾತ",
+    "WasteManagement": "ತ್ಯಾಜ್ಯ ನಿರ್ವಹಣೆ",
+    "RoadDamage": "ರಸ್ತೆ ಹಾನಿ",
+    "Other": "ಇತರೆ"
+  },
+  "reportStatus": {
+    "New": "ಹೊಸ",
+    "Assigned": "ನಿಯೋಜಿತ",
+    "InProgress": "ಪ್ರಗತಿಯಲ್ಲಿದೆ",
+    "Resolved": "ಪರಿಹರಿಸಲಾಗಿದೆ",
+    "Overdue": "ಮೀರಿದೆ"
+  }
+}

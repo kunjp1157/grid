@@ -1,0 +1,32 @@
+
+{
+  "appName": "ଦି ଗ୍ରୀଡ୍",
+  "login": {
+    "title": "ଦି ଗ୍ରୀଡ୍‌କୁ ସ୍ୱାଗତ",
+    "subtitle": "ବାସ୍ତବ-ସମୟ ସଙ୍କଟ ରିପୋର୍ଟିଂ ଏବଂ ପରିଚାଳନା।",
+    "emailLabel": "ଇମେଲ୍",
+    "passwordLabel": "ପାସୱାର୍ଡ",
+    "roleLabel": "ଭାବରେ ଲଗଇନ୍ କରନ୍ତୁ",
+    "roleCitizen": "ନାଗରିକ",
+    "roleAdmin": "ପ୍ରଶାସକ",
+    "submitButton": "ଲଗଇନ୍ କରନ୍ତୁ",
+    "error": "ଅବୈଧ କ୍ରେଡେନସିଆଲ୍। ଦୟାକରି ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।",
+    "noAccount": "ଖାତା ନାହିଁ?",
+    "signUp": "ସାଇନ୍ ଅପ୍ କରନ୍ତୁ"
+  },
+  "reportTypes": {
+    "Waterlogging": "ଜଳବନ୍ଦୀ",
+    "Fire": "ଅଗ୍ନି",
+    "Accident": "ଦୁର୍ଘଟଣା",
+    "WasteManagement": "ବର୍ଜ୍ୟବସ୍ତୁ ପରିଚାଳନା",
+    "RoadDamage": "ରାସ୍ତା କ୍ଷତି",
+    "Other": "ଅନ୍ୟାନ୍ୟ"
+  },
+  "reportStatus": {
+    "New": "ନୂଆ",
+    "Assigned": "ନ୍ୟସ୍ତ",
+    "InProgress": "ପ୍ରଗତିରେ",
+    "Resolved": "ସମାଧାନ ହୋଇଛି",
+    "Overdue": "ବିଳମ୍ବିତ"
+  }
+}

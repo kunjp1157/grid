@@ -1,0 +1,32 @@
+
+{
+  "appName": "ધ ગ્રીડ",
+  "login": {
+    "title": "ધ ગ્રીડમાં આપનું સ્વાગત છે",
+    "subtitle": "વાસ્તવિક સમય સંકટ રિપોર્ટિંગ અને સંચાલન.",
+    "emailLabel": "ઈમેલ",
+    "passwordLabel": "પાસવર્ડ",
+    "roleLabel": "તરીકે લોગિન કરો",
+    "roleCitizen": "નાગરિક",
+    "roleAdmin": "એડમિન",
+    "submitButton": "લૉગિન કરો",
+    "error": "અમાન્ય ઓળખપત્રો. કૃપા કરીને ફરી પ્રયાસ કરો.",
+    "noAccount": "ખાતું નથી?",
+    "signUp": "સાઇન અપ કરો"
+  },
+  "reportTypes": {
+    "Waterlogging": "પાણી ભરાવો",
+    "Fire": "આગ",
+    "Accident": "અકસ્માત",
+    "WasteManagement": "કચરા વ્યવસ્થાપન",
+    "RoadDamage": "રસ્તાનું નુકસાન",
+    "Other": "અન્ય"
+  },
+  "reportStatus": {
+    "New": "નવું",
+    "Assigned": "સોંપાયેલ",
+    "InProgress": "પ્રગતિમાં",
+    "Resolved": "ઉકેલાઈ ગયું",
+    "Overdue": "મુદતવીતી"
+  }
+}

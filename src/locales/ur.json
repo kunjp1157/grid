@@ -1,0 +1,32 @@
+
+{
+  "appName": "دی گرڈ",
+  "login": {
+    "title": "دی گرڈ میں خوش آمدید",
+    "subtitle": "ریئل ٹائم بحران کی رپورٹنگ اور انتظام۔",
+    "emailLabel": "ای میل",
+    "passwordLabel": "پاس ورڈ",
+    "roleLabel": "کے طور پر لاگ ان کریں",
+    "roleCitizen": "شہری",
+    "roleAdmin": "ایڈمن",
+    "submitButton": "لاگ ان کریں",
+    "error": "غلط اسناد۔ براہ کرم دوبارہ کوشش کریں۔",
+    "noAccount": "اکاؤنٹ نہیں ہے؟",
+    "signUp": "سائن اپ کریں"
+  },
+  "reportTypes": {
+    "Waterlogging": "پانی کا جمع ہونا",
+    "Fire": "آگ",
+    "Accident": "حادثہ",
+    "WasteManagement": "فضلہ کا انتظام",
+    "RoadDamage": "سڑک کا نقصان",
+    "Other": "دیگر"
+  },
+  "reportStatus": {
+    "New": "نیا",
+    "Assigned": "تفویض",
+    "InProgress": "جاری ہے",
+    "Resolved": "حل ہو गया",
+    "Overdue": "زائد المیعاد"
+  }
+}

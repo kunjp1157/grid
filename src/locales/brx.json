@@ -1,0 +1,32 @@
+
+{
+  "appName": "द ग्रिड",
+  "login": {
+    "title": "द ग्रिडआव बरायबाय",
+    "subtitle": "real-time crisis reporting and management.",
+    "emailLabel": "इमेल",
+    "passwordLabel": "पास्वार्ड",
+    "roleLabel": "Login as",
+    "roleCitizen": "सुबुं",
+    "roleAdmin": "एडमिन",
+    "submitButton": "लगिन खालाम",
+    "error": "Invalid credentials. Please try again.",
+    "noAccount": "एकाउन्ट गैया?",
+    "signUp": "Sign Up"
+  },
+  "reportTypes": {
+    "Waterlogging": "दै जमा",
+    "Fire": "अर",
+    "Accident": "जाब्रथाय",
+    "WasteManagement": "Waste Management",
+    "RoadDamage": "लामा गाज्रि",
+    "Other": "गुबुन"
+  },
+  "reportStatus": {
+    "New": "गोदान",
+    "Assigned": "बि जिन्थिनाय",
+    "InProgress": "चलिगासिनो",
+    "Resolved": "सुस्रांनाय",
+    "Overdue": "Overdue"
+  }
+}

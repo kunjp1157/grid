@@ -1,0 +1,32 @@
+
+{
+  "appName": "द ग्रिड",
+  "login": {
+    "title": "द ग्रिड च तुंदा स्वागत ऐ",
+    "subtitle": "रियल-टाइम संकट रिपोर्टिंग ते प्रबंधन।",
+    "emailLabel": "ईमेल",
+    "passwordLabel": "पासवर्ड",
+    "roleLabel": "दे रूप च लॉगिन करो",
+    "roleCitizen": "नागरिक",
+    "roleAdmin": "प्रशासक",
+    "submitButton": "लॉगिन करो",
+    "error": "अमान्य क्रेडेंशियल। कृपा करियै फ्ही प्रयास करो।",
+    "noAccount": "खाता नेईं ऐ?",
+    "signUp": "साइन अप करो"
+  },
+  "reportTypes": {
+    "Waterlogging": "पानी जमा",
+    "Fire": "अग्ग",
+    "Accident": "दुर्घटना",
+    "WasteManagement": "कचरा प्रबंधन",
+    "RoadDamage": "सड़क क्षति",
+    "Other": "होर"
+  },
+  "reportStatus": {
+    "New": "नमां",
+    "Assigned": "सौंपेआ गेदा",
+    "InProgress": "प्रगति च",
+    "Resolved": "हल होई गेदा",
+    "Overdue": "देरी"
+  }
+}

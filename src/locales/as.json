@@ -1,0 +1,32 @@
+
+{
+  "appName": "দ্য গ্ৰিড",
+  "login": {
+    "title": "দ্য গ্ৰিডলৈ স্বাগতম",
+    "subtitle": "বাস্তৱ সময়ৰ সংকট প্ৰতিবেদন আৰু ব্যৱস্থাপনা।",
+    "emailLabel": "ইমেইল",
+    "passwordLabel": "পাছৱৰ্ড",
+    "roleLabel": "হিচাপে লগইন কৰক",
+    "roleCitizen": "নাগৰিক",
+    "roleAdmin": "প্ৰশাসক",
+    "submitButton": "লগইন কৰক",
+    "error": "অবৈধ তথ্য। অনুগ্ৰহ কৰি পুনৰ চেষ্টা কৰক।",
+    "noAccount": "একাউণ্ট নাই?",
+    "signUp": "চাইন আপ কৰক"
+  },
+  "reportTypes": {
+    "Waterlogging": "জলবদ্ধতা",
+    "Fire": "জুই",
+    "Accident": "দুৰ্ঘটনা",
+    "WasteManagement": "আৱৰ্জনা ব্যৱস্থাপনা",
+    "RoadDamage": "ৰাস্তাৰ ক্ষতি",
+    "Other": "অন্যান্য"
+  },
+  "reportStatus": {
+    "New": "নতুন",
+    "Assigned": "নিযুক্ত",
+    "InProgress": "কাম চলি আছে",
+    "Resolved": "সমাধান হৈছে",
+    "Overdue": "অত্যাধিক"
+  }
+}

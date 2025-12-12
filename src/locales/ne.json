@@ -1,0 +1,32 @@
+
+{
+  "appName": "द ग्रिड",
+  "login": {
+    "title": "द ग्रिडमा स्वागत छ",
+    "subtitle": "वास्तविक-समय संकट रिपोर्टिङ र व्यवस्थापन।",
+    "emailLabel": "इमेल",
+    "passwordLabel": "पासवर्ड",
+    "roleLabel": "को रूपमा लगइन गर्नुहोस्",
+    "roleCitizen": "नागरिक",
+    "roleAdmin": "प्रशासक",
+    "submitButton": "लगइन गर्नुहोस्",
+    "error": "अमान्य प्रमाणहरू। कृपया फेरि प्रयास गर्नुहोस्।",
+    "noAccount": "खाता छैन?",
+    "signUp": "साइन अप गर्नुहोस्"
+  },
+  "reportTypes": {
+    "Waterlogging": "पानी जम्ने",
+    "Fire": "आगो",
+    "Accident": "दुर्घटना",
+    "WasteManagement": "फोहोर व्यवस्थापन",
+    "RoadDamage": "सडक क्षति",
+    "Other": "अन्य"
+  },
+  "reportStatus": {
+    "New": "नयाँ",
+    "Assigned": "तोकिएको",
+    "InProgress": "प्रगतिमा",
+    "Resolved": "समाधान भयो",
+    "Overdue": "म्याद सकिएको"
+  }
+}

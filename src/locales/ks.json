@@ -1,0 +1,32 @@
+
+{
+  "appName": "द ग्रिड",
+  "login": {
+    "title": "द ग्रिडस मंज़ स्वागत",
+    "subtitle": "रियल-टाइम بحرانٕچۍ رپورٹिंग تہٕ انتظام۔",
+    "emailLabel": "ای میل",
+    "passwordLabel": "پاس ورڈ",
+    "roleLabel": "کس طورِ پٲٹھۍ لاگ ان کرِیو",
+    "roleCitizen": "شہری",
+    "roleAdmin": "منتظم",
+    "submitButton": "لاگ ان کرِیو",
+    "error": "غلط اسناد۔ مہربٲنی کرِتھ دوبار کوشش کرِیو۔",
+    "noAccount": "اکاؤنٹ چھُ نٕہ؟",
+    "signUp": "سائن اپ کرِیو"
+  },
+  "reportTypes": {
+    "Waterlogging": "آب جمع گژھُن",
+    "Fire": "نار",
+    "Accident": "حادثہ",
+    "WasteManagement": "فالتو چیزن ہُنٛد انتظام",
+    "RoadDamage": "روڈٕچ خرٲبی",
+    "Other": "باقٕے"
+  },
+  "reportStatus": {
+    "New": "نو",
+    "Assigned": "مقرر کرنہٕ آمُت",
+    "InProgress": "جٲری",
+    "Resolved": "حل کرنہٕ آمُت",
+    "Overdue": "وقتٕ پؠٹھ"
+  }
+}
