@@ -11,4 +11,6 @@ import '@/ai/flows/fact-check-rumor.ts';
 import '@/ai/flows/process-sos-audio.ts';
 import '@/ai/flows/find-missing-person.ts';
 import '@/ai/flows/predict-secondary-hazards.ts';
+import '@/ai/flows/provide-emotional-support.ts';
+
 
