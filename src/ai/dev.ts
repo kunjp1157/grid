@@ -9,4 +9,5 @@ import '@/ai/flows/categorize-and-prioritize-report.ts';
 import '@/ai/flows/generate-sop.ts';
 import '@/ai/flows/fact-check-rumor.ts';
 import '@/ai/flows/process-sos-audio.ts';
+import '@/ai/flows/find-missing-person.ts';
 
