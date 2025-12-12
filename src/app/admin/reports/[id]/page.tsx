@@ -29,12 +29,14 @@ import { ReportStatus, ReportPriority, type Report, type ChatMessage, type User 
 import { trackReportResolutionDeadline, type TrackReportResolutionDeadlineOutput } from '@/ai/flows/track-report-resolution-deadlines';
 import { sendNotification } from '@/ai/flows/send-notification';
 import { generateSop, type SopItem } from '@/ai/flows/generate-sop';
+import { predictSecondaryHazards, type PredictedHazard } from '@/ai/flows/predict-secondary-hazards';
 import Image from 'next/image';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CheckCircle, AlertCircle, Loader2, Star, Bot } from 'lucide-react';
+import { CheckCircle, AlertCircle, Loader2, Star } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SopAdvisor } from '@/components/shared/SopAdvisor';
 import { LiveStreamViewer } from '@/components/shared/LiveStreamViewer';
+import { PredictedRisks } from '@/components/shared/PredictedRisks';
 
 export default function ReportDetailsPage({ params }: { params: { id: string } }) {
   const { t } = useTranslation();
@@ -56,30 +58,53 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
 
   const [sop, setSop] = useState<SopItem[]>([]);
   const [isGeneratingSop, setIsGeneratingSop] = useState(false);
+  
+  const [predictedHazards, setPredictedHazards] = useState<PredictedHazard[]>([]);
+  const [isPredictingHazards, setIsPredictingHazards] = useState(false);
 
   const shouldGenerateSop = useMemo(() => {
     return report?.priority === ReportPriority.Critical || report?.priority === ReportPriority.High;
   }, [report?.priority]);
   
   useEffect(() => {
-      const fetchSop = async () => {
-          if (!report || !shouldGenerateSop) return;
-          setIsGeneratingSop(true);
+      if (!report) return;
+
+      const fetchAiInsights = async () => {
+          // Generate SOP
+          if (shouldGenerateSop) {
+              setIsGeneratingSop(true);
+              try {
+                  const result = await generateSop({
+                      reportType: report.type,
+                      priority: report.priority,
+                      description: report.description,
+                  });
+                  setSop(result);
+              } catch(err) {
+                  console.error(err);
+                  toast({ title: 'Could not generate SOP', variant: 'destructive' });
+              } finally {
+                  setIsGeneratingSop(false);
+              }
+          }
+          
+          // Predict Secondary Hazards
+          setIsPredictingHazards(true);
           try {
-              const result = await generateSop({
+              const hazards = await predictSecondaryHazards({
                   reportType: report.type,
-                  priority: report.priority,
                   description: report.description,
               });
-              setSop(result);
+              setPredictedHazards(hazards);
           } catch(err) {
               console.error(err);
-              toast({ title: 'Could not generate SOP', variant: 'destructive' });
+              toast({ title: 'Could not predict hazards', variant: 'destructive' });
           } finally {
-              setIsGeneratingSop(false);
+              setIsPredictingHazards(false);
           }
       };
-      fetchSop();
+      
+      fetchAiInsights();
   }, [report, shouldGenerateSop, toast]);
 
 
@@ -176,6 +201,8 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
         <div className="md:col-span-2 space-y-6">
           
           <LiveStreamViewer reportId={report.id} />
+
+          <PredictedRisks hazards={predictedHazards} isLoading={isPredictingHazards} />
 
           {shouldGenerateSop && (
               <SopAdvisor sopItems={sop} isLoading={isGeneratingSop} onItemsChange={setSop} />
