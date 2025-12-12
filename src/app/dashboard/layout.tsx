@@ -15,7 +15,7 @@ import {
 import { Header } from '@/components/shared/Header';
 import { getUser } from '@/actions/auth';
 import { Logo } from '@/components/shared/Logo';
-import { LayoutDashboard, PlusCircle, FileText, User, BookOpen, Video, Siren, HeartHandshake, ContactSearch, Handshake, BrainCircuit } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, FileText, User, BookOpen, Video, Siren, HeartHandshake, Users, Handshake, BrainCircuit } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
@@ -140,7 +140,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             </SidebarMenuItem>
              <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip="Missing Persons">
-                  <Link href="/dashboard/missing-persons"><ContactSearch /><span>Missing Persons</span></Link>
+                  <Link href="/dashboard/missing-persons"><Users /><span>Missing Persons</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
