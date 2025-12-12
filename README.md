@@ -1,47 +1,60 @@
 
 # The Grid: AI-Powered Crisis Management Platform
 
-**The Grid** is a modern, web-based platform designed for real-time public crisis reporting and management. It serves as a comprehensive final-year project for an 8th-semester Computer Science student, demonstrating a wide range of advanced concepts including AI-driven automation, real-time communication, and data visualization.
+**The Grid** is a modern, web-based platform designed for real-time public crisis reporting and management. It serves as a comprehensive final-year project for a Computer Science student, demonstrating a wide range of advanced concepts including AI-driven automation, real-time communication, data visualization, and community collaboration tools.
 
-The application connects citizens directly with crisis management administrators, enabling faster response times and more efficient resource allocation during emergencies.
+The application connects citizens directly with crisis management administrators, enabling faster response times and more efficient resource allocation during emergencies. It is designed to be resilient, accessible, and proactive, moving beyond simple reporting to become a complete crisis ecosystem.
 
 ---
 
 ## ✨ Core Features
 
-The platform is rich with features that showcase a full-stack development skillset and an understanding of modern application architecture.
+The platform is rich with features that showcase a full-stack development skillset and a deep understanding of modern, resilient, and intelligent application architecture.
 
-### 1. Dual User Roles (Citizen & Admin)
+### 1. Dual User Roles with Robust Access Control
 - **Citizen Portal**: Allows the public to sign up, submit detailed crisis reports, track their status, and provide feedback on resolution.
-- **Admin Portal**: A powerful command center for administrators to manage incoming reports, oversee operations, and analyze system performance.
-- **Role-Based Access Control (RBAC)**: Secure routing and middleware ensure that users can only access the dashboard and features appropriate for their role.
+- **Admin Portal**: A powerful command center for administrators to manage incoming reports, oversee operations, analyze system performance, and dispatch resources.
+- **Role-Based Access Control (RBAC)**: Secure routing and middleware ensure that users can only access the dashboards and features appropriate for their role.
 
 ### 2. AI-Assisted Report Processing
 - **Automated Categorization & Prioritization**: When a user submits a report, a multi-modal GenAI agent analyzes the description and any uploaded images to automatically assign a category (e.g., "Public Safety," "Utilities") and a priority level ("Low" to "Critical").
-- **Visual Damage Assessment**: The AI model is prompted to perform a visual analysis of uploaded photos to determine the severity of an incident (e.g., distinguishing a small trash fire from a building fire), making its priority assessment highly accurate.
+- **Visual Damage Assessment**: The AI model performs a visual analysis of uploaded photos to determine the severity of an incident (e.g., distinguishing a small trash fire from a building fire), making its priority assessment highly accurate.
 - **Geofencing & Smart Routing**: An AI flow uses the report's GPS coordinates to determine the correct operational zone and automatically assigns the report to the relevant administrator.
 
-### 3. AI-Powered SOP Advisor
+### 3. Proactive AI "Cascading Risk" Prediction
+- **Predictive Hazard Analysis**: When a report for a primary crisis (e.g., "Heavy Flooding") is filed, an AI agent proactively analyzes the situation and predicts likely secondary or "cascading" hazards.
+- **Actionable Intelligence**: It generates warnings for potential follow-on events like "Power Outages," "Water Contamination," or "Traffic Gridlock," allowing admins to prepare and respond preemptively. This moves the platform from being reactive to proactive.
+
+### 4. AI-Powered SOP Advisor
 - **Dynamic Checklist Generation**: For "High" or "Critical" priority reports, an AI agent acts as a "Crisis Management Coordinator," instantly generating a dynamic Standard Operating Procedure (SOP) checklist for the administrator.
 - **Interactive Guidance**: Admins can check off tasks as they complete them, ensuring that critical actions like "Dispatch nearest fire brigade" or "Notify police for traffic control" are followed systematically.
 
-### 4. Live Eye-Witness Video Streaming
-- **Real-time Video Feed**: Citizens can initiate a one-way live video stream from their phone's camera directly to the admin's dashboard, providing unparalleled situational awareness during an ongoing incident.
-- **In-Dashboard Viewer**: Administrators can view the live stream directly within the report details page, enabling immediate and accurate assessment of the situation on the ground.
+### 5. AI "Rumor Control" & Fact-Checking
+- **Misinformation Analysis**: An admin tool allows pasting in a social media rumor (e.g., "The main bridge has collapsed!").
+- **Fact-Checking Against Official Data**: The AI compares the rumor against the database of verified reports and provides a conclusion: "Supported," "Not Supported," or "Unverified," along with its reasoning. This helps combat the spread of fake news during a crisis.
 
-### 5. Performance Analytics Dashboard
-- **Data Visualization**: An interactive "Overview" dashboard for admins provides charts and graphs to visualize key performance indicators.
-- **Key Metrics**: At-a-glance cards display stats for Total Reports, Resolved, Overdue, and Average Resolution Time.
-- **Data-Driven Insights**: Charts show the distribution of reports by type and the trend of report submissions over time.
-- **Data Export**: Functionality to export all analytics data to a CSV file for further analysis or record-keeping.
+### 6. Voice-Activated "Panic Mode"
+- **Instant Audio Reporting**: For users in immediate danger who cannot type, a large "SOS" button allows them to press and hold to record a voice message.
+- **AI Transcription & Analysis**: On release, the audio is sent to an AI flow that transcribes the message, extracts the emergency type, and automatically files a high-priority report with the user's current location.
 
-### 6. Comprehensive User Profiles
-- **Editable Personal & Emergency Information**: Users can view and edit their profile, including contact details, address, and critical information like blood group, medical conditions, and emergency contacts.
-- **Role-Specific Stats**: The profile page displays relevant statistics, such as reports submitted for citizens and reports resolved for admins.
+### 7. Community & Volunteer Management
+- **Verified Volunteer Dispatch**: Citizens can register as volunteers and list their skills (e.g., CPR, Driving). Admins can "broadcast" tasks to nearby, qualified volunteers who can then accept the "gig," turning passive citizens into an active response force.
+- **Community Resource Mapping**: Citizens can "pin" available resources on a community board, such as "Clean Water," "First Aid Kits," or "Safe Shelter." This crowdsources solutions and allows neighbors to help each other directly.
+- **The Barter Board**: A peer-to-peer exchange platform where users can post items they have and items they need, facilitating trade when normal currency may be useless (e.g., "HAVE: Power Bank, NEED: Baby Formula").
 
-### 7. Knowledge Base & Multi-Language Support
-- **First Aid & Preparedness Guides**: A built-in, searchable knowledge base provides citizens with essential information for handling emergencies like fires, floods, or medical incidents.
-- **Internationalization (i18n)**: The entire application supports multiple languages (English and Hindi) with a simple language switcher, demonstrating an understanding of building global-ready applications.
+### 8. Humanitarian AI Tools
+- **"Missing Persons" AI Matcher**: Users can upload a photo of a missing person and a group photo from a shelter. A vision AI model compares the images and provides a confidence score on whether a match has been found, helping to reunite families.
+- **"Psychological First Aid" Chatbot**: An empathetic AI chatbot named "Aura" provides emotional support, using calming language and grounding techniques to help users manage stress and panic during a crisis.
+
+### 9. Resilient & Accessible Design
+- **Offline-First Reporting**: Citizens can create and save a crisis report even without an internet connection. The app stores it locally and automatically submits it once connectivity is restored.
+- **Multi-Language Support**: The entire application supports 22+ languages, including regional Indian languages, making it accessible to a diverse, global audience.
+- **Digital Medical ID**: Each user profile features a QR code that contains their critical medical information (blood group, allergies, emergency contact). First responders can scan this to get instant access to vital data if a user is incapacitated.
+
+### 10. Comprehensive Dashboards & Profiles
+- **Performance Analytics Dashboard**: An interactive "Overview" dashboard for admins provides charts and graphs to visualize key metrics like report volume, resolution times, and report types. Data can be exported to CSV.
+- **Detailed User Profiles**: All users can view and edit their profiles, including personal, contact, and emergency information. Profiles also display role-specific statistics (reports submitted for citizens, reports resolved for admins).
+- **Feedback Mechanism**: Citizens can rate the resolution of their reports and provide comments, giving administrators valuable feedback to improve services.
 
 ---
 
@@ -50,10 +63,8 @@ The platform is rich with features that showcase a full-stack development skills
 This project utilizes a modern, robust technology stack favored by top tech companies.
 
 - **Frontend**:
-    - **Next.js**: React framework for building server-rendered and static web applications.
-    - **React & TypeScript**: For building a type-safe, component-based UI.
-    - **Tailwind CSS**: A utility-first CSS framework for rapid UI development.
-    - **ShadCN UI**: A collection of beautifully designed, accessible, and reusable components.
+    - **Next.js & React**: For building a server-rendered, component-based UI with TypeScript.
+    - **Tailwind CSS & ShadCN UI**: For rapid, accessible, and beautiful UI development.
     - **Recharts**: For creating interactive data visualization charts.
 
 - **Artificial Intelligence**:
@@ -61,9 +72,12 @@ This project utilizes a modern, robust technology stack favored by top tech comp
     - **Google Gemini**: The underlying multi-modal AI model used for text analysis, visual assessment, and function calling.
 
 - **Real-time & Backend Simulation**:
-    - **Server Actions**: Next.js feature used for handling form submissions and data mutations on the server.
-    - **Simulated WebRTC**: The "Live Eye" feature simulates a real-time video connection using browser MediaStream APIs.
+    - **Next.js Server Actions**: Used for handling form submissions and data mutations on the server.
     - **In-Memory Data**: The application uses mock data arrays to simulate a database, allowing it to be fully functional for demonstration purposes without a database setup.
+    - **Browser APIs**: Utilizes `localStorage` for offline storage and `MediaRecorder` for audio capture.
+
+- **Internationalization (i18n)**:
+    - **React Context & JSON**: A custom, lightweight i18n system supporting over 22 languages.
 
 ---
 
