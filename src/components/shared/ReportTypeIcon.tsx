@@ -1,13 +1,14 @@
-import type { ReportType } from '@/lib/types';
-import { Flame, Waves, Car, Recycle, Wrench, AlertCircle, Wind, Droplets, Ear, Zap, Biohazard, Bus, Shield, Siren } from 'lucide-react';
+import type { ReportType, ResourceType } from '@/lib/types';
+import { Flame, Waves, Car, Recycle, Wrench, AlertCircle, Wind, Droplets, Ear, Zap, Biohazard, Bus, Shield, Siren, HandHeart, FirstAidKit, Bolt, Home } from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
 
 interface ReportTypeIconProps extends LucideProps {
-  type: ReportType;
+  type: ReportType | ResourceType;
 }
 
 export function ReportTypeIcon({ type, ...props }: ReportTypeIconProps) {
   switch (type) {
+    // Report Types
     case 'Waterlogging':
       return <Waves {...props} />;
     case 'Fire':
@@ -34,6 +35,17 @@ export function ReportTypeIcon({ type, ...props }: ReportTypeIconProps) {
         return <Shield {...props} />
     case 'Voice SOS':
         return <Siren {...props} />
+    
+    // Resource Types
+    case 'Clean Water':
+        return <Droplets {...props} />;
+    case 'First Aid Kit':
+        return <FirstAidKit {...props} />;
+    case 'Generator':
+        return <Bolt {...props} />;
+    case 'Safe Shelter':
+        return <Home {...props} />;
+        
     default:
       return <AlertCircle {...props} />;
   }

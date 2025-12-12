@@ -105,3 +105,18 @@ export type Zone = {
   id: string;
   name: string;
 };
+
+export const AllResourceTypes = ['Clean Water', 'First Aid Kit', 'Generator', 'Safe Shelter'] as const;
+export type ResourceType = typeof AllResourceTypes[number];
+
+export type CommunityResource = {
+    id: string;
+    userId: string;
+    type: ResourceType;
+    description: string;
+    location: {
+        lat: number;
+        lng: number;
+    };
+    timestamp: string;
+};

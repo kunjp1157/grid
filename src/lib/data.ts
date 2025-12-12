@@ -1,5 +1,5 @@
 
-import type { User, Report, Zone, ChatMessage } from './types';
+import type { User, Report, Zone, ChatMessage, CommunityResource } from './types';
 import { ReportStatus, ReportPriority, AllReportTypes } from './types';
 
 export const users: User[] = [
@@ -131,4 +131,31 @@ export const reports: Report[] = [
     timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     resolutionDeadline: new Date(Date.now() - 1.5 * 24 * 60 * 60 * 1000).toISOString(),
   }
+];
+
+export const resources: CommunityResource[] = [
+    {
+        id: 'resource-1',
+        userId: 'citizen1',
+        type: 'Clean Water',
+        description: 'Have a 20-liter bottle of clean drinking water available.',
+        location: { lat: 28.6142, lng: 77.2095 },
+        timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+        id: 'resource-2',
+        userId: 'admin1', // An admin can also share resources
+        type: 'First Aid Kit',
+        description: 'Fully stocked first aid kit available at the North Zone office.',
+        location: { lat: 28.6200, lng: 77.2200 },
+        timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+    },
+    {
+        id: 'resource-3',
+        userId: 'citizen1',
+        type: 'Safe Shelter',
+        description: 'Can offer temporary shelter for a family of 4 in my home.',
+        location: { lat: 28.6130, lng: 77.2080 },
+        timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+    }
 ];
