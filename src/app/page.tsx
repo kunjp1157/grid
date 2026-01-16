@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '@/actions/auth';
@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Logo } from '@/components/shared/Logo';
 import { useTranslation } from '@/context/LocalizationContext';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import Link from 'next/link';
 
@@ -25,6 +25,7 @@ export default function LoginPage() {
   const { t } = useTranslation();
   const router = useRouter();
   const [state, formAction, isPending] = useActionState<LoginState, FormData>(login, { error: "" });
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (state?.redirectTo) {
@@ -60,7 +61,27 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">{t('login.passwordLabel')}</Label>
-              <Input id="password" name="password" type="password" defaultValue="password" required />
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  defaultValue="password"
+                  required
+                  className="pr-10"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="absolute inset-y-0 right-0 h-full w-10 text-muted-foreground hover:bg-transparent"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff /> : <Eye />}
+                  <span className="sr-only">Toggle password visibility</span>
+                </Button>
+              </div>
             </div>
 
             {state?.error && (
