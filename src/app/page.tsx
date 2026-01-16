@@ -1,13 +1,13 @@
+
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/shared/Logo';
 import { useTranslation } from '@/context/LocalizationContext';
@@ -24,7 +24,6 @@ type LoginState = {
 export default function LoginPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [role, setRole] = useState<'citizen' | 'admin'>('citizen');
   const [state, formAction, isPending] = useActionState<LoginState, FormData>(login, { error: "" });
 
   useEffect(() => {
@@ -55,8 +54,7 @@ export default function LoginPage() {
                 id="email"
                 name="email"
                 type="email"
-                placeholder={role === 'citizen' ? 'citizen@example.com' : 'admin@example.com'}
-                defaultValue={role === 'citizen' ? 'citizen@example.com' : 'admin@example.com'}
+                placeholder="you@example.com"
                 required
               />
             </div>
@@ -65,25 +63,6 @@ export default function LoginPage() {
               <Input id="password" name="password" type="password" defaultValue="password" required />
             </div>
 
-            <div className="space-y-3">
-              <Label>{t('login.roleLabel')}</Label>
-              <RadioGroup
-                name="role"
-                value={role}
-                onValueChange={(value: 'citizen' | 'admin') => setRole(value)}
-                className="flex gap-4"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="citizen" id="citizen" />
-                  <Label htmlFor="citizen" className="font-normal">{t('login.roleCitizen')}</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="admin" id="admin" />
-                  <Label htmlFor="admin" className="font-normal">{t('login.roleAdmin')}</Label>
-                </div>
-              </RadioGroup>
-            </div>
-            
             {state?.error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />

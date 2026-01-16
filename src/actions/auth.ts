@@ -1,3 +1,4 @@
+
 "use server";
 
 import { cookies } from "next/headers";
@@ -6,9 +7,8 @@ import type { User } from "@/lib/types";
 
 export async function login(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
-  const role = formData.get("role") as "citizen" | "admin";
-
-  const user = users.find(u => u.email === email && u.role === role);
+  // Note: Password is not checked in this mock setup.
+  const user = users.find(u => u.email === email);
 
   if (!user) {
     return { error: "Invalid credentials" };
@@ -38,7 +38,8 @@ export async function login(prevState: any, formData: FormData) {
 export async function signup(prevState: any, formData: FormData) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
-  const role = formData.get("role") as "citizen" | "admin";
+  // New users are always created as citizens
+  const role = "citizen";
 
   if (users.find(u => u.email === email)) {
     return { error: "User with this email already exists." };
@@ -67,6 +68,7 @@ export async function signup(prevState: any, formData: FormData) {
     path: "/",
   });
 
+  // New users are always citizens, so they will be redirected to the dashboard.
   if (newUser.role === "admin") {
     return { redirectTo: "/admin" };
   } else {

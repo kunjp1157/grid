@@ -1,13 +1,13 @@
+
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useActionState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signup } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/shared/Logo';
 import { useTranslation } from '@/context/LocalizationContext';
@@ -24,7 +24,6 @@ type SignupState = {
 export default function SignupPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [role, setRole] = useState<'citizen' | 'admin'>('citizen');
   const [state, formAction, isPending] = useActionState<SignupState, FormData>(signup, { error: "" });
 
   useEffect(() => {
@@ -59,25 +58,6 @@ export default function SignupPage() {
             <div className="space-y-2">
               <Label htmlFor="password">{t('login.passwordLabel')}</Label>
               <Input id="password" name="password" type="password" required />
-            </div>
-
-            <div className="space-y-3">
-              <Label>{t('signup.roleLabel')}</Label>
-              <RadioGroup
-                name="role"
-                value={role}
-                onValueChange={(value: 'citizen' | 'admin') => setRole(value)}
-                className="flex gap-4"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="citizen" id="citizen" />
-                  <Label htmlFor="citizen" className="font-normal">{t('login.roleCitizen')}</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="admin" id="admin" />
-                  <Label htmlFor="admin" className="font-normal">{t('login.roleAdmin')}</Label>
-                </div>
-              </RadioGroup>
             </div>
             
             {state?.error && (
