@@ -38,17 +38,23 @@ export default function VolunteerTasksPage() {
       return;
     }
 
+    const taskToUpdate = tasks.find(task => task.id === taskId);
+    if (!taskToUpdate) return;
+
+    if (taskToUpdate.volunteers.some(v => v.userId === currentUser.id)) {
+        toast({ title: 'Already Accepted', description: "You have already accepted this task." });
+        return;
+    }
+
+    if (taskToUpdate.volunteers.length >= taskToUpdate.volunteersNeeded) {
+        toast({ title: 'Task Full', description: "This task already has enough volunteers.", variant: 'destructive' });
+        return;
+    }
+
+    toast({ title: 'Task Accepted!', description: `You have signed up for "${taskToUpdate.title}".` });
+
     setTasks(prevTasks => prevTasks.map(task => {
         if (task.id === taskId) {
-            if (task.volunteers.some(v => v.userId === currentUser.id)) {
-                toast({ title: 'Already Accepted', description: "You have already accepted this task." });
-                return task;
-            }
-            if (task.volunteers.length >= task.volunteersNeeded) {
-                 toast({ title: 'Task Full', description: "This task already has enough volunteers.", variant: 'destructive' });
-                 return task;
-            }
-            toast({ title: 'Task Accepted!', description: `You have signed up for "${task.title}".` });
             return {
                 ...task,
                 volunteers: [...task.volunteers, { userId: currentUser.id, name: currentUser.name }],
