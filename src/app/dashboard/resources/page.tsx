@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -9,12 +10,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { resources, users } from '@/lib/data'; // Mock data
+import { resources as initialResources, users } from '@/lib/data'; // Mock data
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { PlusCircle, User, MapPin, HeartHandshake } from 'lucide-react';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
-import type { ResourceType } from '@/lib/types';
+import type { CommunityResource } from '@/lib/types';
 import { LocationMap } from '@/components/shared/LocationMap';
 import {
   Accordion,
@@ -25,6 +26,15 @@ import {
 
 
 export default function CommunityResourcesPage() {
+    const [allResources, setAllResources] = useState<CommunityResource[]>(initialResources);
+
+    useEffect(() => {
+        const storedResources: CommunityResource[] = JSON.parse(localStorage.getItem('community_resources') || '[]');
+        // Combine initial data with stored data, ensuring no duplicates by ID
+        const combined = [...storedResources, ...initialResources];
+        const unique = combined.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
+        setAllResources(unique);
+    }, []);
     
     const getUserName = (userId: string) => {
         return users.find(u => u.id === userId)?.name || 'Unknown User';
@@ -48,9 +58,9 @@ export default function CommunityResourcesPage() {
                 A list of resources being offered by fellow community members to help during the crisis.
             </p>
 
-            {resources.length > 0 ? (
+            {allResources.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {resources.map(resource => (
+                    {allResources.map(resource => (
                         <Card key={resource.id} className="flex flex-col">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-3">

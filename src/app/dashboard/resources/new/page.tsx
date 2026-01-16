@@ -29,10 +29,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { AllResourceTypes, type ResourceType } from '@/lib/types';
+import { AllResourceTypes, type ResourceType, type CommunityResource, type User } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
 const resourceSchema = z.object({
@@ -49,6 +49,22 @@ export type ResourceFormValues = z.infer<typeof resourceSchema>;
 export default function NewResourcePage() {
   const { toast } = useToast();
   const router = useRouter();
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await fetch('/api/user');
+        if (res.ok) {
+          const userData = await res.json();
+          setCurrentUser(userData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user", error);
+      }
+    };
+    loadUser();
+  }, []);
 
   const form = useForm<ResourceFormValues>({
     resolver: zodResolver(resourceSchema),
@@ -60,9 +76,30 @@ export default function NewResourcePage() {
   });
   
   const onSubmit = async (data: ResourceFormValues) => {
-    // In a real app, this would make an API call to save the resource.
-    // For this demo, we'll just show a success message and redirect.
-    console.log("New Resource Submitted:", data);
+    if (!currentUser) {
+        toast({
+            title: "Error",
+            description: "You must be logged in to offer a resource.",
+            variant: "destructive"
+        });
+        return;
+    }
+    // For this demo, we'll save to localStorage to simulate a database.
+    const newResource: CommunityResource = {
+        id: `resource-${Date.now()}`,
+        userId: currentUser.id,
+        type: data.type,
+        description: data.description,
+        location: {
+            lat: data.latitude,
+            lng: data.longitude,
+        },
+        timestamp: new Date().toISOString(),
+    };
+
+    const storedResources: CommunityResource[] = JSON.parse(localStorage.getItem('community_resources') || '[]');
+    storedResources.unshift(newResource); // Add to the beginning of the list
+    localStorage.setItem('community_resources', JSON.stringify(storedResources));
 
     toast({
         title: "Resource Offered!",
