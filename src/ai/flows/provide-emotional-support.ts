@@ -10,7 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import {generate} from 'genkit';
+import type {Message} from 'genkit';
 
 const ChatMessageSchema = z.object({
   role: z.enum(['user', 'model']),
@@ -53,10 +53,10 @@ const provideEmotionalSupportFlow = ai.defineFlow(
     outputSchema: ProvideEmotionalSupportOutputSchema,
   },
   async ({history}) => {
-    const response = await generate({
+    const response = await ai.generate({
       model: 'googleai/gemini-2.5-flash',
       system: systemPrompt,
-      history,
+      history: history as Message[],
     });
 
     return {response: response.text};
