@@ -6,12 +6,12 @@ import { users } from "@/lib/data";
 import type { User } from "@/lib/types";
 
 export async function login(prevState: any, formData: FormData) {
-  const email = formData.get("email") as string;
+  const email = (formData.get("email") as string || "").toLowerCase();
   // Note: Password is not checked in this mock setup.
-  const user = users.find(u => u.email === email);
+  const user = users.find(u => u.email.toLowerCase() === email);
 
   if (!user) {
-    return { error: "Invalid credentials" };
+    return { error: "Invalid credentials. Please try again." };
   }
 
   const userCookie = JSON.stringify({
@@ -37,11 +37,11 @@ export async function login(prevState: any, formData: FormData) {
 
 export async function signup(prevState: any, formData: FormData) {
   const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
+  const email = (formData.get("email") as string || "").toLowerCase();
   // New users are always created as citizens
   const role = "citizen";
 
-  if (users.find(u => u.email === email)) {
+  if (users.find(u => u.email.toLowerCase() === email)) {
     return { error: "User with this email already exists." };
   }
 

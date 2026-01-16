@@ -1,8 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useActionState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { login } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
@@ -16,23 +15,31 @@ import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import Link from 'next/link';
 
-type LoginState = {
-  error?: string;
-  redirectTo?: string;
-}
-
 export default function LoginPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState<LoginState, FormData>(login, { error: "" });
+  const [error, setError] = useState<string | undefined>();
+  const [isPending, setIsPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    if (state?.redirectTo) {
-      router.push(state.redirectTo);
-    }
-  }, [state, router]);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsPending(true);
+    setError(undefined);
 
+    const formData = new FormData(event.currentTarget);
+    const result = await login(null, formData);
+
+    if (result?.redirectTo) {
+        router.push(result.redirectTo);
+    } else if (result?.error) {
+        setError(result.error);
+        setIsPending(false);
+    } else {
+        setError("An unknown error occurred.");
+        setIsPending(false);
+    }
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-muted/40">
@@ -48,7 +55,7 @@ export default function LoginPage() {
           <CardDescription>{t('login.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={formAction} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">{t('login.emailLabel')}</Label>
               <Input
@@ -57,6 +64,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="you@example.com"
                 required
+                disabled={isPending}
               />
             </div>
             <div className="space-y-2">
@@ -69,6 +77,7 @@ export default function LoginPage() {
                   defaultValue="password"
                   required
                   className="pr-10"
+                  disabled={isPending}
                 />
                 <Button
                   type="button"
@@ -84,11 +93,11 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {state?.error && (
+            {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{t('login.error')}</AlertDescription>
+                <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 

@@ -1,8 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useActionState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signup } from '@/actions/auth';
 import { Button } from '@/components/ui/button';
@@ -16,22 +15,31 @@ import { AlertCircle, Eye, EyeOff } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/shared/LanguageSwitcher';
 import Link from 'next/link';
 
-type SignupState = {
-  error?: string;
-  redirectTo?: string;
-}
-
 export default function SignupPage() {
   const { t } = useTranslation();
   const router = useRouter();
-  const [state, formAction, isPending] = useActionState<SignupState, FormData>(signup, { error: "" });
+  const [error, setError] = useState<string | undefined>();
+  const [isPending, setIsPending] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(() => {
-    if (state?.redirectTo) {
-      router.push(state.redirectTo);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsPending(true);
+    setError(undefined);
+
+    const formData = new FormData(event.currentTarget);
+    const result = await signup(null, formData);
+
+    if (result?.redirectTo) {
+        router.push(result.redirectTo);
+    } else if (result?.error) {
+        setError(result.error);
+        setIsPending(false);
+    } else {
+        setError("An unknown error occurred during sign up.");
+        setIsPending(false);
     }
-  }, [state, router]);
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-muted/40">
@@ -47,14 +55,14 @@ export default function SignupPage() {
           <CardDescription>{t('signup.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={formAction} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">{t('signup.nameLabel')}</Label>
-              <Input id="name" name="name" type="text" placeholder={t('signup.namePlaceholder')} required />
+              <Input id="name" name="name" type="text" placeholder={t('signup.namePlaceholder')} required disabled={isPending} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">{t('login.emailLabel')}</Label>
-              <Input id="email" name="email" type="email" placeholder="you@example.com" required />
+              <Input id="email" name="email" type="email" placeholder="you@example.com" required disabled={isPending} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">{t('login.passwordLabel')}</Label>
@@ -65,6 +73,7 @@ export default function SignupPage() {
                   type={showPassword ? 'text' : 'password'}
                   required
                   className="pr-10"
+                  disabled={isPending}
                 />
                 <Button
                   type="button"
@@ -80,11 +89,11 @@ export default function SignupPage() {
               </div>
             </div>
             
-            {state?.error && (
+            {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
-                <AlertDescription>{state.error}</AlertDescription>
+                <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
