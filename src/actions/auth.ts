@@ -69,11 +69,7 @@ export async function signup(prevState: any, formData: FormData) {
   });
 
   // New users are always citizens, so they will be redirected to the dashboard.
-  if (newUser.role === "admin") {
-    return { redirectTo: "/admin" };
-  } else {
-    return { redirectTo: "/dashboard" };
-  }
+  return { redirectTo: "/dashboard" };
 }
 
 
