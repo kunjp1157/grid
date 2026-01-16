@@ -12,6 +12,7 @@ import { use } from 'react';
 export default function LiveStreamPage({ params }: { params: { reportId: string } }) {
   const { toast } = useToast();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null); // Ref to hold the stream object
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
   const resolvedParams = use(params);
 
@@ -19,6 +20,7 @@ export default function LiveStreamPage({ params }: { params: { reportId: string 
     const getCameraPermission = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        streamRef.current = stream; // Store the stream in the ref
         setHasCameraPermission(true);
 
         if (videoRef.current) {
@@ -39,9 +41,8 @@ export default function LiveStreamPage({ params }: { params: { reportId: string 
 
     // Cleanup function to stop the camera stream when the component unmounts
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
       }
     };
   }, [toast]);
