@@ -59,6 +59,18 @@ export const articles: KBArticle[] = [
     `,
   },
   {
+    slug: 'stroke-recognition',
+    title: 'Recognizing a Stroke (F.A.S.T.)',
+    category: 'First Aid',
+    content: `
+      Use the F.A.S.T. method to spot stroke signs and get help quickly:
+      - F—Face Drooping: Does one side of the face droop or is it numb? Ask the person to smile. Is the person's smile uneven?
+      - A—Arm Weakness: Is one arm weak or numb? Ask the person to raise both arms. Does one arm drift downward?
+      - S—Speech Difficulty: Is speech slurred? Is the person unable to speak or hard to understand? Ask the person to repeat a simple sentence, like "The sky is blue." Is the sentence repeated correctly?
+      - T—Time to Call Emergency Services: If someone shows any of these symptoms, even if the symptoms go away, call for emergency medical help immediately and get the person to a hospital. Note the time when the first symptoms appeared.
+    `,
+  },
+  {
     slug: 'emergency-kit',
     title: 'Building a Basic Emergency Kit',
     category: 'Emergency Preparedness',
@@ -75,6 +87,19 @@ export const articles: KBArticle[] = [
       - Wrench or pliers to turn off utilities.
       - Can opener for food (if kit contains canned food).
       - Local maps.
+    `,
+  },
+    {
+    slug: 'family-emergency-plan',
+    title: 'Creating a Family Emergency Plan',
+    category: 'Emergency Preparedness',
+    content: `
+      Every family should have a plan for emergencies.
+      1. Discuss with your family: Talk about why you need to prepare for disasters. Explain the dangers of fire, severe weather, and earthquakes to children.
+      2. Choose meeting places: Pick two places to meet. A spot right outside your home for a sudden emergency, like a fire, and a place outside your neighborhood in case you can't return home.
+      3. Identify an out-of-state contact: Ask an out-of-state friend or relative to be your "family contact." After a disaster, it's often easier to make a long-distance call.
+      4. Plan for your pets: If you must evacuate, take your pets with you. Make a list of pet-friendly places and hotels.
+      5. Practice your plan: Conduct fire and emergency drills. Quiz your kids every six months so they remember what to do.
     `,
   },
   {
