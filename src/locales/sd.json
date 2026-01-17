@@ -14,6 +14,17 @@
     "noAccount": "کاتو ناهي؟",
     "signUp": "سائن اپ ڪريو"
   },
+  "kb": {
+    "title": "علم جو بنياد",
+    "subtitle": "ايمرجنسي حالتن لاءِ تڪڙا ھدايتون ۽ معلومات ڳولھيو.",
+    "searchPlaceholder": "مضمون ڳولھيو...",
+    "category": {
+      "FirstAid": "ابتدائي طبي امداد",
+      "EmergencyPreparedness": "ايمرجنسي جي تياري"
+    },
+    "noResults": "ڪي بہ نتيجا نہ مليا",
+    "noResultsDescription": "ڪو بہ مضمون توھان جي ڳولا واري اصطلاح سان نہ ٿو ملي. ھڪ مختلف لفظ ڪوشش ڪريو."
+  },
   "reportTypes": {
     "Waterlogging": "پاڻي جو جمع ٿيڻ",
     "Fire": "باهه",

@@ -14,6 +14,17 @@
     "noAccount": "एकाउन्ट गैया?",
     "signUp": "Sign Up"
   },
+  "kb": {
+    "title": "गियान भान्दार",
+    "subtitle": "जोरोसि सोमोयनि थाखाय थाबैनो दिन्थिनाय आरो खौरां नागिर।",
+    "searchPlaceholder": "लेख नागिर...",
+    "category": {
+      "FirstAid": " गिबि मदद",
+      "EmergencyPreparedness": "जोरोसि राहा"
+    },
+    "noResults": "जेबो फिथाइ मोनाखै",
+    "noResultsDescription": "जेबो लेख नोंथांनि नागिरनाय सोदोबजों मिलाया। गुबुन सोदोबजों नागिर।"
+  },
   "reportTypes": {
     "Waterlogging": "दै जमा",
     "Fire": "अर",

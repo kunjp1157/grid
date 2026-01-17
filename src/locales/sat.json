@@ -14,6 +14,17 @@
     "noAccount": "ᱮᱠᱟᱣᱩᱱᱴ ᱵᱟᱹᱱᱩᱜᱼᱟ?",
     "signUp": "Sign Up"
   },
+  "kb": {
+    "title": "ज्ञान भण्डार",
+    "subtitle": "आपतकालीन परिस्थिति लागि छिटो गाइड र जानकारी खोज्नुहोस्।",
+    "searchPlaceholder": "लेख खोज्नुहोस्...",
+    "category": {
+      "FirstAid": "प्राथमिक उपचार",
+      "EmergencyPreparedness": "आपतकालीन तयारी"
+    },
+    "noResults": "कुनै परिणाम भेटिएन",
+    "noResultsDescription": "कुनै लेख तपाईंको खोज शब्दसँग मिल्दैन। फरक कीवर्ड प्रयास गर्नुहोस्।"
+  },
   "reportTypes": {
     "Waterlogging": "ᱫᱟᱜ ᱡᱟᱢᱟ",
     "Fire": "ᱥᱮᱸᱜᱮᱞ",

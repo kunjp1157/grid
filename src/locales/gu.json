@@ -14,6 +14,17 @@
     "noAccount": "ખાતું નથી?",
     "signUp": "સાઇન અપ કરો"
   },
+  "kb": {
+    "title": "જ્ઞાન આધાર",
+    "subtitle": "કટોકટીની પરિસ્થિતિઓ માટે ઝડપી માર્ગદર્શિકાઓ અને માહિતી શોધો.",
+    "searchPlaceholder": "લેખો શોધો...",
+    "category": {
+      "FirstAid": "પ્રાથમિક સારવાર",
+      "EmergencyPreparedness": "કટોકટીની તૈયારી"
+    },
+    "noResults": "કોઈ પરિણામ મળ્યું નથી",
+    "noResultsDescription": "તમારા શોધ શબ્દ સાથે કોઈ લેખ મેળ ખાતો નથી. બીજો કીવર્ડ અજમાવો."
+  },
   "reportTypes": {
     "Waterlogging": "પાણી ભરાવો",
     "Fire": "આગ",

@@ -14,6 +14,17 @@
     "noAccount": "ਖਾਤਾ ਨਹੀਂ ਹੈ?",
     "signUp": "ਸਾਈਨ ਅੱਪ ਕਰੋ"
   },
+  "kb": {
+    "title": "ਗਿਆਨ ਅਧਾਰ",
+    "subtitle": "ਐਮਰਜੈਂਸੀ ਸਥਿਤੀਆਂ ਲਈ ਤੇਜ਼ ਗਾਈਡ ਅਤੇ ਜਾਣਕਾਰੀ ਲੱਭੋ।",
+    "searchPlaceholder": "ਲੇਖਾਂ ਦੀ ਖੋਜ ਕਰੋ...",
+    "category": {
+      "FirstAid": "ਮੁੱਢਲੀ ਸਹਾਇਤਾ",
+      "EmergencyPreparedness": "ਐਮਰਜੈਂਸੀ ਦੀ ਤਿਆਰੀ"
+    },
+    "noResults": "ਕੋਈ ਨਤੀਜਾ ਨਹੀਂ ਮਿਲਿਆ",
+    "noResultsDescription": "ਕੋਈ ਵੀ ਲੇਖ ਤੁਹਾਡੇ ਖੋਜ ਸ਼ਬਦ ਨਾਲ ਮੇਲ ਨਹੀਂ ਖਾਂਦਾ। ਇੱਕ ਵੱਖਰਾ ਕੀਵਰਡ ਅਜ਼ਮਾਓ।"
+  },
   "reportTypes": {
     "Waterlogging": "ਪਾਣੀ ਭਰਨਾ",
     "Fire": "ਅੱਗ",

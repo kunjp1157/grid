@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { articles, KBArticle } from '@/lib/kb';
+import { articles } from '@/lib/kb';
 import {
   Accordion,
   AccordionContent,
@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { HeartPulse, ShieldCheck, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/context/LocalizationContext';
 
 type Category = 'First Aid' | 'Emergency Preparedness';
 
@@ -36,39 +37,51 @@ const categoryConfig: Record<Category, { icon: React.ElementType, iconColor: str
 
 export default function KnowledgeBasePage() {
     const [searchTerm, setSearchTerm] = useState('');
+    const { t } = useTranslation();
+
+    const translatedArticles = useMemo(() => {
+        return articles.map(article => ({
+            ...article,
+            title: t(`kb.${article.slug}.title`),
+            content: t(`kb.${article.slug}.content`),
+        }));
+    }, [t]);
 
     const filteredArticles = useMemo(() => {
         if (!searchTerm) {
-            return articles;
+            return translatedArticles;
         }
-        return articles.filter(article =>
+        return translatedArticles.filter(article =>
             article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
             article.content.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [searchTerm]);
+    }, [searchTerm, translatedArticles]);
 
-    const articlesByCategory = filteredArticles.reduce((acc, article) => {
-        const category = article.category as Category;
-        if (!acc[category]) {
-            acc[category] = [];
-        }
-        acc[category].push(article);
-        return acc;
-    }, {} as Record<Category, KBArticle[]>);
+    const articlesByCategory = useMemo(() => {
+        return filteredArticles.reduce((acc, article) => {
+            const category = article.category as Category;
+            if (!acc[category]) {
+                acc[category] = [];
+            }
+            acc[category].push(article);
+            return acc;
+        }, {} as Record<Category, typeof translatedArticles>);
+    }, [filteredArticles]);
+
 
     return (
         <div className="space-y-8">
             <div className="text-center">
-                <h1 className="text-4xl font-bold tracking-tight">Knowledge Base</h1>
+                <h1 className="text-4xl font-bold tracking-tight">{t('kb.title')}</h1>
                 <p className="text-muted-foreground mt-2 text-lg">
-                    Find quick guides and information for emergency situations.
+                    {t('kb.subtitle')}
                 </p>
             </div>
 
             <div className="relative max-w-md mx-auto">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
-                  placeholder="Search articles..."
+                  placeholder={t('kb.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
@@ -77,6 +90,7 @@ export default function KnowledgeBasePage() {
 
             <div className="grid gap-8 md:grid-cols-1">
                 {Object.entries(articlesByCategory).map(([category, articles]) => {
+                    if (articles.length === 0) return null;
                     const config = categoryConfig[category as Category];
                     const CategoryIcon = config.icon;
                     return (
@@ -84,7 +98,7 @@ export default function KnowledgeBasePage() {
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-3 text-2xl">
                                     {CategoryIcon && <CategoryIcon className={cn("h-8 w-8", config.iconColor)} />}
-                                    {category}
+                                    {t(`kb.category.${category.replace(/\s/g, '')}`)}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
@@ -92,7 +106,7 @@ export default function KnowledgeBasePage() {
                                     <Accordion type="single" collapsible className="w-full">
                                     {articles.map((article) => (
                                         <AccordionItem value={article.slug} key={article.slug} className="bg-background/50 border-border/50 rounded-lg mb-2">
-                                        <AccordionTrigger className="px-4 py-3 text-base font-semibold hover:no-underline">
+                                        <AccordionTrigger className="px-4 py-3 text-base font-semibold hover:no-underline text-left">
                                             {article.title}
                                         </AccordionTrigger>
                                         <AccordionContent className="px-4">
@@ -104,7 +118,7 @@ export default function KnowledgeBasePage() {
                                     ))}
                                     </Accordion>
                                 ) : (
-                                    <p className="text-muted-foreground text-sm">No articles found for this category.</p>
+                                    <p className="text-muted-foreground text-sm">{t('kb.noResults')}</p>
                                 )}
                             </CardContent>
                         </Card>
@@ -113,9 +127,9 @@ export default function KnowledgeBasePage() {
             </div>
              {filteredArticles.length === 0 && searchTerm && (
                 <div className="text-center py-12">
-                    <h3 className="text-xl font-semibold">No Results Found</h3>
+                    <h3 className="text-xl font-semibold">{t('kb.noResults')}</h3>
                     <p className="text-muted-foreground mt-2">
-                        No articles match your search term. Try a different keyword.
+                        {t('kb.noResultsDescription')}
                     </p>
                 </div>
             )}

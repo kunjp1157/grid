@@ -14,6 +14,17 @@
     "noAccount": "खाता छैन?",
     "signUp": "साइन अप गर्नुहोस्"
   },
+  "kb": {
+    "title": "ज्ञान कोष",
+    "subtitle": "आपतकालीन अवस्थाहरूको लागि द्रुत गाइड र जानकारी खोज्नुहोस्।",
+    "searchPlaceholder": "लेखहरू खोज्नुहोस्...",
+    "category": {
+      "FirstAid": "प्राथमिक उपचार",
+      "EmergencyPreparedness": "आपतकालीन तयारी"
+    },
+    "noResults": "कुनै परिणाम फेला परेन",
+    "noResultsDescription": "तपाईंको खोज शब्दसँग कुनै लेख मेल खाँदैन। अर्को किवर्ड प्रयास गर्नुहोस्।"
+  },
   "reportTypes": {
     "Waterlogging": "पानी जम्ने",
     "Fire": "आगो",

@@ -14,6 +14,17 @@
     "noAccount": "खाता नहि अछि?",
     "signUp": "साइन अप करू"
   },
+  "kb": {
+    "title": "ज्ञान आधार",
+    "subtitle": "आपातकालीन स्थिति के लेल त्वरित गाइड आ जानकारी खोजू।",
+    "searchPlaceholder": "लेख खोजू...",
+    "category": {
+      "FirstAid": "प्राथमिक चिकित्सा",
+      "EmergencyPreparedness": "आपातकालीन तैयारी"
+    },
+    "noResults": "कोनो परिणाम नहि भेटल",
+    "noResultsDescription": "कोनो लेख अहाँक खोज शब्द सँ मेल नहि खाइत अछि। दोसर कीवर्ड प्रयास करू।"
+  },
   "reportTypes": {
     "Waterlogging": "जलजमाव",
     "Fire": "आगि",

@@ -14,6 +14,17 @@
     "noAccount": "खाते नाही?",
     "signUp": "साइन अप करा"
   },
+  "kb": {
+    "title": "ज्ञान आधार",
+    "subtitle": "आपत्कालीन परिस्थितींसाठी जलद मार्गदर्शक आणि माहिती शोधा.",
+    "searchPlaceholder": "लेख शोधा...",
+    "category": {
+      "FirstAid": "प्रथमोपचार",
+      "EmergencyPreparedness": "आपत्कालीन तयारी"
+    },
+    "noResults": "कोणतेही परिणाम आढळले नाहीत",
+    "noResultsDescription": "तुमच्या शोध शब्दाशी कोणताही लेख जुळत नाही. दुसरा कीवर्ड वापरून पहा."
+  },
   "reportTypes": {
     "Waterlogging": "पाणी साचणे",
     "Fire": "आग",

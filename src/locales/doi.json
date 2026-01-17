@@ -14,6 +14,17 @@
     "noAccount": "खाता नेईं ऐ?",
     "signUp": "साइन अप करो"
   },
+  "kb": {
+    "title": "ज्ञान भंडार",
+    "subtitle": "आपातकालीन परिस्थितियें लेई तेज़ गाइड ते जानकारी पाओ।",
+    "searchPlaceholder": "लेख खोजो...",
+    "category": {
+      "FirstAid": "प्राथमिक चिकित्सा",
+      "EmergencyPreparedness": "आपातकालीन तैयारी"
+    },
+    "noResults": "कोई नतीजा नेईं मिल्या",
+    "noResultsDescription": "कोई बी लेख तुंदे खोज शब्द कन्नै मेल नेईं खांदा। कोई होर कीवर्ड अजमाओ।"
+  },
   "reportTypes": {
     "Waterlogging": "पानी जमा",
     "Fire": "अग्ग",
