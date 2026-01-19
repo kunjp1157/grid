@@ -37,10 +37,19 @@ import { categorizeAndPrioritizeReport } from '@/ai/flows/categorize-and-priorit
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { zones } from '@/lib/data';
-import { useState } from 'react';
-import { Loader2, Sparkles, WifiOff } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Loader2, Sparkles, WifiOff, Camera, X } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LocationMap } from '@/components/shared/LocationMap';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import Image from 'next/image';
 
 const reportSchema = z.object({
   category: z.custom<ReportCategory>(val => typeof val === 'string' && val, {
@@ -70,6 +79,11 @@ export default function NewReportPage() {
   const [isCategorizing, setIsCategorizing] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState<AiSuggestion | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
+
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+
 
   const form = useForm<ReportFormValues>({
     resolver: zodResolver(reportSchema),
@@ -135,6 +149,58 @@ export default function NewReportPage() {
         setIsCategorizing(false);
     }
   }
+
+  useEffect(() => {
+    const startCamera = async () => {
+      try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        streamRef.current = mediaStream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStream;
+        }
+      } catch (err) {
+        console.error("Camera error:", err);
+        toast({
+          title: "Camera Access Denied",
+          description: "Please enable camera permissions in your browser settings.",
+          variant: "destructive",
+        });
+        setIsCameraOpen(false);
+      }
+    };
+
+    if (isCameraOpen) {
+      startCamera();
+    }
+    
+    return () => {
+        if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current = null;
+        }
+    };
+  }, [isCameraOpen, toast]);
+
+  const handleCapture = () => {
+    if (videoRef.current) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const context = canvas.getContext('2d');
+      if (context) {
+        context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+        const dataUri = canvas.toDataURL('image/jpeg');
+        setFilePreview(dataUri);
+        form.setValue('media', null); // Clear file input
+      }
+      setIsCameraOpen(false);
+    }
+  };
+
+  const clearMedia = () => {
+    setFilePreview(null);
+    form.setValue('media', null);
+  };
 
 
   const onSubmit = async (data: ReportFormValues) => {
@@ -218,25 +284,70 @@ export default function NewReportPage() {
                         )}
                     />
                     
-                    <FormField
-                        control={form.control}
-                        name="media"
-                        render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>{t('citizen.newReport.mediaLabel')}</FormLabel>
-                            <FormControl>
-                                <Input type="file" accept="image/*" onChange={(e) => {
-                                    field.onChange(e.target.files);
-                                    handleFileChange(e);
-                                }} />
-                            </FormControl>
-                            <FormDescription>
-                            Upload a photo of the issue (optional, helps with auto-categorization).
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
+                    <div className="space-y-2">
+                        <FormLabel>{t('citizen.newReport.mediaLabel')}</FormLabel>
+                        {filePreview ? (
+                            <div className="relative w-fit rounded-md border p-2 bg-muted/50">
+                                <Image src={filePreview} alt="Report preview" width={200} height={200} className="rounded-md object-cover aspect-square" />
+                                <Button
+                                    type="button"
+                                    variant="destructive"
+                                    size="icon"
+                                    className="absolute -top-2 -right-2 h-7 w-7 rounded-full shadow-md"
+                                    onClick={clearMedia}
+                                >
+                                    <X className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col sm:flex-row gap-2">
+                                <FormField
+                                    control={form.control}
+                                    name="media"
+                                    render={({ field: { onChange, value, ...rest } }) => (
+                                        <FormItem className="flex-1">
+                                            <FormControl>
+                                                <Input
+                                                    type="file"
+                                                    accept="image/*"
+                                                    className="cursor-pointer"
+                                                    onChange={(e) => {
+                                                        onChange(e.target.files);
+                                                        handleFileChange(e);
+                                                    }}
+                                                    {...rest}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                                    <DialogTrigger asChild>
+                                        <Button type="button" variant="outline" className="w-full sm:w-auto">
+                                            <Camera className="mr-2 h-4 w-4" />
+                                            Take Photo
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Take a Photo</DialogTitle>
+                                        </DialogHeader>
+                                        <div className="relative aspect-video bg-black rounded-md overflow-hidden">
+                                            <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline></video>
+                                        </div>
+                                        <DialogFooter>
+                                            <Button variant="ghost" onClick={() => setIsCameraOpen(false)}>Cancel</Button>
+                                            <Button type="button" onClick={handleCapture} >Capture Photo</Button>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
                         )}
-                    />
+                        <FormDescription>
+                            A photo helps our AI to categorize and prioritize the issue faster.
+                        </FormDescription>
+                    </div>
 
                     <div className="space-y-4">
                         <Button type="button" onClick={handleAutoCategorize} disabled={isCategorizing}>
