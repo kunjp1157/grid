@@ -20,8 +20,10 @@ import { Handshake, Users, MapPin, Check, PlusCircle } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { useTranslation } from '@/context/LocalizationContext';
 
 export default function VolunteerTasksPage() {
+  const { t } = useTranslation();
   const [tasks, setTasks] = useState<VolunteerTask[]>(initialTasks);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const { toast } = useToast();
@@ -34,7 +36,7 @@ export default function VolunteerTasksPage() {
 
   const handleAcceptTask = (taskId: string) => {
     if (!currentUser || !currentUser.isVolunteer) {
-      toast({ title: 'Not a Volunteer', description: "Please register as a volunteer in your profile to accept tasks.", variant: 'destructive' });
+      toast({ title: t('citizen.tasks.error.notVolunteerTitle'), description: t('citizen.tasks.error.notVolunteerDescription'), variant: 'destructive' });
       return;
     }
 
@@ -42,16 +44,16 @@ export default function VolunteerTasksPage() {
     if (!taskToUpdate) return;
 
     if (taskToUpdate.volunteers.some(v => v.userId === currentUser.id)) {
-        toast({ title: 'Already Accepted', description: "You have already accepted this task." });
+        toast({ title: t('citizen.tasks.error.alreadyAcceptedTitle'), description: t('citizen.tasks.error.alreadyAcceptedDescription') });
         return;
     }
 
     if (taskToUpdate.volunteers.length >= taskToUpdate.volunteersNeeded) {
-        toast({ title: 'Task Full', description: "This task already has enough volunteers.", variant: 'destructive' });
+        toast({ title: t('citizen.tasks.error.taskFullTitle'), description: t('citizen.tasks.error.taskFullDescription'), variant: 'destructive' });
         return;
     }
 
-    toast({ title: 'Task Accepted!', description: `You have signed up for "${taskToUpdate.title}".` });
+    toast({ title: t('citizen.tasks.success.taskAcceptedTitle'), description: t('citizen.tasks.success.taskAcceptedDescription', { title: taskToUpdate.title }) });
 
     setTasks(prevTasks => prevTasks.map(task => {
         if (task.id === taskId) {
@@ -76,18 +78,18 @@ export default function VolunteerTasksPage() {
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
             <div className='flex items-center gap-3'>
                 <Handshake className="h-8 w-8 text-primary" />
-                <h1 className="text-3xl font-bold">Volunteer Task Board</h1>
+                <h1 className="text-3xl font-bold">{t('citizen.tasks.title')}</h1>
             </div>
             {!currentUser?.isVolunteer && (
                  <Button asChild>
                     <Link href="/dashboard/profile">
                         <PlusCircle className="mr-2 h-4 w-4" />
-                        Become a Volunteer
+                        {t('profile.becomeVolunteerButton')}
                     </Link>
                 </Button>
             )}
         </div>
-        <CardDescription>Browse and accept volunteer opportunities to help your community.</CardDescription>
+        <CardDescription>{t('citizen.tasks.description')}</CardDescription>
         
         {openTasks.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -102,7 +104,7 @@ export default function VolunteerTasksPage() {
                                 {task.requiredSkills.length > 0 ? (
                                     task.requiredSkills.map(skill => <Badge key={skill} variant="secondary" className="mr-1">{skill}</Badge>)
                                 ) : (
-                                    <Badge variant="outline">No specific skills required</Badge>
+                                    <Badge variant="outline">{t('citizen.tasks.noSkills')}</Badge>
                                 )}
                             </div>
                             <div className="text-sm text-muted-foreground space-y-2">
@@ -112,7 +114,7 @@ export default function VolunteerTasksPage() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Users className="h-4 w-4" />
-                                    <span>{task.volunteers.length} / {task.volunteersNeeded} volunteers</span>
+                                    <span>{task.volunteers.length} / {task.volunteersNeeded} {t('citizen.tasks.volunteers')}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -122,18 +124,18 @@ export default function VolunteerTasksPage() {
                                 onClick={() => handleAcceptTask(task.id)}
                                 disabled={hasAccepted(task) || task.volunteers.length >= task.volunteersNeeded}
                             >
-                                {hasAccepted(task) ? <><Check className="mr-2"/>Accepted</> : 'Accept Task'}
+                                {hasAccepted(task) ? <><Check className="mr-2"/>{t('citizen.tasks.acceptedButton')}</> : t('citizen.tasks.acceptButton')}
                              </Button>
-                             <p className="text-xs text-muted-foreground text-center w-full">Posted on {formatDate(task.createdAt, 'PP')}</p>
+                             <p className="text-xs text-muted-foreground text-center w-full">{t('citizen.tasks.postedOn', { date: formatDate(task.createdAt, 'PP')})}</p>
                         </CardFooter>
                     </Card>
                 ))}
             </div>
         ) : (
              <div className="text-center py-12 border-2 border-dashed rounded-lg">
-                <h3 className="text-xl font-semibold">No Open Tasks</h3>
+                <h3 className="text-xl font-semibold">{t('citizen.tasks.emptyTitle')}</h3>
                 <p className="text-muted-foreground mt-2">
-                    There are currently no open volunteer tasks. Check back later!
+                    {t('citizen.tasks.emptyDescription')}
                 </p>
             </div>
         )}

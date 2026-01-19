@@ -34,6 +34,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { useTranslation } from '@/context/LocalizationContext';
 
 const resourceSchema = z.object({
   type: z.custom<ResourceType>(val => AllResourceTypes.includes(val as ResourceType), {
@@ -47,6 +48,7 @@ const resourceSchema = z.object({
 export type ResourceFormValues = z.infer<typeof resourceSchema>;
 
 export default function NewResourcePage() {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -78,8 +80,8 @@ export default function NewResourcePage() {
   const onSubmit = async (data: ResourceFormValues) => {
     if (!currentUser) {
         toast({
-            title: "Error",
-            description: "You must be logged in to offer a resource.",
+            title: t('common.error'),
+            description: t('citizen.resources.new.error.notLoggedIn'),
             variant: "destructive"
         });
         return;
@@ -102,8 +104,8 @@ export default function NewResourcePage() {
     localStorage.setItem('community_resources', JSON.stringify(storedResources));
 
     toast({
-        title: "Resource Offered!",
-        description: "Thank you for supporting your community. Your resource is now listed.",
+        title: t('citizen.resources.new.success.title'),
+        description: t('citizen.resources.new.success.description'),
         variant: 'default',
     });
 
@@ -114,8 +116,8 @@ export default function NewResourcePage() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Offer a Community Resource</CardTitle>
-          <CardDescription>Share available resources with your neighbors. Your small act of kindness can make a huge difference in a crisis.</CardDescription>
+          <CardTitle>{t('citizen.resources.new.title')}</CardTitle>
+          <CardDescription>{t('citizen.resources.new.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -125,11 +127,11 @@ export default function NewResourcePage() {
                     name="type"
                     render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Resource Type</FormLabel>
+                        <FormLabel>{t('citizen.resources.new.typeLabel')}</FormLabel>
                         <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                             <SelectTrigger>
-                            <SelectValue placeholder="Select the type of resource you are offering" />
+                            <SelectValue placeholder={t('citizen.resources.new.typePlaceholder')} />
                             </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -148,10 +150,10 @@ export default function NewResourcePage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>{t('citizen.resources.new.detailsLabel')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Provide details, e.g., '20-liter sealed water bottle' or 'First aid kit with bandages and antiseptic'."
+                        placeholder={t('citizen.resources.new.detailsPlaceholder')}
                         className="resize-none"
                         {...field}
                         rows={4}
@@ -163,14 +165,14 @@ export default function NewResourcePage() {
               />
               
               <div className="space-y-4">
-                <h3 className="text-sm font-medium">Your Location (where the resource is available)</h3>
+                <h3 className="text-sm font-medium">{t('citizen.resources.new.locationLabel')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="latitude"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Latitude</FormLabel>
+                        <FormLabel>{t('citizen.newReport.latitudeLabel')}</FormLabel>
                         <FormControl>
                           <Input type="number" step="any" {...field} />
                         </FormControl>
@@ -183,7 +185,7 @@ export default function NewResourcePage() {
                     name="longitude"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Longitude</FormLabel>
+                        <FormLabel>{t('citizen.newReport.longitudeLabel')}</FormLabel>
                         <FormControl>
                           <Input type="number" step="any" {...field} />
                         </FormControl>
@@ -196,7 +198,7 @@ export default function NewResourcePage() {
 
               <Button type="submit" disabled={form.formState.isSubmitting}>
                  {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Submit Resource
+                {t('citizen.resources.new.submitButton')}
               </Button>
             </form>
           </Form>

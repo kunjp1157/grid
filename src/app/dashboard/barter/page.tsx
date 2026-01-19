@@ -18,8 +18,10 @@ import { PlusCircle, User, Repeat, ArrowRightLeft, MessageSquare } from 'lucide-
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { useTranslation } from '@/context/LocalizationContext';
 
 export default function BarterBoardPage() {
+    const { t } = useTranslation();
     const { toast } = useToast();
     
     const getUser = (userId: string) => {
@@ -28,8 +30,8 @@ export default function BarterBoardPage() {
     
     const handleConnect = (userName: string) => {
         toast({
-            title: "Connection Request Sent (Simulated)",
-            description: `A notification has been sent to ${userName} to connect and coordinate the exchange.`,
+            title: t('citizen.barter.success.connectedTitle'),
+            description: t('citizen.barter.success.connectedDescription', { name: userName }),
         });
     }
 
@@ -38,17 +40,17 @@ export default function BarterBoardPage() {
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <div className='flex items-center gap-3'>
                     <Repeat className="h-8 w-8 text-primary" />
-                    <h1 className="text-3xl font-bold">Barter Board</h1>
+                    <h1 className="text-3xl font-bold">{t('citizen.barter.title')}</h1>
                 </div>
                 <Button asChild>
                     <Link href="/dashboard/barter/new">
                         <PlusCircle className="mr-2 h-4 w-4" />
-                        Create New Post
+                        {t('citizen.barter.newPostButton')}
                     </Link>
                 </Button>
             </div>
             <p className="text-muted-foreground">
-                Exchange essential goods and services with your community members.
+                {t('citizen.barter.description')}
             </p>
 
             {initialPosts.length > 0 ? (
@@ -66,28 +68,28 @@ export default function BarterBoardPage() {
                                             <AvatarFallback>{userInitials}</AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <CardTitle className="text-base">{user?.name || 'Unknown User'}</CardTitle>
+                                            <CardTitle className="text-base">{user?.name || t('common.unknownUser')}</CardTitle>
                                             <p className="text-xs text-muted-foreground">
-                                                Posted {formatDate(post.timestamp, 'PP')}
+                                                {t('citizen.barter.postedOn', { date: formatDate(post.timestamp, 'PP')})}
                                             </p>
                                         </div>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="flex-grow space-y-4">
                                    <div>
-                                        <h3 className="text-sm font-semibold text-green-600">HAVE:</h3>
+                                        <h3 className="text-sm font-semibold text-green-600">{t('citizen.barter.new.haveLabel')}</h3>
                                         <p className="text-muted-foreground text-sm">{post.have}</p>
                                    </div>
                                    <Separator />
                                    <div>
-                                        <h3 className="text-sm font-semibold text-orange-600">NEED:</h3>
+                                        <h3 className="text-sm font-semibold text-orange-600">{t('citizen.barter.new.needLabel')}</h3>
                                         <p className="text-muted-foreground text-sm">{post.need}</p>
                                    </div>
                                 </CardContent>
                                 <CardFooter>
-                                    <Button className="w-full" variant="outline" onClick={() => handleConnect(user?.name || 'the user')}>
+                                    <Button className="w-full" variant="outline" onClick={() => handleConnect(user?.name || t('common.unknownUser'))}>
                                         <MessageSquare className="mr-2 h-4 w-4" />
-                                        Connect to Exchange
+                                        {t('citizen.barter.connectButton')}
                                     </Button>
                                 </CardFooter>
                             </Card>
@@ -96,12 +98,12 @@ export default function BarterBoardPage() {
                 </div>
             ) : (
                 <div className="text-center py-12 border-2 border-dashed rounded-lg">
-                    <h3 className="text-xl font-semibold">The Barter Board is Empty</h3>
-                    <p className="text-muted-foreground mt-2 mb-4">Be the first to create an exchange post.</p>
+                    <h3 className="text-xl font-semibold">{t('citizen.barter.emptyTitle')}</h3>
+                    <p className="text-muted-foreground mt-2 mb-4">{t('citizen.barter.emptyDescription')}</p>
                      <Button asChild>
                         <Link href="/dashboard/barter/new">
                             <PlusCircle className="mr-2 h-4 w-4" />
-                            Create New Post
+                            {t('citizen.barter.newPostButton')}
                         </Link>
                     </Button>
                 </div>

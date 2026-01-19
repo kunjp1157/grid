@@ -30,8 +30,10 @@ import { TaskStatus } from '@/lib/types';
 import { Megaphone, PlusCircle, Users } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/context/LocalizationContext';
 
 export default function DispatchCenterPage() {
+  const { t } = useTranslation();
   const [tasks, setTasks] = useState<VolunteerTask[]>(initialTasks);
   const [newTask, setNewTask] = useState({
     title: '',
@@ -50,7 +52,7 @@ export default function DispatchCenterPage() {
   const handleBroadcastTask = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTask.title || !newTask.description || !newTask.location) {
-        toast({ title: "Missing Fields", description: "Please fill out all required fields.", variant: "destructive" });
+        toast({ title: t('admin.dispatch.error.missingFields'), description: t('admin.dispatch.error.missingFieldsDescription'), variant: "destructive" });
         return;
     }
 
@@ -68,8 +70,8 @@ export default function DispatchCenterPage() {
 
     setTasks(prev => [task, ...prev]);
     toast({
-        title: "Task Broadcasted!",
-        description: `The task "${task.title}" is now available for volunteers.`
+        title: t('admin.dispatch.success.taskBroadcasted'),
+        description: t('admin.dispatch.success.taskBroadcastedDescription', { title: task.title })
     });
     
     // Reset form
@@ -80,25 +82,25 @@ export default function DispatchCenterPage() {
     <div className="space-y-6">
         <div className="flex items-center gap-3">
             <Megaphone className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold">Volunteer Dispatch Center</h1>
+            <h1 className="text-3xl font-bold">{t('admin.dispatch.title')}</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2">
                 <Card>
                     <CardHeader>
-                        <CardTitle>Active Tasks</CardTitle>
-                        <CardDescription>Monitor and manage ongoing volunteer tasks.</CardDescription>
+                        <CardTitle>{t('admin.dispatch.activeTasksTitle')}</CardTitle>
+                        <CardDescription>{t('admin.dispatch.activeTasksDescription')}</CardDescription>
                     </CardHeader>
                     <CardContent>
                          <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Task</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead>Volunteers</TableHead>
-                                    <TableHead>Location</TableHead>
-                                    <TableHead>Created</TableHead>
+                                    <TableHead>{t('admin.dispatch.tableTask')}</TableHead>
+                                    <TableHead>{t('admin.dispatch.tableStatus')}</TableHead>
+                                    <TableHead>{t('admin.dispatch.tableVolunteers')}</TableHead>
+                                    <TableHead>{t('admin.dispatch.tableLocation')}</TableHead>
+                                    <TableHead>{t('admin.dispatch.tableCreated')}</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -106,7 +108,7 @@ export default function DispatchCenterPage() {
                                     <TableRow key={task.id}>
                                         <TableCell>
                                             <p className="font-medium">{task.title}</p>
-                                            <p className="text-xs text-muted-foreground">{task.requiredSkills.join(', ') || 'No specific skills'}</p>
+                                            <p className="text-xs text-muted-foreground">{task.requiredSkills.join(', ') || t('admin.dispatch.noSpecificSkills')}</p>
                                         </TableCell>
                                         <TableCell>
                                             <Badge variant={task.status === TaskStatus.Open ? 'secondary' : 'default'}
@@ -135,30 +137,30 @@ export default function DispatchCenterPage() {
             <div>
                 <Card>
                     <CardHeader>
-                        <CardTitle>Broadcast New Task</CardTitle>
-                        <CardDescription>Create a new task to dispatch volunteers.</CardDescription>
+                        <CardTitle>{t('admin.dispatch.broadcastTaskTitle')}</CardTitle>
+                        <CardDescription>{t('admin.dispatch.broadcastTaskDescription')}</CardDescription>
                     </CardHeader>
                     <form onSubmit={handleBroadcastTask}>
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="title">Task Title</Label>
-                                <Input id="title" name="title" value={newTask.title} onChange={handleInputChange} placeholder="e.g., Sandbagging near River" required />
+                                <Label htmlFor="title">{t('admin.dispatch.taskTitleLabel')}</Label>
+                                <Input id="title" name="title" value={newTask.title} onChange={handleInputChange} placeholder={t('admin.dispatch.taskTitlePlaceholder')} required />
                             </div>
                              <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
-                                <Textarea id="description" name="description" value={newTask.description} onChange={handleInputChange} placeholder="Detailed instructions for volunteers" required />
+                                <Label htmlFor="description">{t('admin.dispatch.descriptionLabel')}</Label>
+                                <Textarea id="description" name="description" value={newTask.description} onChange={handleInputChange} placeholder={t('admin.dispatch.descriptionPlaceholder')} required />
                             </div>
                              <div className="space-y-2">
-                                <Label htmlFor="location">Location</Label>
-                                <Input id="location" name="location" value={newTask.location} onChange={handleInputChange} placeholder="e.g., Central Community Shelter" required />
+                                <Label htmlFor="location">{t('admin.dispatch.locationLabel')}</Label>
+                                <Input id="location" name="location" value={newTask.location} onChange={handleInputChange} placeholder={t('admin.dispatch.locationPlaceholder')} required />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
-                                    <Label htmlFor="requiredSkills">Required Skills</Label>
-                                    <Input id="requiredSkills" name="requiredSkills" value={newTask.requiredSkills} onChange={handleInputChange} placeholder="e.g., Medical, Driving" />
+                                    <Label htmlFor="requiredSkills">{t('admin.dispatch.requiredSkillsLabel')}</Label>
+                                    <Input id="requiredSkills" name="requiredSkills" value={newTask.requiredSkills} onChange={handleInputChange} placeholder={t('admin.dispatch.requiredSkillsPlaceholder')} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="volunteersNeeded">Volunteers Needed</Label>
+                                    <Label htmlFor="volunteersNeeded">{t('admin.dispatch.volunteersNeededLabel')}</Label>
                                     <Input id="volunteersNeeded" name="volunteersNeeded" type="number" min="1" value={newTask.volunteersNeeded} onChange={handleInputChange} />
                                 </div>
                             </div>
@@ -166,7 +168,7 @@ export default function DispatchCenterPage() {
                         <CardFooter>
                             <Button type="submit" className="w-full">
                                 <PlusCircle className="mr-2" />
-                                Broadcast Task
+                                {t('admin.dispatch.broadcastButton')}
                             </Button>
                         </CardFooter>
                     </form>

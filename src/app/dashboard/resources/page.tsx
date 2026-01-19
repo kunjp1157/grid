@@ -23,9 +23,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { useTranslation } from '@/context/LocalizationContext';
 
 
 export default function CommunityResourcesPage() {
+    const { t } = useTranslation();
     const [allResources, setAllResources] = useState<CommunityResource[]>(initialResources);
 
     useEffect(() => {
@@ -37,7 +39,7 @@ export default function CommunityResourcesPage() {
     }, []);
     
     const getUserName = (userId: string) => {
-        return users.find(u => u.id === userId)?.name || 'Unknown User';
+        return users.find(u => u.id === userId)?.name || t('common.unknownUser');
     }
 
     return (
@@ -45,17 +47,17 @@ export default function CommunityResourcesPage() {
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                 <div className='flex items-center gap-3'>
                     <HeartHandshake className="h-8 w-8 text-primary" />
-                    <h1 className="text-3xl font-bold">Community Resources</h1>
+                    <h1 className="text-3xl font-bold">{t('citizen.resources.title')}</h1>
                 </div>
                 <Button asChild>
                     <Link href="/dashboard/resources/new">
                         <PlusCircle className="mr-2 h-4 w-4" />
-                        Offer a Resource
+                        {t('citizen.resources.newButton')}
                     </Link>
                 </Button>
             </div>
             <p className="text-muted-foreground">
-                A list of resources being offered by fellow community members to help during the crisis.
+                {t('citizen.resources.description')}
             </p>
 
             {allResources.length > 0 ? (
@@ -73,7 +75,7 @@ export default function CommunityResourcesPage() {
                                <div className="text-sm">
                                     <div className="flex items-center gap-2">
                                         <User className="h-4 w-4 text-muted-foreground" />
-                                        <span>Offered by: {getUserName(resource.userId)}</span>
+                                        <span>{t('citizen.resources.offeredBy', { name: getUserName(resource.userId) })}</span>
                                     </div>
                                </div>
                             </CardContent>
@@ -83,7 +85,7 @@ export default function CommunityResourcesPage() {
                                         <AccordionTrigger>
                                             <div className='flex items-center gap-2 text-sm'>
                                                 <MapPin className="h-4 w-4 text-muted-foreground" />
-                                                Show on Map
+                                                {t('citizen.resources.showOnMap')}
                                             </div>
                                         </AccordionTrigger>
                                         <AccordionContent>
@@ -94,7 +96,7 @@ export default function CommunityResourcesPage() {
                             </CardContent>
                             <CardContent>
                                 <p className="text-xs text-muted-foreground">
-                                    Posted on {formatDate(resource.timestamp, 'PP')}
+                                    {t('citizen.resources.postedOn', { date: formatDate(resource.timestamp, 'PP') })}
                                 </p>
                             </CardContent>
                         </Card>
@@ -102,8 +104,8 @@ export default function CommunityResourcesPage() {
                 </div>
             ) : (
                 <div className="text-center py-12 border-2 border-dashed rounded-lg">
-                    <h3 className="text-xl font-semibold">No Community Resources Yet</h3>
-                    <p className="text-muted-foreground mt-2 mb-4">Be the first to offer help to your community.</p>
+                    <h3 className="text-xl font-semibold">{t('citizen.resources.emptyTitle')}</h3>
+                    <p className="text-muted-foreground mt-2 mb-4">{t('citizen.resources.emptyDescription')}</p>
                 </div>
             )}
         </div>

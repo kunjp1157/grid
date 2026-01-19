@@ -25,6 +25,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Loader2, Repeat } from 'lucide-react';
+import { useTranslation } from '@/context/LocalizationContext';
 
 const barterSchema = z.object({
   have: z.string().min(5, "Please describe what you have in more detail.").max(200, "Description is too long."),
@@ -34,6 +35,7 @@ const barterSchema = z.object({
 export type BarterFormValues = z.infer<typeof barterSchema>;
 
 export default function NewBarterPostPage() {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -51,8 +53,8 @@ export default function NewBarterPostPage() {
     console.log("New Barter Post Submitted:", data);
 
     toast({
-        title: "Exchange Post Created!",
-        description: "Your barter post is now live on the board.",
+        title: t('citizen.barter.new.success.createdTitle'),
+        description: t('citizen.barter.new.success.createdDescription'),
         variant: 'default',
     });
 
@@ -65,9 +67,9 @@ export default function NewBarterPostPage() {
         <CardHeader>
           <div className="flex items-center gap-3">
             <Repeat className="h-6 w-6 text-primary" />
-            <CardTitle>Create a Barter Post</CardTitle>
+            <CardTitle>{t('citizen.barter.new.title')}</CardTitle>
           </div>
-          <CardDescription>Let your community know what you can offer and what you need in return.</CardDescription>
+          <CardDescription>{t('citizen.barter.new.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -77,18 +79,18 @@ export default function NewBarterPostPage() {
                 name="have"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg font-semibold text-green-700">I HAVE...</FormLabel>
+                    <FormLabel className="text-lg font-semibold text-green-700">{t('citizen.barter.new.haveLabel')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="e.g., 'A box of 10 granola bars' or '2 fully charged power banks'"
+                        placeholder={t('citizen.barter.new.havePlaceholder')}
                         className="resize-none"
                         {...field}
                         rows={3}
                       />
                     </FormControl>
-                     <FormDescription>
-                       Be specific about the item, quantity, and condition.
-                    </FormDescription>
+                     <CardDescription>
+                       {t('citizen.barter.new.haveDescription')}
+                    </CardDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -99,18 +101,18 @@ export default function NewBarterPostPage() {
                 name="need"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-lg font-semibold text-orange-700">I NEED...</FormLabel>
+                    <FormLabel className="text-lg font-semibold text-orange-700">{t('citizen.barter.new.needLabel')}</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="e.g., 'A first aid kit' or 'Some clean drinking water'"
+                        placeholder={t('citizen.barter.new.needPlaceholder')}
                         className="resize-none"
                         {...field}
                         rows={3}
                       />
                     </FormControl>
-                    <FormDescription>
-                       Clearly state what you are looking for in exchange.
-                    </FormDescription>
+                    <CardDescription>
+                       {t('citizen.barter.new.needDescription')}
+                    </CardDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -118,7 +120,7 @@ export default function NewBarterPostPage() {
 
               <Button type="submit" disabled={form.formState.isSubmitting}>
                  {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Post to Board
+                {t('citizen.barter.new.submitButton')}
               </Button>
             </form>
           </Form>

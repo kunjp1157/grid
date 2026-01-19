@@ -143,6 +143,141 @@
         "totalReports": "Total Reports",
         "resolved": "Resolved",
         "pending": "Pending"
+    },
+    "liveStream": {
+        "title": "Live Eye Witness Stream",
+        "description": "You are broadcasting a live video feed for report #{id}. The crisis management team can now see what you see.",
+        "cameraRequiredTitle": "Camera Access Required",
+        "cameraRequiredDescription": "Please allow camera access in your browser to start streaming.",
+        "requestingPermission": "Requesting camera permission...",
+        "safetyNoticeTitle": "Important Safety Notice",
+        "safetyNoticeDescription": "Only stream if it is safe to do so. Do not put yourself in danger. Your safety is the top priority.",
+        "stopButton": "Stop Streaming & Go Back",
+        "error": {
+            "cameraDeniedTitle": "Camera Access Denied",
+            "cameraDeniedDescription": "Please enable camera permissions in your browser settings to use this feature."
+        }
+    },
+    "tasks": {
+        "title": "Volunteer Task Board",
+        "description": "Browse and accept volunteer opportunities to help your community.",
+        "noSkills": "No specific skills required",
+        "volunteers": "volunteers",
+        "acceptButton": "Accept Task",
+        "acceptedButton": "Accepted",
+        "postedOn": "Posted on {date}",
+        "emptyTitle": "No Open Tasks",
+        "emptyDescription": "There are currently no open volunteer tasks. Check back later!",
+        "error": {
+            "notVolunteerTitle": "Not a Volunteer",
+            "notVolunteerDescription": "Please register as a volunteer in your profile to accept tasks.",
+            "alreadyAcceptedTitle": "Already Accepted",
+            "alreadyAcceptedDescription": "You have already accepted this task.",
+            "taskFullTitle": "Task Full",
+            "taskFullDescription": "This task already has enough volunteers."
+        },
+        "success": {
+            "taskAcceptedTitle": "Task Accepted!",
+            "taskAcceptedDescription": "You have signed up for \"{title}\"."
+        }
+    },
+    "resources": {
+        "title": "Community Resources",
+        "description": "A list of resources being offered by fellow community members to help during the crisis.",
+        "newButton": "Offer a Resource",
+        "offeredBy": "Offered by: {name}",
+        "showOnMap": "Show on Map",
+        "postedOn": "Posted on {date}",
+        "emptyTitle": "No Community Resources Yet",
+        "emptyDescription": "Be the first to offer help to your community.",
+        "new": {
+            "title": "Offer a Community Resource",
+            "description": "Share available resources with your neighbors. Your small act of kindness can make a huge difference in a crisis.",
+            "typeLabel": "Resource Type",
+            "typePlaceholder": "Select the type of resource you are offering",
+            "detailsLabel": "Description",
+            "detailsPlaceholder": "Provide details, e.g., '20-liter sealed water bottle' or 'First aid kit with bandages and antiseptic'.",
+            "locationLabel": "Your Location (where the resource is available)",
+            "submitButton": "Submit Resource",
+            "error": {
+                "notLoggedIn": "You must be logged in to offer a resource."
+            },
+            "success": {
+                "title": "Resource Offered!",
+                "description": "Thank you for supporting your community. Your resource is now listed."
+            }
+        }
+    },
+    "barter": {
+        "title": "Barter Board",
+        "description": "Exchange essential goods and services with your community members.",
+        "newPostButton": "Create New Post",
+        "postedOn": "Posted {date}",
+        "connectButton": "Connect to Exchange",
+        "emptyTitle": "The Barter Board is Empty",
+        "emptyDescription": "Be the first to create an exchange post.",
+        "success": {
+            "connectedTitle": "Connection Request Sent (Simulated)",
+            "connectedDescription": "A notification has been sent to {name} to connect and coordinate the exchange."
+        },
+        "new": {
+            "title": "Create a Barter Post",
+            "description": "Let your community know what you can offer and what you need in return.",
+            "haveLabel": "I HAVE...",
+            "havePlaceholder": "e.g., 'A box of 10 granola bars' or '2 fully charged power banks'",
+            "haveDescription": "Be specific about the item, quantity, and condition.",
+            "needLabel": "I NEED...",
+            "needPlaceholder": "e.g., 'A first aid kit' or 'Some clean drinking water'",
+            "needDescription": "Clearly state what you are looking for in exchange.",
+            "submitButton": "Post to Board",
+            "success": {
+                "createdTitle": "Exchange Post Created!",
+                "createdDescription": "Your barter post is now live on the board."
+            }
+        }
+    },
+    "missingPersons": {
+        "title": "Missing Persons AI Matcher",
+        "cardTitle": "Find Someone",
+        "cardDescription": "Upload a photo of a missing person and a group photo from a shelter or crowd. The AI will analyze both to find a potential match.",
+        "missingPersonLabel": "1. Photo of Missing Person",
+        "groupLabel": "2. Photo of Group / Found People",
+        "submitButton": "Find Match",
+        "submitButtonLoading": "Analyzing...",
+        "resultTitle": "AI Analysis Result",
+        "matchFound": "Potential Match Found",
+        "noMatch": "No Clear Match Found",
+        "reasoning": "AI Reasoning:",
+        "confidence": "Confidence Score: {score}%",
+        "error": {
+            "missingImages": "Missing Images",
+            "missingImagesDescription": "Please upload both images before submitting.",
+            "analysisFailed": "AI Matching Failed",
+            "analysisFailedDescription": "Could not analyze the images. Please try again."
+        }
+    },
+    "sos": {
+        "title": "Voice-Activated Panic Mode",
+        "description": "In a critical emergency where you cannot type, press and hold the SOS button below to record your situation. Release to automatically send a report.",
+        "warningTitle": "For Emergency Use Only",
+        "warningDescription": "This feature dispatches an immediate high-priority alert. Misuse may result in penalties.",
+        "status": {
+            "idle": "Press & Hold to Record SOS",
+            "recording": "Recording...",
+            "processing": "Processing...",
+            "submitted": "Submitted!",
+            "error": "Error! Try Again"
+        },
+        "error": {
+            "micDeniedTitle": "Microphone Access Denied",
+            "micDeniedDescription": "Please enable microphone permissions in your browser settings.",
+            "processingFailedTitle": "AI Processing Failed",
+            "processingFailedDescription": "Could not understand the audio. Please try again or submit a manual report."
+        },
+        "success": {
+            "title": "SOS Report Submitted!",
+            "description": "Emergency report for \"{description}\" (Priority: {priority}) routed to {zoneName}. Help is on the way."
+        }
     }
   },
   "admin": {

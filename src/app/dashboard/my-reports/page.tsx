@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -64,13 +65,13 @@ export default function MyReportsPage() {
         });
         setUserReports(updatedReports);
         toast({
-            title: "Feedback Submitted",
-            description: "Thank you for helping us improve our service!",
+            title: t('citizen.reports.feedback.successTitle'),
+            description: t('citizen.reports.feedback.successDescription'),
         });
     };
 
     if (!user) {
-        return <div>Loading...</div>;
+        return <div>{t('common.loading')}</div>;
     }
 
     return (
@@ -112,7 +113,7 @@ export default function MyReportsPage() {
                                      <Button asChild variant="secondary" size="sm">
                                         <Link href={`/dashboard/live/${report.id}`}>
                                             <Video className="mr-2 h-4 w-4" />
-                                            Go Live
+                                            {t('citizen.reports.goLive')}
                                         </Link>
                                     </Button>
                                 </TableCell>

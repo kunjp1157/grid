@@ -5,12 +5,14 @@ import QRCode from "react-qr-code";
 import type { User } from "@/lib/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { QrCode } from "lucide-react";
+import { useTranslation } from "@/context/LocalizationContext";
 
 interface MedicalIdQrCodeProps {
     user: User;
 }
 
 export function MedicalIdQrCode({ user }: MedicalIdQrCodeProps) {
+    const { t } = useTranslation();
     const qrData = JSON.stringify({
         name: user.name,
         bloodGroup: user.bloodGroup || 'N/A',
@@ -22,7 +24,7 @@ export function MedicalIdQrCode({ user }: MedicalIdQrCodeProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><QrCode /> Digital Medical ID</CardTitle>
+                <CardTitle className="flex items-center gap-2"><QrCode /> {t('profile.medicalId.title')}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col items-center justify-center gap-4">
                 <div className="bg-white p-4 rounded-lg">
@@ -34,9 +36,8 @@ export function MedicalIdQrCode({ user }: MedicalIdQrCodeProps) {
                         level="L"
                     />
                 </div>
-                <p className="text-xs text-muted-foreground text-center">First responders can scan this to view your critical medical information.</p>
+                <p className="text-xs text-muted-foreground text-center">{t('profile.medicalId.description')}</p>
             </CardContent>
         </Card>
     );
 }
-

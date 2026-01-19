@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from 'react';
@@ -35,9 +36,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { useTranslation } from '@/context/LocalizationContext';
 
 
 export default function ManageZonesPage() {
+  const { t } = useTranslation();
   const [zones, setZones] = useState<Zone[]>(initialZones);
   const [newZoneName, setNewZoneName] = useState('');
   const { toast } = useToast();
@@ -46,8 +49,8 @@ export default function ManageZonesPage() {
     e.preventDefault();
     if (newZoneName.trim() === '') {
       toast({
-        title: 'Error',
-        description: 'Zone name cannot be empty.',
+        title: t('common.error'),
+        description: t('admin.zones.error.nameEmpty'),
         variant: 'destructive',
       });
       return;
@@ -61,38 +64,36 @@ export default function ManageZonesPage() {
     setZones([...zones, newZone]);
     setNewZoneName('');
     toast({
-      title: 'Success',
-      description: `Zone "${newZone.name}" has been added.`,
+      title: t('admin.zones.success.zoneAdded', { name: newZone.name }),
     });
   };
   
   const handleDeleteZone = (zoneId: string) => {
     setZones(zones.filter(zone => zone.id !== zoneId));
     toast({
-        title: "Zone Deleted",
-        description: "The zone has been removed.",
+        title: t('admin.zones.success.zoneDeleted'),
         variant: "destructive"
     })
   }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Manage Zones</h1>
+      <h1 className="text-3xl font-bold">{t('admin.zones.title')}</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2">
             <Card>
                 <CardHeader>
-                <CardTitle>All Zones</CardTitle>
-                <CardDescription>View and manage all available operational zones.</CardDescription>
+                <CardTitle>{t('admin.zones.allZonesTitle')}</CardTitle>
+                <CardDescription>{t('admin.zones.allZonesDescription')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                 <Table>
                     <TableHeader>
                     <TableRow>
-                        <TableHead>Zone ID</TableHead>
-                        <TableHead>Zone Name</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead>{t('admin.zones.tableId')}</TableHead>
+                        <TableHead>{t('admin.zones.tableName')}</TableHead>
+                        <TableHead className="text-right">{t('admin.zones.tableActions')}</TableHead>
                     </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -105,20 +106,20 @@ export default function ManageZonesPage() {
                                 <AlertDialogTrigger asChild>
                                     <Button variant="destructive" size="icon">
                                         <Trash2 className="h-4 w-4" />
-                                        <span className="sr-only">Delete Zone</span>
+                                        <span className="sr-only">{t('admin.zones.deleteAction')}</span>
                                     </Button>
                                 </AlertDialogTrigger>
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
-                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogTitle>{t('admin.zones.deleteDialog.title')}</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                        This action cannot be undone. This will permanently delete the zone.
+                                        {t('admin.zones.deleteDialog.description')}
                                     </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogCancel>{t('admin.zones.deleteDialog.cancel')}</AlertDialogCancel>
                                     <AlertDialogAction onClick={() => handleDeleteZone(zone.id)}>
-                                        Continue
+                                        {t('admin.zones.deleteDialog.continue')}
                                     </AlertDialogAction>
                                     </AlertDialogFooter>
                                 </AlertDialogContent>
@@ -134,23 +135,23 @@ export default function ManageZonesPage() {
         <div className="md:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Add New Zone</CardTitle>
-              <CardDescription>Create a new operational zone.</CardDescription>
+              <CardTitle>{t('admin.zones.addZoneTitle')}</CardTitle>
+              <CardDescription>{t('admin.zones.addZoneDescription')}</CardDescription>
             </CardHeader>
             <form onSubmit={handleAddZone}>
               <CardContent>
                 <div className="space-y-2">
-                  <Label htmlFor="zone-name">Zone Name</Label>
+                  <Label htmlFor="zone-name">{t('admin.zones.zoneNameLabel')}</Label>
                   <Input
                     id="zone-name"
                     value={newZoneName}
                     onChange={(e) => setNewZoneName(e.target.value)}
-                    placeholder="e.g., Central District"
+                    placeholder={t('admin.zones.zoneNamePlaceholder')}
                   />
                 </div>
               </CardContent>
               <CardFooter>
-                <Button type="submit" className="w-full">Add Zone</Button>
+                <Button type="submit" className="w-full">{t('admin.zones.addButton')}</Button>
               </CardFooter>
             </form>
           </Card>

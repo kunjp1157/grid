@@ -23,8 +23,10 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { MedicalIdQrCode } from '@/components/shared/MedicalIdQrCode';
+import { useTranslation } from '@/context/LocalizationContext';
 
 export default function CitizenProfilePage() {
+  const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [editableUser, setEditableUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -69,8 +71,8 @@ export default function CitizenProfilePage() {
     setUser(editableUser);
     setIsEditing(false);
     toast({
-        title: "Profile Updated",
-        description: "Your changes have been saved. (Note: This is a simulation and will not persist after a page refresh).",
+        title: t('profile.success.profileUpdated'),
+        description: t('profile.success.profileUpdatedDescription'),
     });
   };
 
@@ -91,17 +93,17 @@ export default function CitizenProfilePage() {
   const userInitials = user?.name.split(' ').map(n => n[0]).join('') || 'U';
 
   if (!user || !editableUser) {
-    return <div>Loading profile...</div>;
+    return <div>{t('common.loading')}</div>;
   }
 
   return (
     <div className="space-y-6">
        <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">My Profile</h1>
+        <h1 className="text-3xl font-bold">{t('citizen.profile.title')}</h1>
         {!isEditing && (
              <Button variant="outline" onClick={handleEditToggle}>
                 <Pencil className="mr-2 h-4 w-4" />
-                Edit Profile
+                {t('profile.editButton')}
             </Button>
         )}
       </div>
@@ -117,7 +119,7 @@ export default function CitizenProfilePage() {
               <div className="space-y-1">
                  {isEditing ? (
                   <div className="space-y-2">
-                     <Label htmlFor="name">Name</Label>
+                     <Label htmlFor="name">{t('profile.nameLabel')}</Label>
                     <Input id="name" name="name" value={editableUser.name} onChange={handleInputChange} className="text-2xl font-bold h-auto p-0 border-none focus-visible:ring-0 focus-visible:ring-offset-0" />
                   </div>
                 ) : (
@@ -133,80 +135,80 @@ export default function CitizenProfilePage() {
                 <div className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                            <Label htmlFor="email" className="flex items-center gap-2 text-muted-foreground"><Mail className="h-4 w-4" /> Email</Label>
-                            <Input id="email" name="email" type="email" value={editableUser.email} onChange={handleInputChange} placeholder="Enter email address" />
+                            <Label htmlFor="email" className="flex items-center gap-2 text-muted-foreground"><Mail className="h-4 w-4" /> {t('profile.emailLabel')}</Label>
+                            <Input id="email" name="email" type="email" value={editableUser.email} onChange={handleInputChange} placeholder={t('profile.emailPlaceholder')} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="mobile" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> Mobile</Label>
-                            <Input id="mobile" name="mobile" value={editableUser.mobile || ''} onChange={handleInputChange} placeholder="Enter mobile number" />
+                            <Label htmlFor="mobile" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> {t('profile.mobileLabel')}</Label>
+                            <Input id="mobile" name="mobile" value={editableUser.mobile || ''} onChange={handleInputChange} placeholder={t('profile.mobilePlaceholder')} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="address" className="flex items-center gap-2 text-muted-foreground"><Home className="h-4 w-4" /> Address</Label>
-                            <Input id="address" name="address" value={editableUser.address || ''} onChange={handleInputChange} placeholder="Enter full address" />
+                            <Label htmlFor="address" className="flex items-center gap-2 text-muted-foreground"><Home className="h-4 w-4" /> {t('profile.addressLabel')}</Label>
+                            <Input id="address" name="address" value={editableUser.address || ''} onChange={handleInputChange} placeholder={t('profile.addressPlaceholder')} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="pincode" className="flex items-center gap-2 text-muted-foreground"><MapPin className="h-4 w-4" /> PIN Code</Label>
-                            <Input id="pincode" name="pincode" value={editableUser.pincode || ''} onChange={handleInputChange} placeholder="Enter PIN code" />
+                            <Label htmlFor="pincode" className="flex items-center gap-2 text-muted-foreground"><MapPin className="h-4 w-4" /> {t('profile.pincodeLabel')}</Label>
+                            <Input id="pincode" name="pincode" value={editableUser.pincode || ''} onChange={handleInputChange} placeholder={t('profile.pincodePlaceholder')} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="bloodGroup" className="flex items-center gap-2 text-muted-foreground"><Heart className="h-4 w-4" /> Blood Group</Label>
-                            <Input id="bloodGroup" name="bloodGroup" value={editableUser.bloodGroup || ''} onChange={handleInputChange} placeholder="e.g., O+" />
+                            <Label htmlFor="bloodGroup" className="flex items-center gap-2 text-muted-foreground"><Heart className="h-4 w-4" /> {t('profile.bloodGroupLabel')}</Label>
+                            <Input id="bloodGroup" name="bloodGroup" value={editableUser.bloodGroup || ''} onChange={handleInputChange} placeholder={t('profile.bloodGroupPlaceholder')} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="emergencyContactName" className="flex items-center gap-2 text-muted-foreground"><ShieldAlert className="h-4 w-4" /> Emergency Contact</Label>
-                            <Input id="emergencyContactName" name="emergencyContactName" value={editableUser.emergencyContactName || ''} onChange={handleInputChange} placeholder="Contact name" />
+                            <Label htmlFor="emergencyContactName" className="flex items-center gap-2 text-muted-foreground"><ShieldAlert className="h-4 w-4" /> {t('profile.emergencyContactLabel')}</Label>
+                            <Input id="emergencyContactName" name="emergencyContactName" value={editableUser.emergencyContactName || ''} onChange={handleInputChange} placeholder={t('profile.emergencyContactPlaceholder')} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="emergencyContactNumber" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> Emergency Contact No.</Label>
-                            <Input id="emergencyContactNumber" name="emergencyContactNumber" value={editableUser.emergencyContactNumber || ''} onChange={handleInputChange} placeholder="Contact number" />
+                            <Label htmlFor="emergencyContactNumber" className="flex items-center gap-2 text-muted-foreground"><Phone className="h-4 w-4" /> {t('profile.emergencyContactNumberLabel')}</Label>
+                            <Input id="emergencyContactNumber" name="emergencyContactNumber" value={editableUser.emergencyContactNumber || ''} onChange={handleInputChange} placeholder={t('profile.emergencyContactNumberPlaceholder')} />
                         </div>
                     </div>
                      <div className="space-y-2">
-                        <Label htmlFor="medicalConditions" className="flex items-center gap-2 text-muted-foreground"><Stethoscope className="h-4 w-4" /> Medical Conditions</Label>
-                        <Textarea id="medicalConditions" name="medicalConditions" value={editableUser.medicalConditions || ''} onChange={handleInputChange} placeholder="e.g., Allergic to peanuts, Asthma" />
+                        <Label htmlFor="medicalConditions" className="flex items-center gap-2 text-muted-foreground"><Stethoscope className="h-4 w-4" /> {t('profile.medicalConditionsLabel')}</Label>
+                        <Textarea id="medicalConditions" name="medicalConditions" value={editableUser.medicalConditions || ''} onChange={handleInputChange} placeholder={t('profile.medicalConditionsPlaceholder')} />
                     </div>
                 </div>
             ) : (
                 <ul className="space-y-3 text-sm">
                     <li className="flex justify-between">
-                        <span className="text-muted-foreground flex items-center gap-2"><Phone className="h-4 w-4" /> Mobile</span>
-                        <span>{user.mobile || 'N/A'}</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><Phone className="h-4 w-4" /> {t('profile.mobileLabel')}</span>
+                        <span>{user.mobile || t('common.na')}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between">
-                        <span className="text-muted-foreground flex items-center gap-2"><Home className="h-4 w-4" /> Address</span>
-                        <span className='text-right'>{user.address || 'N/A'}</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><Home className="h-4 w-4" /> {t('profile.addressLabel')}</span>
+                        <span className='text-right'>{user.address || t('common.na')}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between">
-                        <span className="text-muted-foreground flex items-center gap-2"><MapPin className="h-4 w-4" /> PIN Code</span>
-                        <span>{user.pincode || 'N/A'}</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><MapPin className="h-4 w-4" /> {t('profile.pincodeLabel')}</span>
+                        <span>{user.pincode || t('common.na')}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between">
-                        <span className="text-muted-foreground flex items-center gap-2"><Heart className="h-4 w-4" /> Blood Group</span>
-                        <span>{user.bloodGroup || 'N/A'}</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><Heart className="h-4 w-4" /> {t('profile.bloodGroupLabel')}</span>
+                        <span>{user.bloodGroup || t('common.na')}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between">
-                        <span className="text-muted-foreground flex items-center gap-2"><ShieldAlert className="h-4 w-4" /> Emergency Contact</span>
-                        <span>{user.emergencyContactName || 'N/A'} ({user.emergencyContactNumber || 'N/A'})</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><ShieldAlert className="h-4 w-4" /> {t('profile.emergencyContactLabel')}</span>
+                        <span>{user.emergencyContactName || t('common.na')} ({user.emergencyContactNumber || t('common.na')})</span>
                     </li>
                      <Separator />
                     <li className="flex justify-between">
-                        <span className="text-muted-foreground flex items-center gap-2"><Stethoscope className="h-4 w-4" /> Medical Conditions</span>
-                        <span className='text-right'>{user.medicalConditions || 'N/A'}</span>
+                        <span className="text-muted-foreground flex items-center gap-2"><Stethoscope className="h-4 w-4" /> {t('profile.medicalConditionsLabel')}</span>
+                        <span className='text-right'>{user.medicalConditions || t('common.na')}</span>
                     </li>
                     <Separator />
                     <li className="flex justify-between items-center">
-                        <span className="text-muted-foreground">Role</span>
+                        <span className="text-muted-foreground">{t('profile.roleLabel')}</span>
                         <Badge variant={user.role === 'admin' ? 'default' : 'secondary'} className="capitalize">
                         {user.role}
                         </Badge>
                     </li>
                     <Separator />
                     <li className="flex justify-between">
-                        <span className="text-muted-foreground">User ID</span>
+                        <span className="text-muted-foreground">{t('profile.userIdLabel')}</span>
                         <span className="font-mono text-xs">{user.id}</span>
                     </li>
                 </ul>
@@ -214,8 +216,8 @@ export default function CitizenProfilePage() {
           </CardContent>
            {isEditing && (
                 <CardFooter className="justify-end gap-2">
-                    <Button variant="ghost" onClick={handleEditToggle}>Cancel</Button>
-                    <Button onClick={handleSaveChanges}>Save Changes</Button>
+                    <Button variant="ghost" onClick={handleEditToggle}>{t('profile.cancelButton')}</Button>
+                    <Button onClick={handleSaveChanges}>{t('profile.saveButton')}</Button>
                 </CardFooter>
             )}
         </Card>
@@ -223,27 +225,27 @@ export default function CitizenProfilePage() {
         <div className="space-y-6">
           <Card>
               <CardHeader>
-                  <CardTitle>My Stats</CardTitle>
+                  <CardTitle>{t('citizen.profile.statsTitle')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                       <div className='flex items-center gap-3'>
                           <FileText className="h-5 w-5 text-muted-foreground" />
-                          <span className="text-sm font-medium">Total Reports</span>
+                          <span className="text-sm font-medium">{t('citizen.profile.totalReports')}</span>
                       </div>
                       <span className="text-lg font-bold">{userStats.total}</span>
                   </div>
                     <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                       <div className='flex items-center gap-3'>
                           <CheckCircle className="h-5 w-5 text-green-500" />
-                          <span className="text-sm font-medium">Resolved</span>
+                          <span className="text-sm font-medium">{t('citizen.profile.resolved')}</span>
                       </div>
                       <span className="text-lg font-bold">{userStats.resolved}</span>
                   </div>
                     <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                       <div className='flex items-center gap-3'>
                           <Clock className="h-5 w-5 text-yellow-500" />
-                          <span className="text-sm font-medium">Pending</span>
+                          <span className="text-sm font-medium">{t('citizen.profile.pending')}</span>
                       </div>
                       <span className="text-lg font-bold">{userStats.pending}</span>
                   </div>
@@ -254,7 +256,7 @@ export default function CitizenProfilePage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2"><HandHeart /> Volunteer Status</CardTitle>
+                    <CardTitle className="flex items-center gap-2"><HandHeart /> {t('profile.volunteerStatusTitle')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                 {isEditing ? (
@@ -263,21 +265,21 @@ export default function CitizenProfilePage() {
                              <div className="space-y-4">
                                 <div className="flex items-center gap-2 text-green-600">
                                     <Award className="h-5 w-5" />
-                                    <p className="font-semibold">You are a registered volunteer!</p>
+                                    <p className="font-semibold">{t('profile.isVolunteer')}</p>
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="skills">Your Skills (comma-separated)</Label>
-                                    <Input id="skills" name="skills" value={(editableUser.skills || []).join(', ')} onChange={(e) => setEditableUser({...editableUser, skills: e.target.value.split(',').map(s => s.trim())})} placeholder="e.g., First Aid, Driving" />
+                                    <Label htmlFor="skills">{t('profile.skillsLabel')}</Label>
+                                    <Input id="skills" name="skills" value={(editableUser.skills || []).join(', ')} onChange={(e) => setEditableUser({...editableUser, skills: e.target.value.split(',').map(s => s.trim())})} placeholder={t('profile.skillsPlaceholder')} />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="certifications">Certifications</Label>
-                                    <Input id="certifications" name="certifications" value={editableUser.certifications || ''} onChange={handleInputChange} placeholder="e.g., CPR Certified" />
+                                    <Label htmlFor="certifications">{t('profile.certificationsLabel')}</Label>
+                                    <Input id="certifications" name="certifications" value={editableUser.certifications || ''} onChange={handleInputChange} placeholder={t('profile.certificationsPlaceholder')} />
                                 </div>
                              </div>
                         ) : (
                             <div className='text-center'>
-                               <p className="text-sm text-muted-foreground mb-4">Join the community response team.</p>
-                               <Button onClick={handleBecomeVolunteer}>Become a Volunteer</Button>
+                               <p className="text-sm text-muted-foreground mb-4">{t('profile.volunteerPrompt')}</p>
+                               <Button onClick={handleBecomeVolunteer}>{t('profile.becomeVolunteerButton')}</Button>
                             </div>
                         )}
                     </div>
@@ -285,12 +287,12 @@ export default function CitizenProfilePage() {
                     <div>
                         {user.isVolunteer ? (
                              <div className="space-y-3">
-                                <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Verified Volunteer</Badge>
-                                 <p className="text-sm"><strong className="text-muted-foreground">Skills:</strong> {user.skills?.join(', ') || 'Not specified'}</p>
-                                 <p className="text-sm"><strong className="text-muted-foreground">Certifications:</strong> {user.certifications || 'None'}</p>
+                                <Badge className="bg-green-100 text-green-800 hover:bg-green-100">{t('profile.volunteerBadge')}</Badge>
+                                 <p className="text-sm"><strong className="text-muted-foreground">{t('profile.skillsDisplayLabel')}:</strong> {user.skills?.join(', ') || t('profile.notSpecified')}</p>
+                                 <p className="text-sm"><strong className="text-muted-foreground">{t('profile.certificationsDisplayLabel')}:</strong> {user.certifications || t('profile.none')}</p>
                             </div>
                         ) : (
-                            <p className="text-sm text-muted-foreground">Not registered as a volunteer. You can register in edit mode.</p>
+                            <p className="text-sm text-muted-foreground">{t('profile.notVolunteer')}</p>
                         )}
                     </div>
                 )}

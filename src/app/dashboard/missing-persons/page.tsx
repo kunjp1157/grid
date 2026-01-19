@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import { Progress } from '@/components/ui/progress';
+import { useTranslation } from '@/context/LocalizationContext';
 
 
 const matcherSchema = z.object({
@@ -26,6 +27,7 @@ const matcherSchema = z.object({
 type MatcherFormValues = z.infer<typeof matcherSchema>;
 
 export default function MissingPersonsPage() {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<FindMissingPersonOutput | null>(null);
@@ -49,7 +51,7 @@ export default function MissingPersonsPage() {
 
   const onSubmit = async (data: MatcherFormValues) => {
     if (!missingPersonPreview || !groupPreview) {
-        toast({ title: "Missing Images", description: "Please upload both images before submitting.", variant: "destructive"});
+        toast({ title: t('citizen.missingPersons.error.missingImages'), description: t('citizen.missingPersons.error.missingImagesDescription'), variant: "destructive"});
         return;
     }
 
@@ -65,8 +67,8 @@ export default function MissingPersonsPage() {
     } catch (error) {
       console.error('AI Matching failed:', error);
       toast({
-        title: 'AI Matching Failed',
-        description: 'Could not analyze the images. Please try again.',
+        title: t('citizen.missingPersons.error.analysisFailed'),
+        description: t('citizen.missingPersons.error.analysisFailedDescription'),
         variant: 'destructive',
       });
     } finally {
@@ -83,14 +85,14 @@ export default function MissingPersonsPage() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <Users className="h-8 w-8 text-primary" />
-        <h1 className="text-3xl font-bold">Missing Persons AI Matcher</h1>
+        <h1 className="text-3xl font-bold">{t('citizen.missingPersons.title')}</h1>
       </div>
       
       <Card>
         <CardHeader>
-          <CardTitle>Find Someone</CardTitle>
+          <CardTitle>{t('citizen.missingPersons.cardTitle')}</CardTitle>
           <CardDescription>
-            Upload a photo of a missing person and a group photo from a shelter or crowd. The AI will analyze both to find a potential match.
+            {t('citizen.missingPersons.cardDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -102,7 +104,7 @@ export default function MissingPersonsPage() {
                   name="missingPersonImage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>1. Photo of Missing Person</FormLabel>
+                      <FormLabel>{t('citizen.missingPersons.missingPersonLabel')}</FormLabel>
                       <FormControl>
                         <Input type="file" accept="image/*" onChange={(e) => {
                           field.onChange(e.target.files);
@@ -119,7 +121,7 @@ export default function MissingPersonsPage() {
                   name="groupImage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>2. Photo of Group / Found People</FormLabel>
+                      <FormLabel>{t('citizen.missingPersons.groupLabel')}</FormLabel>
                       <FormControl>
                         <Input type="file" accept="image/*" onChange={(e) => {
                           field.onChange(e.target.files);
@@ -135,7 +137,7 @@ export default function MissingPersonsPage() {
 
               <Button type="submit" disabled={isLoading} size="lg">
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
-                {isLoading ? 'Analyzing...' : 'Find Match'}
+                {isLoading ? t('citizen.missingPersons.submitButtonLoading') : t('citizen.missingPersons.submitButton')}
               </Button>
             </form>
           </Form>
@@ -145,7 +147,7 @@ export default function MissingPersonsPage() {
       {result && (
         <Card>
           <CardHeader>
-            <CardTitle>AI Analysis Result</CardTitle>
+            <CardTitle>{t('citizen.missingPersons.resultTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Alert
@@ -156,14 +158,14 @@ export default function MissingPersonsPage() {
             >
               <ResultIcon />
               <AlertTitle className="font-bold text-lg">
-                {result.matchFound ? 'Potential Match Found' : 'No Clear Match Found'}
+                {result.matchFound ? t('citizen.missingPersons.matchFound') : t('citizen.missingPersons.noMatch')}
               </AlertTitle>
               <AlertDescription className="mt-2 space-y-4">
                 <div>
-                    <strong>AI Reasoning:</strong> {result.reasoning}
+                    <strong>{t('citizen.missingPersons.reasoning')}</strong> {result.reasoning}
                 </div>
                 <div>
-                    <strong className="block mb-1">Confidence Score: {(result.confidenceScore * 100).toFixed(0)}%</strong>
+                    <strong className="block mb-1">{t('citizen.missingPersons.confidence', { score: (result.confidenceScore * 100).toFixed(0) })}</strong>
                     <Progress value={result.confidenceScore * 100} className="w-full h-3" />
                 </div>
               </AlertDescription>

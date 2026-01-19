@@ -6,6 +6,7 @@ import { AlertTriangle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { PredictedHazard } from '@/ai/flows/predict-secondary-hazards';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useTranslation } from '@/context/LocalizationContext';
 
 interface PredictedRisksProps {
   hazards: PredictedHazard[];
@@ -13,6 +14,7 @@ interface PredictedRisksProps {
 }
 
 export function PredictedRisks({ hazards, isLoading }: PredictedRisksProps) {
+  const { t } = useTranslation();
   const renderSkeletons = () => (
     Array.from({ length: 2 }).map((_, i) => (
       <div key={i} className="flex items-start space-x-3">
@@ -30,10 +32,10 @@ export function PredictedRisks({ hazards, isLoading }: PredictedRisksProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-3 text-yellow-900 dark:text-yellow-200">
           <AlertTriangle className="h-6 w-6" />
-          AI Predicted Secondary Risks
+          {t('components.predictedRisks.title')}
         </CardTitle>
         <CardDescription className="text-yellow-700 dark:text-yellow-300">
-          Potential cascading events based on the initial report.
+          {t('components.predictedRisks.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -51,7 +53,7 @@ export function PredictedRisks({ hazards, isLoading }: PredictedRisksProps) {
               </Alert>
             ))
           ) : (
-             <p className="text-sm text-muted-foreground">No secondary risks predicted at this time.</p>
+             <p className="text-sm text-muted-foreground">{t('components.predictedRisks.none')}</p>
           )}
         </div>
       </CardContent>

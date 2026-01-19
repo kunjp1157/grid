@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Bot, Loader2 } from 'lucide-react';
 import type { SopItem } from '@/ai/flows/generate-sop';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslation } from '@/context/LocalizationContext';
 
 interface SopAdvisorProps {
   sopItems: SopItem[];
@@ -16,6 +17,7 @@ interface SopAdvisorProps {
 }
 
 export function SopAdvisor({ sopItems, isLoading, onItemsChange }: SopAdvisorProps) {
+  const { t } = useTranslation();
   const handleCheckedChange = (index: number, checked: boolean) => {
     const newItems = [...sopItems];
     newItems[index].completed = checked;
@@ -36,10 +38,10 @@ export function SopAdvisor({ sopItems, isLoading, onItemsChange }: SopAdvisorPro
       <CardHeader>
         <CardTitle className="flex items-center gap-3 text-blue-900 dark:text-blue-200">
           <Bot className="h-6 w-6" />
-          AI-Powered SOP Advisor
+          {t('components.sopAdvisor.title')}
         </CardTitle>
         <CardDescription className="text-blue-700 dark:text-blue-300">
-          Recommended actions based on the report's priority and type.
+          {t('components.sopAdvisor.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -64,7 +66,7 @@ export function SopAdvisor({ sopItems, isLoading, onItemsChange }: SopAdvisorPro
               </div>
             ))
           ) : (
-             <p className="text-sm text-muted-foreground">No specific SOP required for this report's priority level.</p>
+             <p className="text-sm text-muted-foreground">{t('components.sopAdvisor.none')}</p>
           )}
         </div>
       </CardContent>

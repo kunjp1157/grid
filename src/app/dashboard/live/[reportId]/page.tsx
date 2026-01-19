@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -8,8 +9,10 @@ import { useToast } from '@/hooks/use-toast';
 import { Video, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 import { use } from 'react';
+import { useTranslation } from '@/context/LocalizationContext';
 
 export default function LiveStreamPage({ params }: { params: { reportId: string } }) {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null); // Ref to hold the stream object
@@ -31,8 +34,8 @@ export default function LiveStreamPage({ params }: { params: { reportId: string 
         setHasCameraPermission(false);
         toast({
           variant: 'destructive',
-          title: 'Camera Access Denied',
-          description: 'Please enable camera permissions in your browser settings to use this feature.',
+          title: t('citizen.liveStream.error.cameraDeniedTitle'),
+          description: t('citizen.liveStream.error.cameraDeniedDescription'),
         });
       }
     };
@@ -45,7 +48,7 @@ export default function LiveStreamPage({ params }: { params: { reportId: string 
         streamRef.current.getTracks().forEach(track => track.stop());
       }
     };
-  }, [toast]);
+  }, [toast, t]);
 
   return (
     <div className="space-y-6">
@@ -53,10 +56,10 @@ export default function LiveStreamPage({ params }: { params: { reportId: string 
         <CardHeader>
           <CardTitle className="flex items-center gap-3 text-2xl">
             <Video />
-            Live Eye Witness Stream
+            {t('citizen.liveStream.title')}
           </CardTitle>
           <CardDescription>
-            You are broadcasting a live video feed for report #{resolvedParams.reportId.substring(0, 7)}. The crisis management team can now see what you see.
+            {t('citizen.liveStream.description', { id: resolvedParams.reportId.substring(0, 7)})}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -65,28 +68,28 @@ export default function LiveStreamPage({ params }: { params: { reportId: string 
              {hasCameraPermission === false && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white p-4">
                     <AlertTriangle className="h-12 w-12 text-yellow-400 mb-4" />
-                    <h3 className="text-xl font-bold">Camera Access Required</h3>
-                    <p className="text-center">Please allow camera access in your browser to start streaming.</p>
+                    <h3 className="text-xl font-bold">{t('citizen.liveStream.cameraRequiredTitle')}</h3>
+                    <p className="text-center">{t('citizen.liveStream.cameraRequiredDescription')}</p>
                 </div>
              )}
               {hasCameraPermission === null && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white p-4">
-                    <p>Requesting camera permission...</p>
+                    <p>{t('citizen.liveStream.requestingPermission')}</p>
                 </div>
              )}
           </div>
           
            <Alert variant="destructive">
               <AlertTriangle className="h-4 w-4" />
-              <AlertTitle>Important Safety Notice</AlertTitle>
+              <AlertTitle>{t('citizen.liveStream.safetyNoticeTitle')}</AlertTitle>
               <AlertDescription>
-                Only stream if it is safe to do so. Do not put yourself in danger. Your safety is the top priority.
+                {t('citizen.liveStream.safetyNoticeDescription')}
               </AlertDescription>
            </Alert>
 
            <Button asChild size="lg" className="w-full">
                 <Link href="/dashboard/my-reports">
-                    Stop Streaming & Go Back
+                    {t('citizen.liveStream.stopButton')}
                 </Link>
             </Button>
         </CardContent>

@@ -11,8 +11,10 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, ShieldCheck, CheckCircle, XCircle, HelpCircle } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/context/LocalizationContext';
 
 export default function RumorControlPage() {
+  const { t } = useTranslation();
   const [rumorText, setRumorText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<FactCheckRumorOutput | null>(null);
@@ -21,8 +23,8 @@ export default function RumorControlPage() {
   const handleFactCheck = async () => {
     if (rumorText.trim().length < 10) {
       toast({
-        title: 'Input Too Short',
-        description: 'Please enter a rumor or social media post to fact-check.',
+        title: t('admin.rumorControl.error.tooShort'),
+        description: t('admin.rumorControl.error.tooShortDescription'),
         variant: 'destructive',
       });
       return;
@@ -41,14 +43,22 @@ export default function RumorControlPage() {
     } catch (error) {
       console.error('Fact-checking failed:', error);
       toast({
-        title: 'AI Fact-Check Failed',
-        description: 'Could not analyze the rumor. Please try again.',
+        title: t('admin.rumorControl.error.analysisFailed'),
+        description: t('admin.rumorControl.error.analysisFailedDescription'),
         variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
   };
+  
+  const getConclusionText = (conclusion: FactCheckRumorOutput['conclusion']) => {
+      switch(conclusion) {
+          case 'Supported': return t('admin.rumorControl.supported');
+          case 'Not Supported': return t('admin.rumorControl.notSupported');
+          case 'Unverified': return t('admin.rumorControl.unverified');
+      }
+  }
 
   const ResultIcon = () => {
     if (!result) return null;
@@ -68,19 +78,19 @@ export default function RumorControlPage() {
     <div className="space-y-6">
       <div className="flex items-center gap-3">
         <ShieldCheck className="h-8 w-8 text-primary" />
-        <h1 className="text-3xl font-bold">AI Rumor Control Center</h1>
+        <h1 className="text-3xl font-bold">{t('admin.rumorControl.title')}</h1>
       </div>
       
       <Card>
         <CardHeader>
-          <CardTitle>Fact-Check a Rumor</CardTitle>
+          <CardTitle>{t('admin.rumorControl.cardTitle')}</CardTitle>
           <CardDescription>
-            Paste a social media post or rumor below. The AI will analyze it against official reports in the database to assess its validity.
+            {t('admin.rumorControl.cardDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Textarea
-            placeholder="e.g., 'I heard the main bridge has collapsed due to the floods! Everyone panic!'"
+            placeholder={t('admin.rumorControl.placeholder')}
             value={rumorText}
             onChange={(e) => setRumorText(e.target.value)}
             rows={4}
@@ -88,7 +98,7 @@ export default function RumorControlPage() {
           />
           <Button onClick={handleFactCheck} disabled={isLoading}>
             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Fact-Check Rumor
+            {isLoading ? t('admin.rumorControl.buttonLoading') : t('admin.rumorControl.button')}
           </Button>
         </CardContent>
       </Card>
@@ -96,7 +106,7 @@ export default function RumorControlPage() {
       {result && (
         <Card>
           <CardHeader>
-            <CardTitle>Analysis Result</CardTitle>
+            <CardTitle>{t('admin.rumorControl.resultTitle')}</CardTitle>
           </CardHeader>
           <CardContent>
             <Alert
@@ -114,10 +124,10 @@ export default function RumorControlPage() {
             >
               <ResultIcon />
               <AlertTitle className="font-bold text-lg">
-                Conclusion: {result.conclusion}
+                {t('admin.rumorControl.conclusion', { conclusion: getConclusionText(result.conclusion) })}
               </AlertTitle>
               <AlertDescription className="mt-2">
-                <strong>AI Reasoning:</strong> {result.reasoning}
+                <strong>{t('admin.rumorControl.reasoning')}</strong> {result.reasoning}
               </AlertDescription>
             </Alert>
           </CardContent>

@@ -1,7 +1,9 @@
+
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
+import { useTranslation } from "@/context/LocalizationContext";
 
 interface LocationMapProps {
   latitude: number;
@@ -9,15 +11,19 @@ interface LocationMapProps {
   title?: string;
 }
 
-export function LocationMap({ latitude, longitude, title = "Location" }: LocationMapProps) {
+export function LocationMap({ latitude, longitude, title }: LocationMapProps) {
+  const { t } = useTranslation();
+
+  const mapTitle = title || t('components.locationMap.location');
+
   if (typeof latitude !== 'number' || typeof longitude !== 'number' || isNaN(latitude) || isNaN(longitude)) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle className="flex items-center gap-2"><MapPin /> {title}</CardTitle>
+                <CardTitle className="flex items-center gap-2"><MapPin /> {mapTitle}</CardTitle>
             </CardHeader>
             <CardContent>
-                <p className="text-muted-foreground">Invalid location data provided.</p>
+                <p className="text-muted-foreground">{t('components.locationMap.invalid')}</p>
             </CardContent>
         </Card>
     );
@@ -28,7 +34,7 @@ export function LocationMap({ latitude, longitude, title = "Location" }: Locatio
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2"><MapPin /> {title}</CardTitle>
+        <CardTitle className="flex items-center gap-2"><MapPin /> {mapTitle}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="aspect-video w-full rounded-md overflow-hidden border">

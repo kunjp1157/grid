@@ -11,10 +11,12 @@ import { cn } from '@/lib/utils';
 import { processSosAudio } from '@/ai/flows/process-sos-audio';
 import { geofenceAndRouteReport } from '@/ai/flows/geofence-and-route-reports';
 import { zones } from '@/lib/data';
+import { useTranslation } from '@/context/LocalizationContext';
 
 type RecordingStatus = 'idle' | 'recording' | 'processing' | 'success' | 'error';
 
 export default function SosPage() {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const [status, setStatus] = useState<RecordingStatus>('idle');
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -39,8 +41,8 @@ export default function SosPage() {
     } catch (err) {
       console.error("Error accessing microphone:", err);
       toast({
-        title: 'Microphone Access Denied',
-        description: 'Please enable microphone permissions in your browser settings.',
+        title: t('citizen.sos.error.micDeniedTitle'),
+        description: t('citizen.sos.error.micDeniedDescription'),
         variant: 'destructive',
       });
       setStatus('error');
@@ -94,8 +96,12 @@ export default function SosPage() {
           
           setStatus('success');
           toast({
-            title: 'SOS Report Submitted!',
-            description: `Emergency report for "${aiResult.description}" (Priority: ${aiResult.priority}) routed to ${zoneName}. Help is on the way.`,
+            title: t('citizen.sos.success.title'),
+            description: t('citizen.sos.success.description', { 
+                description: aiResult.description, 
+                priority: aiResult.priority, 
+                zoneName: zoneName 
+            }),
             duration: 10000,
           });
 
@@ -103,8 +109,8 @@ export default function SosPage() {
           console.error("Error processing audio:", err);
           setStatus('error');
           toast({
-            title: 'AI Processing Failed',
-            description: 'Could not understand the audio. Please try again or submit a manual report.',
+            title: t('citizen.sos.error.processingFailedTitle'),
+            description: t('citizen.sos.error.processingFailedDescription'),
             variant: 'destructive',
           });
         }
@@ -113,11 +119,11 @@ export default function SosPage() {
 
   const getButtonContent = () => {
     switch(status) {
-        case 'recording': return <><Radio className="mr-2 h-4 w-4 animate-pulse text-red-400" /> Recording...</>;
-        case 'processing': return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>;
-        case 'success': return <><CheckCircle className="mr-2 h-4 w-4" /> Submitted!</>;
-        case 'error': return 'Error! Try Again';
-        default: return 'Press & Hold to Record SOS';
+        case 'recording': return <><Radio className="mr-2 h-4 w-4 animate-pulse text-red-400" /> {t('citizen.sos.status.recording')}</>;
+        case 'processing': return <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('citizen.sos.status.processing')}</>;
+        case 'success': return <><CheckCircle className="mr-2 h-4 w-4" /> {t('citizen.sos.status.submitted')}</>;
+        case 'error': return t('citizen.sos.status.error');
+        default: return t('citizen.sos.status.idle');
     }
   }
 
@@ -127,10 +133,10 @@ export default function SosPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-3 text-2xl">
             <Siren />
-            Voice-Activated Panic Mode
+            {t('citizen.sos.title')}
           </CardTitle>
           <CardDescription>
-            In a critical emergency where you cannot type, press and hold the SOS button below to record your situation. Release to automatically send a report.
+            {t('citizen.sos.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center space-y-8 py-16">
@@ -156,9 +162,9 @@ export default function SosPage() {
 
            <Alert variant="destructive" className="max-w-md">
               <Siren className="h-4 w-4" />
-              <AlertTitle>For Emergency Use Only</AlertTitle>
+              <AlertTitle>{t('citizen.sos.warningTitle')}</AlertTitle>
               <AlertDescription>
-                This feature dispatches an immediate high-priority alert. Misuse may result in penalties.
+                {t('citizen.sos.warningDescription')}
               </AlertDescription>
            </Alert>
         </CardContent>
