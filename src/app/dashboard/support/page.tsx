@@ -3,7 +3,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { provideEmotionalSupport } from '@/ai/flows/provide-emotional-support';
-import type { Message } from 'genkit';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,8 +13,14 @@ import { Send, Loader2, BrainCircuit, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 
+// Use a simple, local type for managing chat messages in the component's state.
+interface ChatMessage {
+  role: 'user' | 'model';
+  content: string;
+}
+
 export default function EmotionalSupportPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -26,6 +31,7 @@ export default function EmotionalSupportPage() {
     const getInitialGreeting = async () => {
       setIsLoading(true);
       try {
+        // The flow expects an object with a `history` property, which is an array.
         const result = await provideEmotionalSupport({ history: [] });
         setMessages([{ role: 'model', content: result.response }]);
       } catch (error) {
@@ -52,18 +58,19 @@ export default function EmotionalSupportPage() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const userMessage: Message = { role: 'user', content: input };
+    const userMessage: ChatMessage = { role: 'user', content: input };
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInput('');
     setIsLoading(true);
 
     try {
+      // The flow expects the full history in the correct format.
       const result = await provideEmotionalSupport({ history: newMessages });
       setMessages([...newMessages, { role: 'model', content: result.response }]);
     } catch (error) {
       console.error(error);
-      const errorMessage: Message = { role: 'model', content: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment." };
+      const errorMessage: ChatMessage = { role: 'model', content: "I'm sorry, I'm having trouble connecting right now. Please try again in a moment." };
       setMessages([...newMessages, errorMessage]);
     } finally {
       setIsLoading(false);

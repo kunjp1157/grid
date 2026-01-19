@@ -53,10 +53,16 @@ const provideEmotionalSupportFlow = ai.defineFlow(
     outputSchema: ProvideEmotionalSupportOutputSchema,
   },
   async ({history}) => {
+    // Map the simple history to the format Genkit's `generate` function expects.
+    const genkitMessages: Message[] = history.map(msg => ({
+      role: msg.role,
+      content: [{ text: msg.content }],
+    }));
+
     const response = await ai.generate({
       model: 'googleai/gemini-2.5-flash',
       system: systemPrompt,
-      history: history,
+      history: genkitMessages,
     });
 
     return {response: response.text};
