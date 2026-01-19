@@ -33,10 +33,10 @@ export default function LoginPage() {
     if (result?.redirectTo) {
         router.push(result.redirectTo);
     } else if (result?.error) {
-        setError(result.error);
+        setError(t(result.error));
         setIsPending(false);
     } else {
-        setError("An unknown error occurred.");
+        setError(t('login.error.unknown'));
         setIsPending(false);
     }
   };
@@ -62,7 +62,7 @@ export default function LoginPage() {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder={t('login.emailPlaceholder')}
                 required
                 disabled={isPending}
               />
@@ -88,7 +88,7 @@ export default function LoginPage() {
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff /> : <Eye />}
-                  <span className="sr-only">Toggle password visibility</span>
+                  <span className="sr-only">{t('login.togglePassword')}</span>
                 </Button>
               </div>
             </div>
@@ -96,13 +96,13 @@ export default function LoginPage() {
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>{t('common.error')}</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
             <Button type="submit" className="w-full !mt-8 bg-accent hover:bg-accent/90" disabled={isPending}>
-              {isPending ? "Logging in..." : t('login.submitButton')}
+              {isPending ? t('login.pending') : t('login.submitButton')}
             </Button>
           </form>
         </CardContent>

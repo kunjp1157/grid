@@ -1,17 +1,26 @@
 
 {
   "appName": "The Grid",
+  "common": {
+    "error": "Error",
+    "na": "N/A",
+    "loading": "Loading...",
+    "unknownUser": "Unknown User",
+    "unassigned": "Unassigned"
+  },
   "login": {
     "title": "Welcome to The Grid",
     "subtitle": "Real-time crisis reporting and management.",
     "emailLabel": "Email",
-    "emailPlaceholder": "admin@example.com",
+    "emailPlaceholder": "you@example.com",
     "passwordLabel": "Password",
-    "roleLabel": "Login as",
-    "roleCitizen": "Citizen",
-    "roleAdmin": "Admin",
+    "togglePassword": "Toggle password visibility",
     "submitButton": "Login",
-    "error": "Invalid credentials. Please try again.",
+    "pending": "Logging in...",
+    "error": {
+      "invalid": "Invalid credentials. Please try again.",
+      "unknown": "An unknown error occurred."
+    },
     "noAccount": "Don't have an account?",
     "signUp": "Sign Up"
   },
@@ -20,12 +29,15 @@
     "subtitle": "Join The Grid to report and manage crises.",
     "nameLabel": "Full Name",
     "namePlaceholder": "John Doe",
-    "roleLabel": "Sign up as",
     "submitButton": "Sign Up",
+    "pending": "Signing up...",
+    "error": {
+        "userExists": "User with this email already exists.",
+        "unknown": "An unknown error occurred during sign up."
+    },
     "hasAccount": "Already have an account?"
   },
   "header": {
-    "toggleSidebar": "Toggle sidebar",
     "userMenu": {
       "myProfile": "My Profile",
       "logout": "Logout"
@@ -33,9 +45,17 @@
   },
   "citizen": {
     "sidebar": {
+      "sos": "SOS",
       "dashboard": "Dashboard",
       "newReport": "New Report",
-      "myReports": "My Reports"
+      "myReports": "My Reports",
+      "liveStream": "Live Stream",
+      "volunteerTasks": "Volunteer Tasks",
+      "communityResources": "Community Resources",
+      "barterBoard": "Barter Board",
+      "missingPersons": "Missing Persons",
+      "knowledgeBase": "Knowledge Base",
+      "myProfile": "My Profile"
     },
     "dashboard": {
       "welcome": "Welcome, {name}!",
@@ -53,7 +73,19 @@
       "status": "Status",
       "date": "Date",
       "actions": "Actions",
-      "view": "View"
+      "view": "View",
+      "goLive": "Go Live",
+      "feedback": {
+        "button": "Provide Feedback",
+        "title": "Rate Resolution",
+        "description": "How satisfied are you with the resolution of report #{id}?",
+        "commentsLabel": "Additional Comments (Optional)",
+        "commentsPlaceholder": "Tell us more about your experience...",
+        "submit": "Submit Feedback",
+        "cancel": "Cancel",
+        "successTitle": "Feedback Submitted",
+        "successDescription": "Thank you for helping us improve our service!"
+      }
     },
     "newReport": {
       "title": "Submit a New Report",
@@ -62,31 +94,70 @@
       "categoryPlaceholder": "Select a category",
       "typeLabel": "Issue Type",
       "typePlaceholder": "Select an issue type",
+      "typeDescription": "Select a category first.",
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Provide a detailed description of the issue...",
       "locationLabel": "Location",
       "latitudeLabel": "Latitude",
       "longitudeLabel": "Longitude",
+      "autoDetect": "Auto-detect",
+      "locating": "Locating...",
       "mediaLabel": "Upload Media",
-      "mediaButton": "Choose File",
+      "mediaDescription": "A photo helps our AI to categorize and prioritize the issue faster.",
+      "takePicture": "Take Photo",
       "submitButton": "Submit Report",
-      "success": "Report submitted successfully!",
-      "error": "Failed to submit report. Please try again."
+      "submitting": "Submitting...",
+      "queueReport": "Queue Report",
+      "aiCategorizeButton": "Auto-Categorize & Prioritize",
+      "aiCategorizing": "Categorizing...",
+      "aiSuggestionTitle": "AI Suggestion",
+      "aiSuggestionDescription": "Priority set to {priority}. Reason: {reasoning}",
+      "error": {
+        "submit": "Failed to submit report. Please try again.",
+        "categorize": "AI Categorization Failed",
+        "categorizeDescription": "Could not automatically categorize the report. Please select a category manually.",
+        "location": "Location Error",
+        "locationDescription": "Could not auto-detect location. Please grant permission or enter it manually.",
+        "geolocationNotSupported": "Geolocation Not Supported",
+        "geolocationNotSupportedDescription": "Your browser does not support geolocation.",
+        "cameraDenied": "Camera Access Denied",
+        "cameraDeniedDescription": "Please enable camera permissions in your browser settings."
+      },
+      "success": {
+          "submitTitle": "Report Submitted Successfully",
+          "submitDescription": "Your report has been routed to {zoneName}. Priority: {priority}"
+      },
+      "offline": {
+          "title": "You are offline",
+          "description": "Your report has been saved and will be submitted automatically when you're back online."
+      },
+      "takePictureDialog": {
+        "title": "Take a Photo",
+        "capture": "Capture Photo",
+        "cancel": "Cancel"
+      }
+    },
+    "profile": {
+        "title": "My Profile",
+        "statsTitle": "My Stats",
+        "totalReports": "Total Reports",
+        "resolved": "Resolved",
+        "pending": "Pending"
     }
   },
   "admin": {
     "sidebar": {
       "dashboard": "Dashboard",
+      "overview": "Overview",
       "allReports": "All Reports",
-      "zones": "Manage Zones"
+      "dispatchCenter": "Dispatch Center",
+      "rumorControl": "Rumor Control",
+      "manageZones": "Manage Zones",
+      "knowledgeBase": "Knowledge Base",
+      "myProfile": "My Profile"
     },
     "dashboard": {
       "title": "Admin Dashboard",
-      "description": "Overview of all crisis reports.",
-      "totalReports": "Total Reports",
-      "newReports": "New",
-      "inProgress": "In Progress",
-      "resolved": "Resolved",
       "recentReports": "Recent Reports",
       "viewAll": "View All Reports"
     },
@@ -100,7 +171,11 @@
       "date": "Date",
       "actions": "Actions",
       "details": "Details",
-      "assignedAdmin": "Assigned Admin"
+      "assignedAdmin": "Assigned Admin",
+      "searchPlaceholder": "Search by ID or keyword...",
+      "filterStatusPlaceholder": "Filter by status",
+      "allStatuses": "All Statuses",
+      "dateRangePlaceholder": "Pick a date range"
     },
     "reportDetails": {
       "title": "Report Details",
@@ -120,7 +195,169 @@
       "noAlert": "No alert was triggered.",
       "errorChecking": "Error checking overdue status.",
       "chatTitle": "Conversation with Reporter",
-      "chatPlaceholder": "Type your message..."
+      "chatPlaceholder": "Type your message...",
+      "resolutionFeedbackTitle": "Resolution Feedback",
+      "rating": "Rating:",
+      "comments": "Comments:",
+      "reportInfoTitle": "Report Information",
+      "error": {
+          "sop": "Could not generate SOP",
+          "hazards": "Could not predict hazards",
+          "overdueCheck": "Cannot Check Status",
+          "overdueCheckDescription": "Report must have a deadline and an assigned admin.",
+          "notification": "Notification Error",
+          "notificationDescription": "The status was updated, but the notification failed to send."
+      },
+      "success": {
+          "messageSent": "Message Sent (Simulated)",
+          "messageSentDescription": "In a real app, this would be sent in real-time.",
+          "statusUpdated": "Status Updated",
+          "statusUpdatedDescription": "Report status changed to \"{status}\" and user notified."
+      }
+    },
+    "overview": {
+        "title": "Performance Overview",
+        "export": "Export to CSV",
+        "totalReports": "Total Reports",
+        "resolved": "Resolved",
+        "overdue": "Overdue",
+        "avgResolutionTime": "Avg. Resolution Time (Hours)",
+        "reportsByTypeTitle": "Reports by Type",
+        "reportsByTypeDescription": "Distribution of report categories.",
+        "reportsTrendTitle": "Reports Trend",
+        "reportsTrendDescription": "Number of reports submitted over the last 30 days."
+    },
+    "dispatch": {
+      "title": "Volunteer Dispatch Center",
+      "activeTasksTitle": "Active Tasks",
+      "activeTasksDescription": "Monitor and manage ongoing volunteer tasks.",
+      "tableTask": "Task",
+      "tableStatus": "Status",
+      "tableVolunteers": "Volunteers",
+      "tableLocation": "Location",
+      "tableCreated": "Created",
+      "noSpecificSkills": "No specific skills",
+      "broadcastTaskTitle": "Broadcast New Task",
+      "broadcastTaskDescription": "Create a new task to dispatch volunteers.",
+      "taskTitleLabel": "Task Title",
+      "taskTitlePlaceholder": "e.g., Sandbagging near River",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Detailed instructions for volunteers",
+      "locationLabel": "Location",
+      "locationPlaceholder": "e.g., Central Community Shelter",
+      "requiredSkillsLabel": "Required Skills",
+      "requiredSkillsPlaceholder": "e.g., Medical, Driving",
+      "volunteersNeededLabel": "Volunteers Needed",
+      "broadcastButton": "Broadcast Task",
+      "error": {
+        "missingFields": "Missing Fields",
+        "missingFieldsDescription": "Please fill out all required fields."
+      },
+      "success": {
+        "taskBroadcasted": "Task Broadcasted!",
+        "taskBroadcastedDescription": "The task \"{title}\" is now available for volunteers."
+      }
+    },
+    "rumorControl": {
+        "title": "AI Rumor Control Center",
+        "cardTitle": "Fact-Check a Rumor",
+        "cardDescription": "Paste a social media post or rumor below. The AI will analyze it against official reports in the database to assess its validity.",
+        "placeholder": "e.g., 'I heard the main bridge has collapsed due to the floods! Everyone panic!'",
+        "button": "Fact-Check Rumor",
+        "buttonLoading": "Fact-Checking...",
+        "resultTitle": "Analysis Result",
+        "conclusion": "Conclusion: {conclusion}",
+        "reasoning": "AI Reasoning:",
+        "supported": "Supported",
+        "notSupported": "Not Supported",
+        "unverified": "Unverified",
+        "error": {
+            "tooShort": "Input Too Short",
+            "tooShortDescription": "Please enter a rumor or social media post to fact-check.",
+            "analysisFailed": "AI Fact-Check Failed",
+            "analysisFailedDescription": "Could not analyze the rumor. Please try again."
+        }
+    },
+    "zones": {
+        "title": "Manage Zones",
+        "allZonesTitle": "All Zones",
+        "allZonesDescription": "View and manage all available operational zones.",
+        "tableId": "Zone ID",
+        "tableName": "Zone Name",
+        "tableActions": "Actions",
+        "deleteAction": "Delete Zone",
+        "addZoneTitle": "Add New Zone",
+        "addZoneDescription": "Create a new operational zone.",
+        "zoneNameLabel": "Zone Name",
+        "zoneNamePlaceholder": "e.g., Central District",
+        "addButton": "Add Zone",
+        "deleteDialog": {
+            "title": "Are you absolutely sure?",
+            "description": "This action cannot be undone. This will permanently delete the zone.",
+            "cancel": "Cancel",
+            "continue": "Continue"
+        },
+        "error": {
+            "nameEmpty": "Zone name cannot be empty."
+        },
+        "success": {
+            "zoneAdded": "Zone \"{name}\" has been added.",
+            "zoneDeleted": "The zone has been removed."
+        }
+    },
+    "profile": {
+        "title": "My Profile",
+        "statsTitle": "My Stats",
+        "totalAssigned": "Total Assigned",
+        "resolvedByYou": "Resolved by You",
+        "overdueReports": "Overdue Reports"
+    }
+  },
+  "profile": {
+    "editButton": "Edit Profile",
+    "saveButton": "Save Changes",
+    "cancelButton": "Cancel",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter email address",
+    "mobileLabel": "Mobile",
+    "mobilePlaceholder": "Enter mobile number",
+    "addressLabel": "Address",
+    "addressPlaceholder": "Enter full address",
+    "pincodeLabel": "PIN Code",
+    "pincodePlaceholder": "Enter PIN code",
+    "bloodGroupLabel": "Blood Group",
+    "bloodGroupPlaceholder": "e.g., O+",
+    "emergencyContactLabel": "Emergency Contact",
+    "emergencyContactPlaceholder": "Contact name",
+    "emergencyContactNumberLabel": "Emergency Contact No.",
+    "emergencyContactNumberPlaceholder": "Contact number",
+    "medicalConditionsLabel": "Medical Conditions",
+    "medicalConditionsPlaceholder": "e.g., Allergic to peanuts, Asthma",
+    "roleLabel": "Role",
+    "assignedZoneLabel": "Assigned Zone",
+    "userIdLabel": "User ID",
+    "volunteerStatusTitle": "Volunteer Status",
+    "volunteerPrompt": "Join the community response team.",
+    "becomeVolunteerButton": "Become a Volunteer",
+    "isVolunteer": "You are a registered volunteer!",
+    "skillsLabel": "Your Skills (comma-separated)",
+    "skillsPlaceholder": "e.g., First Aid, Driving",
+    "certificationsLabel": "Certifications",
+    "certificationsPlaceholder": "e.g., CPR Certified",
+    "volunteerBadge": "Verified Volunteer",
+    "skillsDisplayLabel": "Skills",
+    "certificationsDisplayLabel": "Certifications",
+    "notVolunteer": "Not registered as a volunteer. You can register in edit mode.",
+    "notSpecified": "Not specified",
+    "none": "None",
+    "success": {
+      "profileUpdated": "Profile Updated",
+      "profileUpdatedDescription": "Your changes have been saved. (Note: This is a simulation and will not persist after a page refresh)."
+    },
+    "medicalId": {
+        "title": "Digital Medical ID",
+        "description": "First responders can scan this to view your critical medical information."
     }
   },
   "kb": {
@@ -204,5 +441,35 @@
     "InProgress": "In Progress",
     "Resolved": "Resolved",
     "Overdue": "Overdue"
+  },
+  "toasts": {
+    "syncingReportsTitle": "Syncing Offline Reports",
+    "syncingReportsDescription": "Found {count} report(s) to submit.",
+    "syncSuccessTitle": "Offline Reports Submitted",
+    "syncSuccessDescription": "{count} report(s) were successfully submitted."
+  },
+  "components": {
+      "liveStreamViewer": {
+          "title": "Live Eye Witness Feed",
+          "description": "A live video stream from the citizen at the scene.",
+          "placeholder": "Live stream placeholder for report: {reportId}",
+          "note": "Note: This is a simulated live stream for demonstration purposes."
+      },
+      "predictedRisks": {
+          "title": "AI Predicted Secondary Risks",
+          "description": "Potential cascading events based on the initial report.",
+          "none": "No secondary risks predicted at this time."
+      },
+      "sopAdvisor": {
+          "title": "AI-Powered SOP Advisor",
+          "description": "Recommended actions based on the report's priority and type.",
+          "none": "No specific SOP required for this report's priority level."
+      },
+      "locationMap": {
+          "location": "Location",
+          "invalid": "Invalid location data provided.",
+          "preview": "Location Preview",
+          "incidentLocation": "Incident Location"
+      }
   }
 }

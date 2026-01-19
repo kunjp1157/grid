@@ -7,26 +7,24 @@ import {
   Sidebar,
   SidebarHeader,
   SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
 import { Header } from '@/components/shared/Header';
 import { getUser } from '@/actions/auth';
 import { Logo } from '@/components/shared/Logo';
-import { LayoutDashboard, PlusCircle, FileText, User, BookOpen, Video, Siren, HeartHandshake, Users, Handshake, Repeat } from 'lucide-react';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { geofenceAndRouteReport } from '@/ai/flows/geofence-and-route-reports';
 import type { ReportFormValues } from './new-report/page';
 import { zones } from '@/lib/data';
+import { DashboardSidebarItems } from '@/components/layout/DashboardSidebarItems';
+import { useTranslation } from '@/context/LocalizationContext';
 
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<any>(null);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -42,8 +40,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       if (offlineReports.length === 0) return;
 
       toast({
-        title: 'Syncing Offline Reports',
-        description: `Found ${offlineReports.length} report(s) to submit.`,
+        title: t('toasts.syncingReportsTitle'),
+        description: t('toasts.syncingReportsDescription', { count: offlineReports.length.toString() }),
       });
       
       const submittedReports: string[] = [];
@@ -71,8 +69,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         const remainingReports = offlineReports.filter(r => !submittedReports.includes((r as any).id));
         localStorage.setItem('offlineReports', JSON.stringify(remainingReports));
         toast({
-          title: 'Offline Reports Submitted',
-          description: `${submittedReports.length} report(s) were successfully submitted.`,
+          title: t('toasts.syncSuccessTitle'),
+          description: t('toasts.syncSuccessDescription', { count: submittedReports.length.toString() }),
         });
       }
     };
@@ -88,7 +86,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     return () => {
       window.removeEventListener('online', syncOfflineReports);
     };
-  }, [toast]);
+  }, [toast, t]);
 
   return (
     <SidebarProvider>
@@ -97,63 +95,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <Logo />
         </SidebarHeader>
         <SidebarContent>
-          <SidebarMenu>
-            <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="SOS">
-                    <Link href="/dashboard/sos"><Siren /><span>SOS</span></Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Dashboard">
-                <Link href="/dashboard"><LayoutDashboard /><span>Dashboard</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="My Reports">
-                <Link href="/dashboard/my-reports"><FileText /><span>My Reports</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="New Report">
-                <Link href="/dashboard/new-report"><PlusCircle /><span>New Report</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Live Stream">
-                    <Link href="/dashboard/live/report-123"><Video /><span>Live Stream</span></Link>
-                </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Volunteer Tasks">
-                <Link href="/dashboard/tasks"><Handshake /><span>Volunteer Tasks</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Community Resources">
-                  <Link href="/dashboard/resources"><HeartHandshake /><span>Community Resources</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Barter Board">
-                  <Link href="/dashboard/barter"><Repeat /><span>Barter Board</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Missing Persons">
-                  <Link href="/dashboard/missing-persons"><Users /><span>Missing Persons</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Knowledge Base">
-                <Link href="/kb"><BookOpen /><span>Knowledge Base</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="My Profile">
-                <Link href="/dashboard/profile"><User /><span>My Profile</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <DashboardSidebarItems />
         </SidebarContent>
       </Sidebar>
       <SidebarInset>

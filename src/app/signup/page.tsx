@@ -33,10 +33,10 @@ export default function SignupPage() {
     if (result?.redirectTo) {
         router.push(result.redirectTo);
     } else if (result?.error) {
-        setError(result.error);
+        setError(t(result.error));
         setIsPending(false);
     } else {
-        setError("An unknown error occurred during sign up.");
+        setError(t('signup.error.unknown'));
         setIsPending(false);
     }
   };
@@ -62,7 +62,7 @@ export default function SignupPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">{t('login.emailLabel')}</Label>
-              <Input id="email" name="email" type="email" placeholder="you@example.com" required disabled={isPending} />
+              <Input id="email" name="email" type="email" placeholder={t('login.emailPlaceholder')} required disabled={isPending} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">{t('login.passwordLabel')}</Label>
@@ -84,7 +84,7 @@ export default function SignupPage() {
                   tabIndex={-1}
                 >
                   {showPassword ? <EyeOff /> : <Eye />}
-                  <span className="sr-only">Toggle password visibility</span>
+                  <span className="sr-only">{t('login.togglePassword')}</span>
                 </Button>
               </div>
             </div>
@@ -92,13 +92,13 @@ export default function SignupPage() {
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>{t('common.error')}</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
             <Button type="submit" className="w-full !mt-8 bg-accent hover:bg-accent/90" disabled={isPending}>
-              {isPending ? 'Signing up...' : t('signup.submitButton')}
+              {isPending ? t('signup.pending') : t('signup.submitButton')}
             </Button>
           </form>
         </CardContent>

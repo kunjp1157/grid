@@ -5,16 +5,12 @@ import {
   Sidebar,
   SidebarHeader,
   SidebarContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
   SidebarInset,
 } from '@/components/ui/sidebar';
 import { Header } from '@/components/shared/Header';
 import { getUser } from '@/actions/auth';
 import { Logo } from '@/components/shared/Logo';
-import { LayoutDashboard, Files, Map, BarChart, User, BookOpen, ShieldCheck, Megaphone } from 'lucide-react';
-import Link from 'next/link';
+import { AdminSidebarItems } from '@/components/layout/AdminSidebarItems';
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const user = await getUser();
@@ -26,48 +22,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
           <Logo />
         </SidebarHeader>
         <SidebarContent>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Dashboard">
-                <Link href="/admin"><LayoutDashboard /><span>Dashboard</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Overview">
-                <Link href="/admin/overview"><BarChart /><span>Overview</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="All Reports">
-                <Link href="/admin/reports"><Files /><span>All Reports</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Dispatch Center">
-                <Link href="/admin/dispatch"><Megaphone /><span>Dispatch Center</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Rumor Control">
-                <Link href="/admin/rumor-control"><ShieldCheck /><span>Rumor Control</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Manage Zones">
-                <Link href="/admin/zones"><Map /><span>Manage Zones</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-             <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="Knowledge Base">
-                <Link href="/kb"><BookOpen /><span>Knowledge Base</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip="My Profile">
-                <Link href="/admin/profile"><User /><span>My Profile</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
+          <AdminSidebarItems />
         </SidebarContent>
       </Sidebar>
       <SidebarInset>

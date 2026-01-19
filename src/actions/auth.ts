@@ -11,7 +11,7 @@ export async function login(prevState: any, formData: FormData) {
   const user = users.find(u => u.email.toLowerCase() === email);
 
   if (!user) {
-    return { error: "Invalid credentials. Please try again." };
+    return { error: "login.error.invalid" };
   }
 
   const userCookie = JSON.stringify({
@@ -42,7 +42,7 @@ export async function signup(prevState: any, formData: FormData) {
   const role = "citizen";
 
   if (users.find(u => u.email.toLowerCase() === email)) {
-    return { error: "User with this email already exists." };
+    return { error: "signup.error.userExists" };
   }
 
   const newUser: User = {
