@@ -38,7 +38,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { zones } from '@/lib/data';
 import { useState, useRef, useEffect } from 'react';
-import { Loader2, Sparkles, WifiOff, Camera, X } from 'lucide-react';
+import { Loader2, Sparkles, WifiOff, Camera, X, LocateFixed } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LocationMap } from '@/components/shared/LocationMap';
 import {
@@ -84,22 +84,7 @@ export default function NewReportPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [isOnline, setIsOnline] = useState(true);
-
-  useEffect(() => {
-    // This effect runs only on the client side
-    const handleOnlineStatus = () => setIsOnline(navigator.onLine);
-    
-    window.addEventListener('online', handleOnlineStatus);
-    window.addEventListener('offline', handleOnlineStatus);
-    
-    // Set initial status
-    handleOnlineStatus();
-
-    return () => {
-      window.removeEventListener('online', handleOnlineStatus);
-      window.removeEventListener('offline', handleOnlineStatus);
-    };
-  }, []);
+  const [isLocating, setIsLocating] = useState(false);
 
   const form = useForm<ReportFormValues>({
     resolver: zodResolver(reportSchema),
@@ -113,6 +98,67 @@ export default function NewReportPage() {
   const selectedCategory = form.watch('category');
   const latitude = form.watch('latitude');
   const longitude = form.watch('longitude');
+
+  const handleAutoDetectLocation = () => {
+    if (navigator.geolocation) {
+      setIsLocating(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          form.setValue('latitude', position.coords.latitude);
+          form.setValue('longitude', position.coords.longitude);
+          toast({
+            title: "Location Detected",
+            description: "Your current location has been filled in.",
+          });
+          setIsLocating(false);
+        },
+        () => {
+          toast({
+            title: "Location Error",
+            description: "Could not auto-detect location. Please grant permission or enter it manually.",
+            variant: "destructive",
+          });
+          setIsLocating(false);
+        }
+      );
+    } else {
+        toast({
+            title: "Geolocation Not Supported",
+            description: "Your browser does not support geolocation.",
+            variant: "destructive",
+        });
+    }
+  };
+
+  useEffect(() => {
+    // This effect runs only on the client side
+    const handleOnlineStatus = () => setIsOnline(navigator.onLine);
+    
+    window.addEventListener('online', handleOnlineStatus);
+    window.addEventListener('offline', handleOnlineStatus);
+    
+    // Set initial status
+    handleOnlineStatus();
+
+    // Auto-detect location on initial load, silently fail if not permitted
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          form.setValue('latitude', position.coords.latitude);
+          form.setValue('longitude', position.coords.longitude);
+        },
+        (error) => {
+          console.error("Silent geolocation on load failed:", error.message);
+        }
+      );
+    }
+
+    return () => {
+      window.removeEventListener('online', handleOnlineStatus);
+      window.removeEventListener('offline', handleOnlineStatus);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -441,7 +487,17 @@ export default function NewReportPage() {
                     </div>
                 </div>
                 <div className="space-y-4">
-                    <h3 className="text-sm font-medium">{t('citizen.newReport.locationLabel')}</h3>
+                     <div className="flex justify-between items-center">
+                        <h3 className="text-sm font-medium">{t('citizen.newReport.locationLabel')}</h3>
+                        <Button type="button" variant="outline" size="sm" onClick={handleAutoDetectLocation} disabled={isLocating}>
+                             {isLocating ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <LocateFixed className="mr-2 h-4 w-4" />
+                            )}
+                            {isLocating ? 'Locating...' : 'Auto-detect'}
+                        </Button>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                         control={form.control}
