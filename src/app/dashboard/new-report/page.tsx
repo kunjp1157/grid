@@ -83,7 +83,23 @@ export default function NewReportPage() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const [isOnline, setIsOnline] = useState(true);
 
+  useEffect(() => {
+    // This effect runs only on the client side
+    const handleOnlineStatus = () => setIsOnline(navigator.onLine);
+    
+    window.addEventListener('online', handleOnlineStatus);
+    window.addEventListener('offline', handleOnlineStatus);
+    
+    // Set initial status
+    handleOnlineStatus();
+
+    return () => {
+      window.removeEventListener('online', handleOnlineStatus);
+      window.removeEventListener('offline', handleOnlineStatus);
+    };
+  }, []);
 
   const form = useForm<ReportFormValues>({
     resolver: zodResolver(reportSchema),
@@ -204,7 +220,7 @@ export default function NewReportPage() {
 
 
   const onSubmit = async (data: ReportFormValues) => {
-    if (!navigator.onLine) {
+    if (!isOnline) {
         // Handle offline submission
         const offlineReports = JSON.parse(localStorage.getItem('offlineReports') || '[]');
         const newReport = { ...data, id: `offline-${Date.now()}`, aiSuggestion, filePreview };
@@ -460,8 +476,8 @@ export default function NewReportPage() {
 
               <Button type="submit" disabled={form.formState.isSubmitting}>
                  {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                 {!navigator.onLine && <WifiOff className="mr-2 h-4 w-4" />}
-                {form.formState.isSubmitting ? "Submitting..." : (navigator.onLine ? t('citizen.newReport.submitButton') : 'Queue Report')}
+                 {!isOnline && <WifiOff className="mr-2 h-4 w-4" />}
+                {form.formState.isSubmitting ? "Submitting..." : (isOnline ? t('citizen.newReport.submitButton') : 'Queue Report')}
               </Button>
             </form>
           </Form>
@@ -470,3 +486,5 @@ export default function NewReportPage() {
     </div>
   );
 }
+
+    
