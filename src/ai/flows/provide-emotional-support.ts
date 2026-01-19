@@ -56,7 +56,7 @@ const provideEmotionalSupportFlow = ai.defineFlow(
     const response = await ai.generate({
       model: 'googleai/gemini-2.5-flash',
       system: systemPrompt,
-      history: history as Message[],
+      history: history,
     });
 
     return {response: response.text};
