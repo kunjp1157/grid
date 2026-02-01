@@ -128,5 +128,5 @@ You can use the following default credentials to explore the different roles:
     -   **Email**: `citizen@example.com`
     -   **Password**: `password`
 -   **Admin Login**:
-    -   **Email**: `admin@example.com`
-    -   **Password**: `password`
+    -   **Email**: `kunjp1157@gmail.com`
+    -   **Password**: `Kunj@2810`

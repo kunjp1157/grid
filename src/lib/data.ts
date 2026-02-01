@@ -23,7 +23,7 @@ export const users: User[] = [
   {
     id: 'admin1',
     name: 'Jane Smith',
-    email: 'admin@example.com',
+    email: 'kunjp1157@gmail.com',
     role: 'admin',
     zoneId: 'zone1',
     mobile: '+91-8765432109',
