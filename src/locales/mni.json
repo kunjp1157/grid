@@ -1,6 +1,9 @@
 
 {
   "appName": "দি গ্রিদ",
+  "common": {
+    "back": "তুংদা হল্লু"
+  },
   "login": {
     "title": "দি গ্রিদতা তরাম্না ওকচরি",
     "subtitle": "real-time crisis reporting and management.",
@@ -37,7 +40,7 @@
     "New": "অনৌবা",
     "Assigned": "শিন্নবা",
     "InProgress": "চত্থরি",
-    "Resolved": "ৱারোইশিনবা",
+    "Resolved": "ৱারোইশินবা",
     "Overdue": "Overdue"
   }
 }

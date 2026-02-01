@@ -1,8 +1,11 @@
 
 {
   "appName": "ᱫᱚ ᱜᱨᱤᱰ",
+  "common": {
+    "back": "ᱛᱟᱭᱚᱢ ᱥᱮᱱᱚᱜ ᱢᱮ"
+  },
   "login": {
-    "title": "ᱫᱚ ᱜᱨᱤᱰ ᱨᱮ ᱥᱟᱹᱜᱩᱱ ᱫᱟᱨᱟᱢ",
+    "title": "ᱫᱚ ᱜᱨᱤᱰ ᱨᱮ ᱥᱟᱹਗᱩᱱ ᱫᱟᱨᱟᱢ",
     "subtitle": "real-time crisis reporting and management.",
     "emailLabel": "ᱤᱢᱮᱞ",
     "passwordLabel": "ᱯᱟᱥᱣਰᱰ",
@@ -27,7 +30,7 @@
   },
   "reportTypes": {
     "Waterlogging": "ᱫᱟᱜ ᱡᱟᱢᱟ",
-    "Fire": "ᱥᱮᱸᱜᱮᱞ",
+    "Fire": "ᱥᱮᱸଗେᱞ",
     "Accident": "ᱫᱩᱨᱜᱷᱚᱴᱚᱱᱟ",
     "WasteManagement": "Waste Management",
     "RoadDamage": "ରାସ୍ତା ଖରାପ",

@@ -1,6 +1,9 @@
 
 {
   "appName": "द ग्रिड",
+  "common": {
+    "back": "उनफिन"
+  },
   "login": {
     "title": "द ग्रिडआव बरायबाय",
     "subtitle": "real-time crisis reporting and management.",

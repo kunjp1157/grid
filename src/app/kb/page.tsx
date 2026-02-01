@@ -1,7 +1,7 @@
-
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import { articles } from '@/lib/kb';
 import {
   Accordion,
@@ -16,7 +16,8 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { HeartPulse, ShieldCheck, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { HeartPulse, ShieldCheck, Search, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/context/LocalizationContext';
 
@@ -38,6 +39,7 @@ const categoryConfig: Record<Category, { icon: React.ElementType, iconColor: str
 export default function KnowledgeBasePage() {
     const [searchTerm, setSearchTerm] = useState('');
     const { t } = useTranslation();
+    const router = useRouter();
 
     const translatedArticles = useMemo(() => {
         return articles.map(article => ({
@@ -71,11 +73,17 @@ export default function KnowledgeBasePage() {
 
     return (
         <div className="space-y-8">
-            <div className="text-center">
-                <h1 className="text-4xl font-bold tracking-tight">{t('kb.title')}</h1>
-                <p className="text-muted-foreground mt-2 text-lg">
-                    {t('kb.subtitle')}
-                </p>
+            <div className="relative flex items-center justify-center">
+                 <Button variant="ghost" onClick={() => router.back()} className="absolute left-0">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    {t('common.back')}
+                </Button>
+                <div className="text-center">
+                    <h1 className="text-4xl font-bold tracking-tight">{t('kb.title')}</h1>
+                    <p className="text-muted-foreground mt-2 text-lg">
+                        {t('kb.subtitle')}
+                    </p>
+                </div>
             </div>
 
             <div className="relative max-w-md mx-auto">

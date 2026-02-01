@@ -6,7 +6,8 @@
     "na": "N/A",
     "loading": "Loading...",
     "unknownUser": "Unknown User",
-    "unassigned": "Unassigned"
+    "unassigned": "Unassigned",
+    "back": "Back"
   },
   "login": {
     "title": "Welcome to The Grid",
