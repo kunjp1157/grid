@@ -1,5 +1,4 @@
 
-
 import type { User, Report, Zone, ChatMessage, CommunityResource, VolunteerTask, BarterPost } from './types';
 import { ReportStatus, ReportPriority, AllReportTypes, TaskStatus } from './types';
 
@@ -22,7 +21,7 @@ export const users: User[] = [
   },
   {
     id: 'admin1',
-    name: 'Jane Smith',
+    name: 'Kunj Patel',
     email: 'kunjp1157@gmail.com',
     role: 'admin',
     zoneId: 'zone1',
