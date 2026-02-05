@@ -11,14 +11,6 @@ const withPWA = require('next-pwa')({
 
 const nextConfig: NextConfig = {
   /* config options here */
-  serverActions: {
-    bodySizeLimit: '10mb',
-  },
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
