@@ -8,7 +8,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
-import { LayoutDashboard, Files, Map, BarChart, User, BookOpen, ShieldCheck, Megaphone } from 'lucide-react';
+import { LayoutDashboard, Files, Map, BarChart, User, BookOpen, Megaphone } from 'lucide-react';
 
 export function AdminSidebarItems() {
     const { t } = useTranslation();
@@ -32,11 +32,6 @@ export function AdminSidebarItems() {
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={t('admin.sidebar.dispatchCenter')}>
                 <Link href="/admin/dispatch"><Megaphone /><span>{t('admin.sidebar.dispatchCenter')}</span></Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild tooltip={t('admin.sidebar.rumorControl')}>
-                <Link href="/admin/rumor-control"><ShieldCheck /><span>{t('admin.sidebar.rumorControl')}</span></Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>

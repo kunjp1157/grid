@@ -126,7 +126,7 @@
       },
       "success": {
           "submitTitle": "Report Submitted Successfully",
-          "submitDescription": "Your report has been routed to {zoneName}. Priority: {priority}"
+          "submitDescription": "Your report has been saved to the database. Priority: {priority}"
       },
       "offline": {
           "title": "You are offline",
@@ -287,7 +287,6 @@
       "overview": "Overview",
       "allReports": "All Reports",
       "dispatchCenter": "Dispatch Center",
-      "rumorControl": "Rumor Control",
       "manageZones": "Manage Zones",
       "knowledgeBase": "Knowledge Base",
       "myProfile": "My Profile"
@@ -393,26 +392,6 @@
         "taskBroadcasted": "Task Broadcasted!",
         "taskBroadcastedDescription": "The task \"{title}\" is now available for volunteers."
       }
-    },
-    "rumorControl": {
-        "title": "AI Rumor Control Center",
-        "cardTitle": "Fact-Check a Rumor",
-        "cardDescription": "Paste a social media post or rumor below. The AI will analyze it against official reports in the database to assess its validity.",
-        "placeholder": "e.g., 'I heard the main bridge has collapsed due to the floods! Everyone panic!'",
-        "button": "Fact-Check Rumor",
-        "buttonLoading": "Fact-Checking...",
-        "resultTitle": "Analysis Result",
-        "conclusion": "Conclusion: {conclusion}",
-        "reasoning": "AI Reasoning:",
-        "supported": "Supported",
-        "notSupported": "Not Supported",
-        "unverified": "Unverified",
-        "error": {
-            "tooShort": "Input Too Short",
-            "tooShortDescription": "Please enter a rumor or social media post to fact-check.",
-            "analysisFailed": "AI Fact-Check Failed",
-            "analysisFailedDescription": "Could not analyze the rumor. Please try again."
-        }
     },
     "zones": {
         "title": "Manage Zones",
