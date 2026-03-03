@@ -1,14 +1,15 @@
+
 "use server";
 
 import { cookies } from "next/headers";
-import { users } from "@/lib/data";
+import { getDb, saveDb } from "@/lib/local-db";
 import type { User } from "@/lib/types";
 
 export async function login(prevState: any, formData: FormData) {
   const email = (formData.get("email") as string || "").toLowerCase();
-  // Note: For prototype, we check against local mock data. 
-  // In full integration, client-side Firebase Auth is preferred.
-  const user = users.find(u => u.email.toLowerCase() === email);
+  const db = await getDb();
+  
+  const user = db.users.find(u => u.email.toLowerCase() === email);
 
   if (!user) {
     return { error: "login.error.invalid" };
@@ -41,7 +42,9 @@ export async function signup(prevState: any, formData: FormData) {
   const email = (formData.get("email") as string || "").toLowerCase();
   const role = "citizen";
 
-  if (users.find(u => u.email.toLowerCase() === email)) {
+  const db = await getDb();
+
+  if (db.users.find(u => u.email.toLowerCase() === email)) {
     return { error: "signup.error.userExists" };
   }
 
@@ -50,10 +53,11 @@ export async function signup(prevState: any, formData: FormData) {
     name,
     email,
     role,
+    isVolunteer: false,
   };
 
-  // Mock addition
-  users.push(newUser);
+  db.users.push(newUser);
+  await saveDb(db);
 
   const userCookie = JSON.stringify({
     id: newUser.id,
