@@ -1,0 +1,67 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Extended information for a user in the system.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["citizen", "admin"] },
+        "zoneId": { "type": "string" },
+        "mobile": { "type": "string" },
+        "address": { "type": "string" },
+        "pincode": { "type": "string" },
+        "bloodGroup": { "type": "string" },
+        "emergencyContactName": { "type": "string" },
+        "emergencyContactNumber": { "type": "string" },
+        "medicalConditions": { "type": "string" },
+        "isVolunteer": { "type": "boolean" },
+        "skills": { "type": "array", "items": { "type": "string" } },
+        "certifications": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "CrisisReport": {
+      "title": "Crisis Report",
+      "description": "A report submitted by a citizen about an incident.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string" },
+        "description": { "type": "string" },
+        "location": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        },
+        "status": { "type": "string" },
+        "priority": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "mediaUrl": { "type": "string" },
+        "assignedAdminId": { "type": "string" },
+        "resolutionDeadline": { "type": "string", "format": "date-time" },
+        "rating": { "type": "number" },
+        "feedback": { "type": "string" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["google.com", "password"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "#/entities/UserProfile",
+      "description": "Collection of user profiles."
+    },
+    "/reports/{reportId}": {
+      "schema": "#/entities/CrisisReport",
+      "description": "Collection of all crisis reports."
+    }
+  }
+}

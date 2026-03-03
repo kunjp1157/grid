@@ -1,7 +1,9 @@
+
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { LocalizationProvider } from '@/context/LocalizationContext';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: 'The Grid',
@@ -22,10 +24,12 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        <LocalizationProvider>
-          {children}
-          <Toaster />
-        </LocalizationProvider>
+        <FirebaseClientProvider>
+          <LocalizationProvider>
+            {children}
+            <Toaster />
+          </LocalizationProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );
