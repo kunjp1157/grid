@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -36,7 +36,6 @@ import { geofenceAndRouteReport } from '@/ai/flows/geofence-and-route-reports';
 import { categorizeAndPrioritizeReport } from '@/ai/flows/categorize-and-prioritize-report';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { zones } from '@/lib/data';
 import { useState, useRef, useEffect } from 'react';
 import { Loader2, Sparkles, WifiOff, Camera, X, LocateFixed } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -50,6 +49,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import Image from 'next/image';
+import { submitReport } from '@/actions/reports';
 
 const reportSchema = z.object({
   category: z.custom<ReportCategory>(val => typeof val === 'string' && val, {
@@ -131,16 +131,11 @@ export default function NewReportPage() {
   };
 
   useEffect(() => {
-    // This effect runs only on the client side
     const handleOnlineStatus = () => setIsOnline(navigator.onLine);
-    
     window.addEventListener('online', handleOnlineStatus);
     window.addEventListener('offline', handleOnlineStatus);
-    
-    // Set initial status
     handleOnlineStatus();
 
-    // Auto-detect location on initial load, silently fail if not permitted
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -157,8 +152,7 @@ export default function NewReportPage() {
       window.removeEventListener('online', handleOnlineStatus);
       window.removeEventListener('offline', handleOnlineStatus);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [form]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -197,7 +191,6 @@ export default function NewReportPage() {
             form.setValue('category', category);
             form.setValue('type', result.category);
         } else {
-            // Fallback if category not found
             form.setValue('category', 'Other');
             form.setValue('type', 'Other');
         }
@@ -253,7 +246,7 @@ export default function NewReportPage() {
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
         const dataUri = canvas.toDataURL('image/jpeg');
         setFilePreview(dataUri);
-        form.setValue('media', null); // Clear file input
+        form.setValue('media', null);
       }
       setIsCameraOpen(false);
     }
@@ -267,7 +260,6 @@ export default function NewReportPage() {
 
   const onSubmit = async (data: ReportFormValues) => {
     if (!isOnline) {
-        // Handle offline submission
         const offlineReports = JSON.parse(localStorage.getItem('offlineReports') || '[]');
         const newReport = { ...data, id: `offline-${Date.now()}`, aiSuggestion, filePreview };
         offlineReports.push(newReport);
@@ -284,21 +276,25 @@ export default function NewReportPage() {
     }
 
     try {
-      const reportId = `report-${Date.now()}`;
-      
-      const result = await geofenceAndRouteReport({
-        reportId: reportId,
+      // First, use AI to route the report
+      const aiRoute = await geofenceAndRouteReport({
+        reportId: `temp-${Date.now()}`,
         latitude: data.latitude,
         longitude: data.longitude,
       });
 
-      const zoneName = result.assignedZoneId ? zones.find(z => z.id === result.assignedZoneId)?.name : 'N/A';
-
-      console.log('Geofencing result:', result);
+      // Submit to MySQL
+      await submitReport({
+        type: data.type,
+        description: data.description,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        priority: aiSuggestion?.priority || ReportPriority.Medium
+      });
       
       toast({
         title: "Report Submitted Successfully",
-        description: `Your report has been routed to ${zoneName || 'the appropriate department'}. Priority: ${aiSuggestion?.priority || 'Not set'}`,
+        description: `Your report has been saved to the database. Priority: ${aiSuggestion?.priority || 'Medium'}`,
         variant: 'default',
       });
 
@@ -308,7 +304,7 @@ export default function NewReportPage() {
       console.error(error);
       toast({
         title: "Error",
-        description: t('citizen.newReport.error'),
+        description: t('citizen.newReport.error.submit'),
         variant: 'destructive',
       });
     }
@@ -388,26 +384,26 @@ export default function NewReportPage() {
                                     <DialogTrigger asChild>
                                         <Button type="button" variant="outline" className="w-full sm:w-auto">
                                             <Camera className="mr-2 h-4 w-4" />
-                                            Take Photo
+                                            {t('citizen.newReport.takePicture')}
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
-                                            <DialogTitle>Take a Photo</DialogTitle>
+                                            <DialogTitle>{t('citizen.newReport.takePictureDialog.title')}</DialogTitle>
                                         </DialogHeader>
                                         <div className="relative aspect-video bg-black rounded-md overflow-hidden">
                                             <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline></video>
                                         </div>
                                         <DialogFooter>
-                                            <Button variant="ghost" onClick={() => setIsCameraOpen(false)}>Cancel</Button>
-                                            <Button type="button" onClick={handleCapture} >Capture Photo</Button>
+                                            <Button variant="ghost" onClick={() => setIsCameraOpen(false)}>{t('citizen.newReport.takePictureDialog.cancel')}</Button>
+                                            <Button type="button" onClick={handleCapture}>{t('citizen.newReport.takePictureDialog.capture')}</Button>
                                         </DialogFooter>
                                     </DialogContent>
                                 </Dialog>
                             </div>
                         )}
                         <FormDescription>
-                            A photo helps our AI to categorize and prioritize the issue faster.
+                            {t('citizen.newReport.mediaDescription')}
                         </FormDescription>
                     </div>
 
@@ -418,15 +414,15 @@ export default function NewReportPage() {
                             ) : (
                                 <Sparkles className="mr-2 h-4 w-4" />
                             )}
-                            Auto-Categorize & Prioritize
+                            {t('citizen.newReport.aiCategorizeButton')}
                         </Button>
 
                         {aiSuggestion && (
                             <Alert>
                             <Sparkles className="h-4 w-4" />
-                            <AlertTitle className='font-semibold'>AI Suggestion</AlertTitle>
+                            <AlertTitle className='font-semibold'>{t('citizen.newReport.aiSuggestionTitle')}</AlertTitle>
                             <AlertDescription>
-                                Priority set to <span className='font-semibold'>{aiSuggestion.priority}</span>. Reason: {aiSuggestion.reasoning}
+                                {t('citizen.newReport.aiSuggestionDescription', { priority: aiSuggestion.priority, reasoning: aiSuggestion.reasoning })}
                             </AlertDescription>
                             </Alert>
                         )}
@@ -478,7 +474,7 @@ export default function NewReportPage() {
                                 </SelectContent>
                                 </Select>
                                 <FormDescription>
-                                    Select a category first.
+                                    {t('citizen.newReport.typeDescription')}
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
@@ -495,7 +491,7 @@ export default function NewReportPage() {
                             ) : (
                                 <LocateFixed className="mr-2 h-4 w-4" />
                             )}
-                            {isLocating ? 'Locating...' : 'Auto-detect'}
+                            {isLocating ? t('citizen.newReport.locating') : t('citizen.newReport.autoDetect')}
                         </Button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -526,14 +522,14 @@ export default function NewReportPage() {
                         )}
                     />
                     </div>
-                     <LocationMap latitude={latitude} longitude={longitude} title="Location Preview" />
+                     <LocationMap latitude={latitude} longitude={longitude} title={t('components.locationMap.preview')} />
                 </div>
               </div>
 
               <Button type="submit" disabled={form.formState.isSubmitting}>
                  {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                  {!isOnline && <WifiOff className="mr-2 h-4 w-4" />}
-                {form.formState.isSubmitting ? "Submitting..." : (isOnline ? t('citizen.newReport.submitButton') : 'Queue Report')}
+                {form.formState.isSubmitting ? t('citizen.newReport.submitting') : (isOnline ? t('citizen.newReport.submitButton') : t('citizen.newReport.queueReport'))}
               </Button>
             </form>
           </Form>
@@ -542,5 +538,3 @@ export default function NewReportPage() {
     </div>
   );
 }
-
-    

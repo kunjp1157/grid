@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -23,18 +23,20 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { tasks as initialTasks, users } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import type { VolunteerTask } from '@/lib/types';
 import { TaskStatus } from '@/lib/types';
-import { Megaphone, PlusCircle, Users } from 'lucide-react';
+import { Megaphone, PlusCircle, Users, Loader2 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/context/LocalizationContext';
+import { getVolunteerTasks, broadcastTask } from '@/actions/tasks';
 
 export default function DispatchCenterPage() {
   const { t } = useTranslation();
-  const [tasks, setTasks] = useState<VolunteerTask[]>(initialTasks);
+  const [tasks, setTasks] = useState<VolunteerTask[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
@@ -44,39 +46,51 @@ export default function DispatchCenterPage() {
   });
   const { toast } = useToast();
 
+  useEffect(() => {
+    const fetchTasks = async () => {
+        const data = await getVolunteerTasks();
+        setTasks(data as any);
+        setLoading(false);
+    };
+    fetchTasks();
+  }, []);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setNewTask(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleBroadcastTask = (e: React.FormEvent) => {
+  const handleBroadcastTask = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTask.title || !newTask.description || !newTask.location) {
         toast({ title: t('admin.dispatch.error.missingFields'), description: t('admin.dispatch.error.missingFieldsDescription'), variant: "destructive" });
         return;
     }
 
-    const task: VolunteerTask = {
-      id: `task-${Date.now()}`,
-      title: newTask.title,
-      description: newTask.description,
-      requiredSkills: newTask.requiredSkills.split(',').map(s => s.trim()).filter(Boolean),
-      location: newTask.location,
-      volunteersNeeded: Number(newTask.volunteersNeeded),
-      status: TaskStatus.Open,
-      volunteers: [],
-      createdAt: new Date().toISOString(),
-    };
+    setIsSubmitting(true);
+    try {
+        await broadcastTask({
+            ...newTask,
+            requiredSkills: newTask.requiredSkills.split(',').map(s => s.trim()).filter(Boolean)
+        });
 
-    setTasks(prev => [task, ...prev]);
-    toast({
-        title: t('admin.dispatch.success.taskBroadcasted'),
-        description: t('admin.dispatch.success.taskBroadcastedDescription', { title: task.title })
-    });
-    
-    // Reset form
-    setNewTask({ title: '', description: '', requiredSkills: '', location: '', volunteersNeeded: 1 });
+        toast({
+            title: t('admin.dispatch.success.taskBroadcasted'),
+            description: t('admin.dispatch.success.taskBroadcastedDescription', { title: newTask.title })
+        });
+        
+        // Reset form and refresh list
+        setNewTask({ title: '', description: '', requiredSkills: '', location: '', volunteersNeeded: 1 });
+        const data = await getVolunteerTasks();
+        setTasks(data as any);
+    } catch (error) {
+        toast({ title: "Error", description: "Failed to broadcast task.", variant: "destructive" });
+    } finally {
+        setIsSubmitting(false);
+    }
   };
+
+  if (loading) return <div className="flex h-96 items-center justify-center"><Loader2 className="animate-spin" /></div>;
 
   return (
     <div className="space-y-6">
@@ -128,6 +142,13 @@ export default function DispatchCenterPage() {
                                         <TableCell>{formatDate(task.createdAt, 'PP')}</TableCell>
                                     </TableRow>
                                 ))}
+                                {tasks.length === 0 && (
+                                    <TableRow>
+                                        <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                                            No active tasks found.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
                             </TableBody>
                          </Table>
                     </CardContent>
@@ -166,8 +187,8 @@ export default function DispatchCenterPage() {
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button type="submit" className="w-full">
-                                <PlusCircle className="mr-2" />
+                            <Button type="submit" className="w-full" disabled={isSubmitting}>
+                                {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <PlusCircle className="mr-2" />}
                                 {t('admin.dispatch.broadcastButton')}
                             </Button>
                         </CardFooter>

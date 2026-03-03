@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -17,13 +19,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { ReportStatusBadge } from '@/components/shared/ReportStatusBadge';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
-import { reports, users } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
-import { reportCategories, getCategoryForType, type ReportCategory } from '@/lib/types';
+import { reportCategories, getCategoryForType, type ReportCategory, type Report } from '@/lib/types';
 import { notFound } from 'next/navigation';
 import { use } from 'react';
+import { getAllReports } from '@/actions/reports';
+import { Loader2 } from 'lucide-react';
 
 export default function ReportsByCategoryPage({ params }: { params: { category: string } }) {
     const { t } = useTranslation();
@@ -31,15 +34,25 @@ export default function ReportsByCategoryPage({ params }: { params: { category: 
     const categoryParam = resolvedParams.category.replace(/%20/g, " ");
     const category = Object.keys(reportCategories).find(c => c.toLowerCase() === categoryParam.toLowerCase()) as ReportCategory | undefined;
 
+    const [reports, setReports] = useState<Report[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchReports = async () => {
+            const data = await getAllReports();
+            setReports(data as any);
+            setLoading(false);
+        };
+        fetchReports();
+    }, []);
+
     if (!category) {
         notFound();
     }
     
     const filteredReports = reports.filter(r => getCategoryForType(r.type) === category);
 
-    const getUserName = (userId: string) => {
-        return users.find(u => u.id === userId)?.name || 'Unknown User';
-    }
+    if (loading) return <div className="flex h-96 items-center justify-center"><Loader2 className="animate-spin" /></div>;
 
     return (
         <div className="space-y-6">
@@ -74,7 +87,7 @@ export default function ReportsByCategoryPage({ params }: { params: { category: 
                             <TableCell className="font-mono text-xs">#{report.id.substring(0, 7)}</TableCell>
                             <TableCell>{t(`reportTypes.${report.type.replace(/\s/g, '')}`)}</TableCell>
                             <TableCell><ReportStatusBadge status={report.status} /></TableCell>
-                            <TableCell>{getUserName(report.userId)}</TableCell>
+                            <TableCell>{report.userId}</TableCell>
                             <TableCell>{formatDate(report.timestamp, 'PP')}</TableCell>
                             <TableCell className="text-right">
                                 <Button asChild variant="outline" size="sm">
@@ -83,6 +96,13 @@ export default function ReportsByCategoryPage({ params }: { params: { category: 
                             </TableCell>
                         </TableRow>
                         ))}
+                        {filteredReports.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                                    No reports found in this category.
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                     </Table>
                 </CardContent>

@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -29,37 +29,41 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { ReportStatusBadge } from '@/components/shared/ReportStatusBadge';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
-import { reports, users } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
-import { ReportStatus } from '@/lib/types';
+import { ReportStatus, type Report } from '@/lib/types';
 import { format } from 'date-fns';
 import type { DateRange } from 'react-day-picker';
-import { Calendar as CalendarIcon } from 'lucide-react';
+import { Calendar as CalendarIcon, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { getAllReports } from '@/actions/reports';
 
 export default function AllReportsPage() {
     const { t } = useTranslation();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('all');
     const [date, setDate] = useState<DateRange | undefined>(undefined);
+    const [reports, setReports] = useState<Report[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const getUserName = (userId: string) => {
-        return users.find(u => u.id === userId)?.name || 'Unknown User';
-    }
+    useEffect(() => {
+        const fetchReports = async () => {
+            const data = await getAllReports();
+            setReports(data as any);
+            setLoading(false);
+        };
+        fetchReports();
+    }, []);
 
     const filteredReports = useMemo(() => {
         return reports.filter(report => {
-            // Search term filter
             const includesSearchTerm = searchTerm.trim() === '' || 
                 report.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
                 report.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-            // Status filter
             const matchesStatus = statusFilter === 'all' || report.status === statusFilter;
 
-            // Date range filter
             const reportDate = new Date(report.timestamp);
             const matchesDate = !date || (
                 (!date.from || reportDate >= date.from) &&
@@ -68,7 +72,9 @@ export default function AllReportsPage() {
             
             return includesSearchTerm && matchesStatus && matchesDate;
         });
-    }, [searchTerm, statusFilter, date]);
+    }, [searchTerm, statusFilter, date, reports]);
+
+    if (loading) return <div className="flex h-96 items-center justify-center"><Loader2 className="animate-spin" /></div>;
 
     return (
         <div className="space-y-6">
@@ -81,17 +87,17 @@ export default function AllReportsPage() {
                 <CardContent>
                     <div className="flex flex-col md:flex-row gap-4 mb-6">
                         <Input 
-                            placeholder="Search by ID or keyword..."
+                            placeholder={t('admin.reports.searchPlaceholder')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="max-w-sm"
                         />
                         <Select value={statusFilter} onValueChange={setStatusFilter}>
                             <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Filter by status" />
+                                <SelectValue placeholder={t('admin.reports.filterStatusPlaceholder')} />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="all">All Statuses</SelectItem>
+                                <SelectItem value="all">{t('admin.reports.allStatuses')}</SelectItem>
                                 {Object.values(ReportStatus).map(status => (
                                     <SelectItem key={status} value={status}>{t(`reportStatus.${status.replace(/\s/g, '')}`)}</SelectItem>
                                 ))}
@@ -118,7 +124,7 @@ export default function AllReportsPage() {
                                     format(date.from, "LLL dd, y")
                                 )
                                 ) : (
-                                <span>Pick a date range</span>
+                                <span>{t('admin.reports.dateRangePlaceholder')}</span>
                                 )}
                             </Button>
                             </PopoverTrigger>
@@ -156,7 +162,7 @@ export default function AllReportsPage() {
                             <TableCell className="font-mono text-xs">#{report.id.substring(0, 7)}</TableCell>
                             <TableCell>{t(`reportTypes.${report.type.replace(/\s/g, '')}`)}</TableCell>
                             <TableCell><ReportStatusBadge status={report.status} /></TableCell>
-                            <TableCell>{getUserName(report.userId)}</TableCell>
+                            <TableCell>{report.userId}</TableCell>
                             <TableCell>{formatDate(report.timestamp, 'PP')}</TableCell>
                             <TableCell className="text-right">
                                 <Button asChild variant="outline" size="sm">
@@ -165,6 +171,13 @@ export default function AllReportsPage() {
                             </TableCell>
                         </TableRow>
                         ))}
+                        {filteredReports.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                                    No reports match your filters.
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                     </Table>
                 </CardContent>

@@ -23,9 +23,9 @@ import {
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { Loader2, Repeat } from 'lucide-react';
 import { useTranslation } from '@/context/LocalizationContext';
+import { createBarterPost } from '@/actions/barter';
 
 const barterSchema = z.object({
   have: z.string().min(5, "Please describe what you have in more detail.").max(200, "Description is too long."),
@@ -48,17 +48,24 @@ export default function NewBarterPostPage() {
   });
   
   const onSubmit = async (data: BarterFormValues) => {
-    // In a real app, this would make an API call to save the post.
-    // For this demo, we'll just show a success message and redirect.
-    console.log("New Barter Post Submitted:", data);
+    try {
+        await createBarterPost(data);
+        
+        toast({
+            title: t('citizen.barter.new.success.createdTitle'),
+            description: t('citizen.barter.new.success.createdDescription'),
+            variant: 'default',
+        });
 
-    toast({
-        title: t('citizen.barter.new.success.createdTitle'),
-        description: t('citizen.barter.new.success.createdDescription'),
-        variant: 'default',
-    });
-
-    router.push('/dashboard/barter');
+        router.push('/dashboard/barter');
+    } catch (error) {
+        console.error(error);
+        toast({
+            title: t('common.error'),
+            description: "Failed to post to barter board.",
+            variant: "destructive"
+        });
+    }
   };
 
   return (
