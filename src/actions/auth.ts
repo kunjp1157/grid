@@ -1,4 +1,3 @@
-
 "use server";
 
 import { cookies } from "next/headers";
@@ -7,7 +6,8 @@ import type { User } from "@/lib/types";
 
 export async function login(prevState: any, formData: FormData) {
   const email = (formData.get("email") as string || "").toLowerCase();
-  // Note: Password is not checked in this mock setup.
+  // Note: For prototype, we check against local mock data. 
+  // In full integration, client-side Firebase Auth is preferred.
   const user = users.find(u => u.email.toLowerCase() === email);
 
   if (!user) {
@@ -21,7 +21,8 @@ export async function login(prevState: any, formData: FormData) {
     role: user.role,
   });
 
-  cookies().set("user", userCookie, {
+  const cookieStore = await cookies();
+  cookieStore.set("user", userCookie, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 7, // 1 week
@@ -38,7 +39,6 @@ export async function login(prevState: any, formData: FormData) {
 export async function signup(prevState: any, formData: FormData) {
   const name = formData.get("name") as string;
   const email = (formData.get("email") as string || "").toLowerCase();
-  // New users are always created as citizens
   const role = "citizen";
 
   if (users.find(u => u.email.toLowerCase() === email)) {
@@ -52,6 +52,7 @@ export async function signup(prevState: any, formData: FormData) {
     role,
   };
 
+  // Mock addition
   users.push(newUser);
 
   const userCookie = JSON.stringify({
@@ -61,27 +62,27 @@ export async function signup(prevState: any, formData: FormData) {
     role: newUser.role,
   });
 
-  cookies().set("user", userCookie, {
+  const cookieStore = await cookies();
+  cookieStore.set("user", userCookie, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 60 * 60 * 24 * 7, // 1 week
     path: "/",
   });
 
-  // New users are always citizens, so they will be redirected to the dashboard.
   return { redirectTo: "/dashboard" };
 }
 
-
 export async function logout() {
-  cookies().delete("user");
-  // This redirect is safe because it's a simple server action not tied to a form state
+  const cookieStore = await cookies();
+  cookieStore.delete("user");
   const { redirect } = await import("next/navigation");
   redirect("/");
 }
 
 export async function getUser(): Promise<User | null> {
-    const userCookie = cookies().get('user')?.value;
+    const cookieStore = await cookies();
+    const userCookie = cookieStore.get('user')?.value;
     if (userCookie) {
         try {
             return JSON.parse(userCookie) as User;
