@@ -2,38 +2,43 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { getDb, saveDb } from "@/lib/local-db";
+import { pool } from "@/lib/db";
 import type { User } from "@/lib/types";
 
 export async function login(prevState: any, formData: FormData) {
   const email = (formData.get("email") as string || "").toLowerCase();
-  const db = await getDb();
   
-  const user = db.users.find(u => u.email.toLowerCase() === email);
+  try {
+    const [rows]: any = await pool.execute("SELECT * FROM users WHERE email = ?", [email]);
+    const user = rows[0];
 
-  if (!user) {
-    return { error: "login.error.invalid" };
-  }
+    if (!user) {
+      return { error: "login.error.invalid" };
+    }
 
-  const userCookie = JSON.stringify({
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    role: user.role,
-  });
+    const userCookie = JSON.stringify({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    });
 
-  const cookieStore = await cookies();
-  cookieStore.set("user", userCookie, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    path: "/",
-  });
+    const cookieStore = await cookies();
+    cookieStore.set("user", userCookie, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+      path: "/",
+    });
 
-  if (user.role === "admin") {
-    return { redirectTo: "/admin" };
-  } else {
-    return { redirectTo: "/dashboard" };
+    if (user.role === "admin") {
+      return { redirectTo: "/admin" };
+    } else {
+      return { redirectTo: "/dashboard" };
+    }
+  } catch (error) {
+    console.error("Database error during login:", error);
+    return { error: "login.error.unknown" };
   }
 }
 
@@ -41,40 +46,34 @@ export async function signup(prevState: any, formData: FormData) {
   const name = formData.get("name") as string;
   const email = (formData.get("email") as string || "").toLowerCase();
   const role = "citizen";
+  const id = `user-${Date.now()}`;
 
-  const db = await getDb();
+  try {
+    const [existing]: any = await pool.execute("SELECT id FROM users WHERE email = ?", [email]);
+    if (existing.length > 0) {
+      return { error: "signup.error.userExists" };
+    }
 
-  if (db.users.find(u => u.email.toLowerCase() === email)) {
-    return { error: "signup.error.userExists" };
+    await pool.execute(
+      "INSERT INTO users (id, name, email, role, isVolunteer) VALUES (?, ?, ?, ?, ?)",
+      [id, name, email, role, false]
+    );
+
+    const userCookie = JSON.stringify({ id, name, email, role });
+
+    const cookieStore = await cookies();
+    cookieStore.set("user", userCookie, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+      path: "/",
+    });
+
+    return { redirectTo: "/dashboard" };
+  } catch (error) {
+    console.error("Database error during signup:", error);
+    return { error: "signup.error.unknown" };
   }
-
-  const newUser: User = {
-    id: `user-${Date.now()}`,
-    name,
-    email,
-    role,
-    isVolunteer: false,
-  };
-
-  db.users.push(newUser);
-  await saveDb(db);
-
-  const userCookie = JSON.stringify({
-    id: newUser.id,
-    name: newUser.name,
-    email: newUser.email,
-    role: newUser.role,
-  });
-
-  const cookieStore = await cookies();
-  cookieStore.set("user", userCookie, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-    path: "/",
-  });
-
-  return { redirectTo: "/dashboard" };
 }
 
 export async function logout() {

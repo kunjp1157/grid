@@ -1,13 +1,13 @@
 
 "use server";
 
-import { getDb, saveDb } from "@/lib/local-db";
+import { pool } from "@/lib/db";
 import { getUser } from "./auth";
 import { ReportStatus, ReportPriority, type Report } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
 export async function submitReport(data: {
-  type: any;
+  type: string;
   description: string;
   latitude: number;
   longitude: number;
@@ -16,37 +16,49 @@ export async function submitReport(data: {
   const user = await getUser();
   if (!user) throw new Error("Unauthorized");
 
-  const db = await getDb();
-  
-  const newReport: Report = {
-    id: `report-${Date.now()}`,
-    userId: user.id,
-    type: data.type,
-    description: data.description,
-    location: {
-      lat: data.latitude,
-      lng: data.longitude,
-    },
-    status: ReportStatus.New,
-    priority: data.priority || ReportPriority.Medium,
-    timestamp: new Date().toISOString(),
-  };
+  const id = `report-${Date.now()}`;
+  const status = ReportStatus.New;
+  const priority = data.priority || ReportPriority.Medium;
+  const timestamp = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-  db.reports.unshift(newReport);
-  await saveDb(db);
-  
-  revalidatePath('/dashboard/my-reports');
-  revalidatePath('/admin/reports');
-  
-  return { success: true, report: newReport };
+  try {
+    await pool.execute(
+      "INSERT INTO reports (id, userId, type, description, lat, lng, status, priority, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [id, user.id, data.type, data.description, data.latitude, data.longitude, status, priority, timestamp]
+    );
+    
+    revalidatePath('/dashboard/my-reports');
+    revalidatePath('/admin/reports');
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Database error during report submission:", error);
+    throw new Error("Failed to save report");
+  }
 }
 
 export async function getAllReports() {
-  const db = await getDb();
-  return db.reports;
+  try {
+    const [rows]: any = await pool.execute("SELECT * FROM reports ORDER BY timestamp DESC");
+    return rows.map((r: any) => ({
+        ...r,
+        location: { lat: r.lat, lng: r.lng }
+    }));
+  } catch (error) {
+    console.error("Database error fetching reports:", error);
+    return [];
+  }
 }
 
 export async function getUserReports(userId: string) {
-  const db = await getDb();
-  return db.reports.filter(r => r.userId === userId);
+  try {
+    const [rows]: any = await pool.execute("SELECT * FROM reports WHERE userId = ? ORDER BY timestamp DESC", [userId]);
+    return rows.map((r: any) => ({
+        ...r,
+        location: { lat: r.lat, lng: r.lng }
+    }));
+  } catch (error) {
+    console.error("Database error fetching user reports:", error);
+    return [];
+  }
 }
