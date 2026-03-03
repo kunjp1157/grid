@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -19,14 +20,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { ReportStatusBadge } from '@/components/shared/ReportStatusBadge';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
-import { reports } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { PlusCircle, Video } from 'lucide-react';
-import type { User } from '@/lib/types';
-import { useEffect, useState } from 'react';
-import { ReportStatus } from '@/lib/types';
+import { ReportStatus, type Report, type User } from '@/lib/types';
+import { getUserReports } from '@/actions/reports';
 import { FeedbackDialog } from '@/components/shared/FeedbackDialog';
 import { useToast } from '@/hooks/use-toast';
 
@@ -34,29 +33,29 @@ export default function MyReportsPage() {
     const { t } = useTranslation();
     const { toast } = useToast();
     const [user, setUser] = useState<User | null>(null);
-    // We'll use local state to manage reports to see feedback changes instantly
-    const [userReports, setUserReports] = useState(user ? reports.filter(r => r.userId === user.id) : []);
-
+    const [userReports, setUserReports] = useState<Report[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadUser = async () => {
+        const loadData = async () => {
             try {
                 const res = await fetch('/api/user');
                 if (res.ok) {
                     const userData = await res.json();
                     setUser(userData);
-                    setUserReports(reports.filter(r => r.userId === userData.id))
+                    const reports = await getUserReports(userData.id);
+                    setUserReports(reports as any);
                 }
             } catch (error) {
-                console.error("Failed to fetch user", error);
+                console.error("Failed to load reports", error);
+            } finally {
+                setLoading(false);
             }
         };
-        loadUser();
+        loadData();
     }, []);
 
     const handleFeedbackSubmit = (reportId: string, rating: number, feedback: string) => {
-        // In a real app, this would be an API call to your backend.
-        // Here, we just update the mock data in state.
         const updatedReports = userReports.map(report => {
             if (report.id === reportId) {
                 return { ...report, rating, feedback };
@@ -70,9 +69,8 @@ export default function MyReportsPage() {
         });
     };
 
-    if (!user) {
-        return <div>{t('common.loading')}</div>;
-    }
+    if (loading) return <div className="p-8 text-center">{t('common.loading')}</div>;
+    if (!user) return <div className="p-8 text-center text-destructive">Unauthorized</div>;
 
     return (
         <div className="space-y-6">
@@ -108,7 +106,11 @@ export default function MyReportsPage() {
                                      {report.status === ReportStatus.Resolved && typeof report.rating === 'undefined' ? (
                                         <FeedbackDialog report={report} onSubmit={handleFeedbackSubmit} />
                                     ) : (
-                                        <Button variant="outline" size="sm" disabled>{t('citizen.reports.view')}</Button>
+                                        <Button variant="outline" size="sm" asChild>
+                                            <Link href={`/dashboard/live/${report.id}`}>
+                                                {t('citizen.reports.view')}
+                                            </Link>
+                                        </Button>
                                     )}
                                      <Button asChild variant="secondary" size="sm">
                                         <Link href={`/dashboard/live/${report.id}`}>

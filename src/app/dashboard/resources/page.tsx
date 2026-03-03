@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { resources as initialResources, users } from '@/lib/data'; // Mock data
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { PlusCircle, User, MapPin, HeartHandshake } from 'lucide-react';
@@ -24,23 +23,23 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { useTranslation } from '@/context/LocalizationContext';
-
+import { getAllResources } from '@/actions/resources';
 
 export default function CommunityResourcesPage() {
     const { t } = useTranslation();
-    const [allResources, setAllResources] = useState<CommunityResource[]>(initialResources);
+    const [allResources, setAllResources] = useState<CommunityResource[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const storedResources: CommunityResource[] = JSON.parse(localStorage.getItem('community_resources') || '[]');
-        // Combine initial data with stored data, ensuring no duplicates by ID
-        const combined = [...storedResources, ...initialResources];
-        const unique = combined.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
-        setAllResources(unique);
+        const load = async () => {
+            const data = await getAllResources();
+            setAllResources(data);
+            setLoading(false);
+        };
+        load();
     }, []);
-    
-    const getUserName = (userId: string) => {
-        return users.find(u => u.id === userId)?.name || t('common.unknownUser');
-    }
+
+    if (loading) return <div className="p-8 text-center">{t('common.loading')}</div>;
 
     return (
         <div className="space-y-6">
@@ -75,7 +74,7 @@ export default function CommunityResourcesPage() {
                                <div className="text-sm">
                                     <div className="flex items-center gap-2">
                                         <User className="h-4 w-4 text-muted-foreground" />
-                                        <span>{t('citizen.resources.offeredBy', { name: getUserName(resource.userId) })}</span>
+                                        <span>User ID: {resource.userId}</span>
                                     </div>
                                </div>
                             </CardContent>
