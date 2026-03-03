@@ -5,20 +5,40 @@
 
 ---
 
-## 🛠️ Database Structure (Local XAMPP/MySQL)
+## 🛠️ Database Setup (Local XAMPP/MySQL)
 
-If you are planning to connect this application to a local MySQL database (via XAMPP), the following 8 tables are required:
+To connect this application to a local MySQL database via XAMPP, follow these steps:
 
-1.  **`users`**: Manages all user profiles (Citizens & Admins), including medical info and volunteer status.
-2.  **`zones`**: Defines operational zones for crisis management.
-3.  **`reports`**: The core table for incident reports, priorities, and status tracking.
-4.  **`report_messages`**: Stores the chat history between citizens and admins for specific reports.
-5.  **`community_resources`**: Tracks shared community resources like clean water and shelter.
-6.  **`volunteer_tasks`**: Stores tasks created by admins for volunteers.
-7.  **`volunteer_assignments`**: Links volunteers to the tasks they have accepted.
-8.  **`barter_posts`**: Manages the peer-to-peer item exchange board.
+### 1. Start XAMPP
+- Open the **XAMPP Control Panel**.
+- Start the **Apache** and **MySQL** modules.
 
-A complete SQL schema is available in `docs/xampp_mysql_schema.sql`.
+### 2. Create the Database
+- Open your browser and go to [http://localhost/phpmyadmin](http://localhost/phpmyadmin).
+- Click on **New** in the left sidebar.
+- Enter Database name: `the_grid_db` and click **Create**.
+
+### 3. Import the Schema
+- Select the `the_grid_db` database you just created.
+- Click on the **Import** tab at the top.
+- Click **Choose File** and select the SQL file located at: `docs/xampp_mysql_schema.sql`.
+- Scroll down and click **Import** (or **Go**).
+
+### 4. Configure Environment Variables
+- Create a `.env` file in the root of your project (if not already present).
+- Add the following database configuration:
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=the_grid_db
+GEMINI_API_KEY=your_api_key_here
+```
+
+### 5. Note on Implementation
+The current version of the app uses a **Local JSON Database** (`database.json`) for zero-config setup. To switch to a live MySQL connection:
+1. Install a database driver: `npm install mysql2`.
+2. Update the logic in `src/lib/local-db.ts` to use MySQL queries instead of file system operations.
 
 ---
 
