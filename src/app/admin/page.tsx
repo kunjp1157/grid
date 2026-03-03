@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -17,20 +19,32 @@ import {
 import { Button } from '@/components/ui/button';
 import { ReportStatusBadge } from '@/components/shared/ReportStatusBadge';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
-import { reports, users } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
-import type { ReportType } from '@/lib/types';
-import { ArrowRight } from 'lucide-react';
+import type { Report, ReportType } from '@/lib/types';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { getCategoryForType } from '@/lib/types';
+import { getAllReports } from '@/actions/reports';
 
 export default function AdminDashboardPage() {
     const { t } = useTranslation();
+    const [reports, setReports] = useState<Report[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const getUserName = (userId: string) => {
-        return users.find(u => u.id === userId)?.name || 'Unknown User';
-    }
+    useEffect(() => {
+        const fetchReports = async () => {
+            try {
+                const data = await getAllReports();
+                setReports(data as any);
+            } catch (error) {
+                console.error("Error fetching reports:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchReports();
+    }, []);
 
     const reportsByCategory = Object.entries(
       reports.reduce((acc, report) => {
@@ -42,6 +56,14 @@ export default function AdminDashboardPage() {
         return acc;
       }, {} as { [key: string]: { type: ReportType; count: number } })
     ).map(([key, value]) => ({...value, category: key}));
+
+    if (loading) {
+        return (
+            <div className="flex h-96 items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6">
@@ -81,13 +103,12 @@ export default function AdminDashboardPage() {
                         <TableHead>{t('admin.reports.id')}</TableHead>
                         <TableHead>{t('admin.reports.type')}</TableHead>
                         <TableHead>{t('admin.reports.status')}</TableHead>
-                        <TableHead>{t('admin.reports.submittedBy')}</TableHead>
                         <TableHead>{t('admin.reports.date')}</TableHead>
                         <TableHead className="text-right">{t('admin.reports.actions')}</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {reports.slice(0, 5).map(report => ( // Show recent 5 reports
+                        {reports.slice(0, 10).map(report => (
                         <TableRow key={report.id}>
                             <TableCell>
                                 <ReportTypeIcon type={report.type} className="h-5 w-5 text-muted-foreground" />
@@ -95,7 +116,6 @@ export default function AdminDashboardPage() {
                             <TableCell className="font-mono text-xs">#{report.id.substring(0, 7)}</TableCell>
                             <TableCell>{t(`reportTypes.${report.type.replace(/\s/g, '')}`)}</TableCell>
                             <TableCell><ReportStatusBadge status={report.status} /></TableCell>
-                            <TableCell>{getUserName(report.userId)}</TableCell>
                             <TableCell>{formatDate(report.timestamp, 'PP')}</TableCell>
                             <TableCell className="text-right">
                                 <Button asChild variant="outline" size="sm">
@@ -104,6 +124,13 @@ export default function AdminDashboardPage() {
                             </TableCell>
                         </TableRow>
                         ))}
+                        {reports.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                                    No reports found in the database.
+                                </TableCell>
+                            </TableRow>
+                        )}
                     </TableBody>
                     </Table>
                 </CardContent>

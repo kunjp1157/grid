@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -18,62 +20,72 @@ import {
 import { Button } from '@/components/ui/button';
 import { ReportStatusBadge } from '@/components/shared/ReportStatusBadge';
 import { ReportTypeIcon } from '@/components/shared/ReportTypeIcon';
-import { reports } from '@/lib/data'; // Mock data
 import { useTranslation } from '@/context/LocalizationContext';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
-import { PlusCircle, ArrowRight } from 'lucide-react';
-import type { User, ReportType } from '@/lib/types';
-import { useEffect, useState } from 'react';
+import { PlusCircle, ArrowRight, Loader2 } from 'lucide-react';
+import type { User, Report, ReportType } from '@/lib/types';
+import { getUserReports } from '@/actions/reports';
 
 export default function CitizenDashboardPage() {
     const { t } = useTranslation();
     const [user, setUser] = useState<User | null>(null);
+    const [userReports, setUserReports] = useState<Report[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const loadUser = async () => {
+        const loadData = async () => {
             try {
-                const res = await fetch('/api/user');
-                if (res.ok) {
-                    const userData = await res.json();
+                const userRes = await fetch('/api/user');
+                if (userRes.ok) {
+                    const userData = await userRes.json();
                     setUser(userData);
+                    const reportsData = await getUserReports(userData.id);
+                    setUserReports(reportsData as any);
                 }
             } catch (error) {
-                console.error("Failed to fetch user", error);
+                console.error("Failed to fetch dashboard data:", error);
+            } finally {
+                setLoading(false);
             }
         };
-        loadUser();
+        loadData();
     }, []);
 
-
-    const userReports = user ? reports.filter(r => r.userId === user.id) : [];
-
-    if (!user) {
-        return <div>Loading...</div>;
+    if (loading) {
+        return (
+            <div className="flex h-96 items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
+        );
     }
 
-    const reportsByCategory = Object.values(userReports.reduce((acc, report) => {
+    if (!user) {
+        return <div className="p-8 text-center text-destructive font-bold">Unauthorized</div>;
+    }
+
+    const reportsByType = Object.values(userReports.reduce((acc, report) => {
         if (!acc[report.type]) {
             acc[report.type] = { type: report.type, count: 0 };
         }
         acc[report.type].count++;
         return acc;
-    }, {} as { [key in ReportType]: { type: ReportType, count: number } }));
+    }, {} as { [key in ReportType]?: { type: ReportType, count: number } }));
 
 
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold">{t('citizen.dashboard.welcome', { name: user?.name || 'Citizen' })}</h1>
+            <h1 className="text-3xl font-bold">{t('citizen.dashboard.welcome', { name: user.name })}</h1>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {reportsByCategory.map(({ type, count }) => (
-                    <Card key={type}>
+                {reportsByType.map((item) => item && (
+                    <Card key={item.type}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                            <CardTitle className="text-sm font-medium">{t(`reportTypes.${type.replace(/\s/g, '')}`)}</CardTitle>
-                            <ReportTypeIcon type={type} className="h-4 w-4 text-muted-foreground" />
+                            <CardTitle className="text-sm font-medium">{t(`reportTypes.${item.type.replace(/\s/g, '')}`)}</CardTitle>
+                            <ReportTypeIcon type={item.type} className="h-4 w-4 text-muted-foreground" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{count}</div>
+                            <div className="text-2xl font-bold">{item.count}</div>
                         </CardContent>
                     </Card>
                 ))}
@@ -106,7 +118,7 @@ export default function CitizenDashboardPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {userReports.slice(0, 5).map(report => ( // Show recent 5 reports
+                            {userReports.slice(0, 5).map(report => (
                             <TableRow key={report.id}>
                                 <TableCell>
                                     <ReportTypeIcon type={report.type} className="h-5 w-5 text-muted-foreground" />
@@ -116,8 +128,9 @@ export default function CitizenDashboardPage() {
                                 <TableCell><ReportStatusBadge status={report.status} /></TableCell>
                                 <TableCell>{formatDate(report.timestamp, 'PP')}</TableCell>
                                 <TableCell className="text-right">
-                                    {/* In a real app, this would link to a details page */}
-                                    <Button variant="outline" size="sm">{t('citizen.reports.view')}</Button>
+                                    <Button variant="outline" size="sm" asChild>
+                                        <Link href={`/dashboard/my-reports`}>View</Link>
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                             ))}

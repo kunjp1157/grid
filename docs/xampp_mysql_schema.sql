@@ -1,5 +1,7 @@
 
--- Create Database
+-- The Grid: MySQL Database Schema
+-- Use this to set up your local database in XAMPP (phpMyAdmin)
+
 CREATE DATABASE IF NOT EXISTS the_grid_db;
 USE the_grid_db;
 
@@ -18,8 +20,9 @@ CREATE TABLE IF NOT EXISTS users (
     emergencyContactNumber VARCHAR(20),
     medicalConditions TEXT,
     isVolunteer BOOLEAN DEFAULT FALSE,
-    skills TEXT,
-    certifications TEXT
+    skills TEXT, -- Comma separated
+    certifications TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 2. Zones Table
@@ -31,80 +34,83 @@ CREATE TABLE IF NOT EXISTS zones (
 -- 3. Reports Table
 CREATE TABLE IF NOT EXISTS reports (
     id VARCHAR(50) PRIMARY KEY,
-    userId VARCHAR(50),
-    type VARCHAR(50),
-    description TEXT,
-    lat DECIMAL(10, 8),
-    lng DECIMAL(11, 8),
-    status VARCHAR(20),
-    priority VARCHAR(20),
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    userId VARCHAR(50) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    lat DECIMAL(10, 8) NOT NULL,
+    lng DECIMAL(11, 8) NOT NULL,
+    status ENUM('New', 'Assigned', 'In Progress', 'Resolved', 'Overdue') DEFAULT 'New',
+    priority ENUM('Low', 'Medium', 'High', 'Critical') DEFAULT 'Medium',
+    timestamp DATETIME NOT NULL,
     mediaUrl TEXT,
     assignedAdminId VARCHAR(50),
     resolutionDeadline DATETIME,
     rating INT,
     feedback TEXT,
-    FOREIGN KEY (userId) REFERENCES users(id)
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 4. Report Messages (Chat)
+-- 4. Chat Messages Table
 CREATE TABLE IF NOT EXISTS report_messages (
     id VARCHAR(50) PRIMARY KEY,
-    reportId VARCHAR(50),
-    senderId VARCHAR(50),
-    text TEXT,
+    reportId VARCHAR(50) NOT NULL,
+    senderId VARCHAR(50) NOT NULL,
+    text TEXT NOT NULL,
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (reportId) REFERENCES reports(id),
-    FOREIGN KEY (senderId) REFERENCES users(id)
+    FOREIGN KEY (reportId) REFERENCES reports(id) ON DELETE CASCADE
 );
 
--- 5. Community Resources
+-- 5. Community Resources Table
 CREATE TABLE IF NOT EXISTS community_resources (
     id VARCHAR(50) PRIMARY KEY,
-    userId VARCHAR(50),
-    type VARCHAR(50),
-    description TEXT,
+    userId VARCHAR(50) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
     lat DECIMAL(10, 8),
     lng DECIMAL(11, 8),
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (userId) REFERENCES users(id)
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 6. Volunteer Tasks
+-- 6. Volunteer Tasks Table
 CREATE TABLE IF NOT EXISTS volunteer_tasks (
     id VARCHAR(50) PRIMARY KEY,
-    title VARCHAR(200),
-    description TEXT,
+    title VARCHAR(200) NOT NULL,
+    description TEXT NOT NULL,
     location VARCHAR(200),
     requiredSkills TEXT,
-    volunteersNeeded INT,
-    status VARCHAR(20),
-    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+    volunteersNeeded INT DEFAULT 1,
+    status ENUM('Open', 'In Progress', 'Completed') DEFAULT 'Open',
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 7. Volunteer Assignments
+-- 7. Volunteer Assignments Table
 CREATE TABLE IF NOT EXISTS volunteer_assignments (
-    taskId VARCHAR(50),
-    userId VARCHAR(50),
-    assignedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    taskId VARCHAR(50) NOT NULL,
+    userId VARCHAR(50) NOT NULL,
+    assignedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (taskId, userId),
-    FOREIGN KEY (taskId) REFERENCES volunteer_tasks(id),
-    FOREIGN KEY (userId) REFERENCES users(id)
+    FOREIGN KEY (taskId) REFERENCES volunteer_tasks(id) ON DELETE CASCADE,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 8. Barter Posts
+-- 8. Barter Posts Table
 CREATE TABLE IF NOT EXISTS barter_posts (
     id VARCHAR(50) PRIMARY KEY,
-    userId VARCHAR(50),
-    have TEXT,
-    need TEXT,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (userId) REFERENCES users(id)
+    userId VARCHAR(50) NOT NULL,
+    have TEXT NOT NULL,
+    need TEXT NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Insert Initial Admin (Password is 'password' in simulation)
-INSERT IGNORE INTO users (id, name, email, role, isVolunteer) 
-VALUES ('admin-1', 'Kunj Patel', 'kunjp1157@gmail.com', 'admin', FALSE);
+-- Initial Admin Account (Optional)
+INSERT IGNORE INTO users (id, name, email, role) 
+VALUES ('admin-1', 'Kunj Patel', 'kunjp1157@gmail.com', 'admin');
 
--- Insert Initial Zones
-INSERT IGNORE INTO zones (id, name) VALUES ('zone1', 'North Zone'), ('zone2', 'South Zone');
+-- Initial Zones
+INSERT IGNORE INTO zones (id, name) VALUES 
+('zone1', 'North Zone'),
+('zone2', 'South Zone'),
+('zone3', 'East Zone'),
+('zone4', 'West Zone');
