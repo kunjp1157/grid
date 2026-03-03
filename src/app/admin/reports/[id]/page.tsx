@@ -3,7 +3,6 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { use } from 'react';
-import { reports, users } from '@/lib/data';
 import { notFound } from 'next/navigation';
 import {
   Card,
@@ -38,22 +37,42 @@ import { SopAdvisor } from '@/components/shared/SopAdvisor';
 import { LiveStreamViewer } from '@/components/shared/LiveStreamViewer';
 import { PredictedRisks } from '@/components/shared/PredictedRisks';
 import { LocationMap } from '@/components/shared/LocationMap';
+import { getReportById, updateReportStatus } from '@/actions/reports';
 
 export default function ReportDetailsPage({ params }: { params: { id: string } }) {
   const { t } = useTranslation();
   const { toast } = useToast();
   const resolvedParams = use(params);
   
-  // We use local state to manage the report to see chat updates instantly
-  const [report, setReport] = useState(() => reports.find(r => r.id === resolvedParams.id));
+  const [report, setReport] = useState<Report | null>(null);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In a real app, you'd fetch the current user from an auth context
-    setCurrentUser(users.find(u => u.role === 'admin') || null);
-  }, []);
+    const loadReport = async () => {
+        const data = await getReportById(resolvedParams.id);
+        if (data) {
+            setReport(data as any);
+            setCurrentStatus(data.status);
+        } else {
+            setReport(null);
+        }
+        setLoading(false);
+    };
+
+    const fetchUser = async () => {
+        const res = await fetch('/api/user');
+        if (res.ok) {
+            const userData = await res.json();
+            setCurrentUser(userData);
+        }
+    };
+
+    loadReport();
+    fetchUser();
+  }, [resolvedParams.id]);
   
-  const [currentStatus, setCurrentStatus] = useState(report?.status || ReportStatus.New);
+  const [currentStatus, setCurrentStatus] = useState<ReportStatus>(ReportStatus.New);
   const [isCheckingOverdue, setIsCheckingOverdue] = useState(false);
   const [overdueResult, setOverdueResult] = useState<TrackReportResolutionDeadlineOutput | null>(null);
 
@@ -71,8 +90,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
       if (!report) return;
 
       const fetchAiInsights = async () => {
-          // Generate SOP
-          if (shouldGenerateSop) {
+          if (shouldGenerateSop && sop.length === 0) {
               setIsGeneratingSop(true);
               try {
                   const result = await generateSop({
@@ -83,56 +101,44 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                   setSop(result);
               } catch(err) {
                   console.error(err);
-                  toast({ title: 'Could not generate SOP', variant: 'destructive' });
               } finally {
                   setIsGeneratingSop(false);
               }
           }
           
-          // Predict Secondary Hazards
-          setIsPredictingHazards(true);
-          try {
-              const hazards = await predictSecondaryHazards({
-                  reportType: report.type,
-                  description: report.description,
-              });
-              setPredictedHazards(hazards);
-          } catch(err) {
-              console.error(err);
-              toast({ title: 'Could not predict hazards', variant: 'destructive' });
-          } finally {
-              setIsPredictingHazards(false);
+          if (predictedHazards.length === 0) {
+              setIsPredictingHazards(true);
+              try {
+                  const hazards = await predictSecondaryHazards({
+                      reportType: report.type,
+                      description: report.description,
+                  });
+                  setPredictedHazards(hazards);
+              } catch(err) {
+                  console.error(err);
+              } finally {
+                  setIsPredictingHazards(false);
+              }
           }
       };
       
       fetchAiInsights();
-  }, [report, shouldGenerateSop, toast]);
+  }, [report, shouldGenerateSop, predictedHazards.length, sop.length]);
 
+
+  if (loading) {
+      return <div className="flex h-96 items-center justify-center"><Loader2 className="animate-spin" /></div>;
+  }
 
   if (!report) {
     notFound();
   }
-
-  const reporter = users.find(u => u.id === report.userId);
-  const admin = users.find(u => u.id === report.assignedAdminId);
   
   const handleSendMessage = (text: string) => {
-    if (!currentUser) return;
-    const newMessage: ChatMessage = {
-      id: `msg-${Date.now()}`,
-      senderId: currentUser.id,
-      text,
-      timestamp: new Date().toISOString(),
-    };
-    
-    // In a real app, this would be an API call to your backend.
-    // Here, we just update the mock data in state.
-    const updatedMessages = [...(report.messages || []), newMessage];
-    setReport({ ...report, messages: updatedMessages });
-
+    // Message logic would go here
      toast({
-        title: "Message Sent (Simulated)",
-        description: "In a real app, this would be sent in real-time.",
+        title: "Chat Feature",
+        description: "Messaging is currently in simulation mode.",
     });
   };
 
@@ -167,24 +173,20 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
   };
 
   const handleStatusChange = async (newStatus: ReportStatus) => {
-    setCurrentStatus(newStatus);
-    setReport(prev => prev ? {...prev, status: newStatus} : null);
-    
     try {
-        await sendNotification({
-            userId: report.userId,
-            reportId: report.id,
-            message: `The status of your report #${report.id.substring(0,7)} has been updated to: ${newStatus}`
-        });
+        await updateReportStatus(report.id, newStatus);
+        setCurrentStatus(newStatus);
+        setReport(prev => prev ? {...prev, status: newStatus} : null);
+        
         toast({
             title: "Status Updated",
-            description: `Report status changed to "${newStatus}" and user notified.`,
+            description: `Report status changed to "${newStatus}".`,
         });
     } catch (error) {
-        console.error("Failed to send notification", error);
+        console.error("Failed to update status", error);
         toast({
-            title: "Notification Error",
-            description: "The status was updated, but the notification failed to send.",
+            title: "Error",
+            description: "Could not update status in database.",
             variant: "destructive"
         })
     }
@@ -236,11 +238,11 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
             )}
           </Card>
 
-           {report.messages && currentUser && (
+           {currentUser && (
               <ChatInterface 
-                messages={report.messages}
+                messages={report.messages || []}
                 currentUser={currentUser}
-                otherUser={reporter}
+                otherUser={undefined}
                 onSendMessage={handleSendMessage}
               />
            )}
@@ -326,7 +328,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
               <ul className="space-y-3 text-sm">
                 <li className="flex justify-between">
                   <span className="text-muted-foreground">{t('admin.reportDetails.reportedBy')}</span>
-                  <span>{reporter?.name || 'N/A'}</span>
+                  <span>{report.userId}</span>
                 </li>
                 <Separator />
                 <li className="flex justify-between">
@@ -336,7 +338,7 @@ export default function ReportDetailsPage({ params }: { params: { id: string } }
                 <Separator />
                 <li className="flex justify-between">
                   <span className="text-muted-foreground">{t('admin.reports.assignedAdmin')}</span>
-                  <span>{admin?.name || 'Unassigned'}</span>
+                  <span>{report.assignedAdminId || 'Unassigned'}</span>
                 </li>
                  <Separator />
                 <li className="flex justify-between">

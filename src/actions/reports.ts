@@ -30,7 +30,7 @@ export async function submitReport(data: {
     revalidatePath('/dashboard/my-reports');
     revalidatePath('/admin/reports');
     
-    return { success: true };
+    return { success: true, id };
   } catch (error) {
     console.error("Database error during report submission:", error);
     throw new Error("Failed to save report");
@@ -61,4 +61,40 @@ export async function getUserReports(userId: string) {
     console.error("Database error fetching user reports:", error);
     return [];
   }
+}
+
+export async function getReportById(id: string) {
+  try {
+    const [rows]: any = await pool.execute("SELECT * FROM reports WHERE id = ?", [id]);
+    if (rows.length === 0) return null;
+    
+    const report = rows[0];
+    
+    // Fetch messages for this report
+    const [messages]: any = await pool.execute(
+        "SELECT * FROM report_messages WHERE reportId = ? ORDER BY timestamp ASC",
+        [id]
+    );
+
+    return {
+        ...report,
+        location: { lat: report.lat, lng: report.lng },
+        messages: messages || []
+    };
+  } catch (error) {
+    console.error("Database error fetching report by ID:", error);
+    return null;
+  }
+}
+
+export async function updateReportStatus(reportId: string, status: ReportStatus) {
+    try {
+        await pool.execute("UPDATE reports SET status = ? WHERE id = ?", [status, reportId]);
+        revalidatePath(`/admin/reports/${reportId}`);
+        revalidatePath('/admin/reports');
+        return { success: true };
+    } catch (error) {
+        console.error("DB Error updating status:", error);
+        throw new Error("Failed to update status");
+    }
 }

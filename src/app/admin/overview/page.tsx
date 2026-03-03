@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -16,6 +16,7 @@ import {
   Clock,
   Timer,
   Download,
+  Loader2,
 } from 'lucide-react';
 import {
   ChartContainer,
@@ -31,13 +32,24 @@ import {
   BarChart as RechartsBarChart,
   AreaChart as RechartsAreaChart,
 } from 'recharts';
-import { reports } from '@/lib/data';
 import { useTranslation } from '@/context/LocalizationContext';
 import { differenceInHours, subDays } from 'date-fns';
-import { AllReportTypes, ReportStatus } from '@/lib/types';
+import { AllReportTypes, ReportStatus, type Report } from '@/lib/types';
+import { getAllReports } from '@/actions/reports';
 
 export default function OverviewDashboardPage() {
   const { t } = useTranslation();
+  const [reports, setReports] = useState<Report[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+        const data = await getAllReports();
+        setReports(data as any);
+        setLoading(false);
+    };
+    fetchData();
+  }, []);
 
   const metrics = useMemo(() => {
     const totalReports = reports.length;
@@ -56,8 +68,6 @@ export default function OverviewDashboardPage() {
 
     const totalResolutionTime = resolvedWithTime.reduce((acc, report) => {
       const startTime = new Date(report.timestamp);
-      // This is a simplification; in a real app, you'd store resolution time.
-      // We'll use the deadline as a proxy for when it was resolved for this metric.
       const endTime = new Date(report.resolutionDeadline!);
       return acc + differenceInHours(endTime, startTime);
     }, 0);
@@ -73,7 +83,7 @@ export default function OverviewDashboardPage() {
       overdueReports,
       avgResolutionTime,
     };
-  }, []);
+  }, [reports]);
 
   const reportsByTypeChartData = useMemo(() => {
     const data = AllReportTypes.map((type) => ({
@@ -81,7 +91,7 @@ export default function OverviewDashboardPage() {
       count: reports.filter((r) => r.type === type).length,
     }));
     return data.filter(d => d.count > 0);
-  }, [t]);
+  }, [t, reports]);
 
   const reportsOverTimeChartData = useMemo(() => {
     const thirtyDaysAgo = subDays(new Date(), 30);
@@ -106,7 +116,7 @@ export default function OverviewDashboardPage() {
         date: new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
         count: dailyCounts[date],
     })).reverse();
-  }, []);
+  }, [reports]);
 
   const handleExport = () => {
     const headers = ['Type', 'Count'];
@@ -131,6 +141,9 @@ export default function OverviewDashboardPage() {
     document.body.removeChild(link);
   };
 
+  if (loading) {
+      return <div className="flex h-96 items-center justify-center"><Loader2 className="animate-spin" /></div>;
+  }
 
   return (
     <div className="space-y-6">

@@ -12,59 +12,56 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { tasks as initialTasks, users } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import type { VolunteerTask, User } from '@/lib/types';
 import { TaskStatus } from '@/lib/types';
-import { Handshake, Users, MapPin, Check, PlusCircle } from 'lucide-react';
+import { Handshake, Users, MapPin, Check, PlusCircle, Loader2 } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
-import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { useTranslation } from '@/context/LocalizationContext';
+import { getVolunteerTasks, acceptTask as acceptTaskAction } from '@/actions/tasks';
 
 export default function VolunteerTasksPage() {
   const { t } = useTranslation();
-  const [tasks, setTasks] = useState<VolunteerTask[]>(initialTasks);
+  const [tasks, setTasks] = useState<VolunteerTask[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
-    // In a real app, this would come from a context or auth hook
-    const user = users.find(u => u.id === 'citizen1');
-    setCurrentUser(user || null);
+    const fetchData = async () => {
+        try {
+            const [tasksData, userRes] = await Promise.all([
+                getVolunteerTasks(),
+                fetch('/api/user').then(r => r.ok ? r.json() : null)
+            ]);
+            setTasks(tasksData as any);
+            setCurrentUser(userRes);
+        } catch (error) {
+            console.error("Error loading tasks:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    fetchData();
   }, []);
 
-  const handleAcceptTask = (taskId: string) => {
+  const handleAcceptTask = async (taskId: string) => {
     if (!currentUser || !currentUser.isVolunteer) {
       toast({ title: t('citizen.tasks.error.notVolunteerTitle'), description: t('citizen.tasks.error.notVolunteerDescription'), variant: 'destructive' });
       return;
     }
 
-    const taskToUpdate = tasks.find(task => task.id === taskId);
-    if (!taskToUpdate) return;
-
-    if (taskToUpdate.volunteers.some(v => v.userId === currentUser.id)) {
-        toast({ title: t('citizen.tasks.error.alreadyAcceptedTitle'), description: t('citizen.tasks.error.alreadyAcceptedDescription') });
-        return;
+    try {
+        await acceptTaskAction(taskId);
+        toast({ title: t('citizen.tasks.success.taskAcceptedTitle') });
+        
+        // Refresh tasks locally
+        const updatedTasks = await getVolunteerTasks();
+        setTasks(updatedTasks as any);
+    } catch (error) {
+        toast({ title: "Failed to accept task", variant: "destructive" });
     }
-
-    if (taskToUpdate.volunteers.length >= taskToUpdate.volunteersNeeded) {
-        toast({ title: t('citizen.tasks.error.taskFullTitle'), description: t('citizen.tasks.error.taskFullDescription'), variant: 'destructive' });
-        return;
-    }
-
-    toast({ title: t('citizen.tasks.success.taskAcceptedTitle'), description: t('citizen.tasks.success.taskAcceptedDescription', { title: taskToUpdate.title }) });
-
-    setTasks(prevTasks => prevTasks.map(task => {
-        if (task.id === taskId) {
-            return {
-                ...task,
-                volunteers: [...task.volunteers, { userId: currentUser.id, name: currentUser.name }],
-                status: task.volunteers.length + 1 === task.volunteersNeeded ? TaskStatus.InProgress : task.status,
-            };
-        }
-        return task;
-    }));
   };
 
   const hasAccepted = (task: VolunteerTask) => {
@@ -72,6 +69,8 @@ export default function VolunteerTasksPage() {
   }
 
   const openTasks = tasks.filter(t => t.status === TaskStatus.Open || t.status === TaskStatus.InProgress);
+
+  if (loading) return <div className="flex h-96 items-center justify-center"><Loader2 className="animate-spin" /></div>;
 
   return (
     <div className="space-y-6">

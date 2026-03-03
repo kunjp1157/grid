@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -11,22 +11,29 @@ import {
   CardFooter,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { barterPosts as initialPosts, users } from '@/lib/data';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
-import { PlusCircle, User, Repeat, ArrowRightLeft, MessageSquare } from 'lucide-react';
+import { PlusCircle, Repeat, MessageSquare, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { useTranslation } from '@/context/LocalizationContext';
+import { getBarterPosts } from '@/actions/barter';
 
 export default function BarterBoardPage() {
     const { t } = useTranslation();
     const { toast } = useToast();
-    
-    const getUser = (userId: string) => {
-        return users.find(u => u.id === userId);
-    }
+    const [posts, setPosts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            const data = await getBarterPosts();
+            setPosts(data);
+            setLoading(false);
+        };
+        fetchPosts();
+    }, []);
     
     const handleConnect = (userName: string) => {
         toast({
@@ -34,6 +41,8 @@ export default function BarterBoardPage() {
             description: t('citizen.barter.success.connectedDescription', { name: userName }),
         });
     }
+
+    if (loading) return <div className="flex h-96 items-center justify-center"><Loader2 className="animate-spin" /></div>;
 
     return (
         <div className="space-y-6">
@@ -53,22 +62,21 @@ export default function BarterBoardPage() {
                 {t('citizen.barter.description')}
             </p>
 
-            {initialPosts.length > 0 ? (
+            {posts.length > 0 ? (
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-                    {initialPosts.map(post => {
-                        const user = getUser(post.userId);
-                        const userInitials = user?.name.split(' ').map(n => n[0]).join('') || 'U';
+                    {posts.map(post => {
+                        const userInitials = post.userName?.split(' ').map((n:any) => n[0]).join('') || 'U';
                         
                         return (
                             <Card key={post.id} className="flex flex-col">
                                 <CardHeader>
                                     <div className="flex items-center gap-3">
                                          <Avatar className="h-10 w-10">
-                                            <AvatarImage src={`https://avatar.vercel.sh/${user?.email}.png`} alt={user?.name} />
+                                            <AvatarImage src={`https://avatar.vercel.sh/${post.userEmail}.png`} alt={post.userName} />
                                             <AvatarFallback>{userInitials}</AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <CardTitle className="text-base">{user?.name || t('common.unknownUser')}</CardTitle>
+                                            <CardTitle className="text-base">{post.userName || t('common.unknownUser')}</CardTitle>
                                             <p className="text-xs text-muted-foreground">
                                                 {t('citizen.barter.postedOn', { date: formatDate(post.timestamp, 'PP')})}
                                             </p>
@@ -87,7 +95,7 @@ export default function BarterBoardPage() {
                                    </div>
                                 </CardContent>
                                 <CardFooter>
-                                    <Button className="w-full" variant="outline" onClick={() => handleConnect(user?.name || t('common.unknownUser'))}>
+                                    <Button className="w-full" variant="outline" onClick={() => handleConnect(post.userName || t('common.unknownUser'))}>
                                         <MessageSquare className="mr-2 h-4 w-4" />
                                         {t('citizen.barter.connectButton')}
                                     </Button>
