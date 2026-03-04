@@ -1,8 +1,7 @@
-
 "use client";
 
 import { useEffect, useState, useMemo } from 'react';
-import type { User, Report } from '@/lib/types';
+import type { User } from '@/lib/types';
 import {
   Card,
   CardContent,
@@ -14,9 +13,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { zones, reports } from '@/lib/data';
 import { ReportStatus } from '@/lib/types';
-import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Mail, Heart, ShieldAlert, Stethoscope, HandHeart, Award } from 'lucide-react';
+import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Mail, Heart, ShieldAlert, Stethoscope, HandHeart, Award, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,12 +22,16 @@ import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { MedicalIdQrCode } from '@/components/shared/MedicalIdQrCode';
 import { useTranslation } from '@/context/LocalizationContext';
+import { updateUserProfile } from '@/actions/auth';
+import { getAllReports } from '@/actions/reports';
 
 export default function AdminProfilePage() {
   const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [editableUser, setEditableUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [userStats, setUserStats] = useState({ totalAssigned: 0, resolvedByYou: 0, overdue: 0 });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -38,8 +40,18 @@ export default function AdminProfilePage() {
         const res = await fetch('/api/user');
         if (res.ok) {
           const userData = await res.json();
+          // In a real app we'd fetch the full DB record here
           setUser(userData);
-          setEditableUser(JSON.parse(JSON.stringify(userData))); // Deep copy
+          setEditableUser(JSON.parse(JSON.stringify(userData))); 
+
+          // Fetch stats
+          const reports = await getAllReports();
+          const assignedReports = reports.filter((r: any) => r.assignedAdminId === userData.id);
+          setUserStats({
+            totalAssigned: assignedReports.length,
+            resolvedByYou: assignedReports.filter((r: any) => r.status === ReportStatus.Resolved).length,
+            overdue: assignedReports.filter((r: any) => r.status === ReportStatus.Overdue).length,
+          });
         }
       } catch (error) {
         console.error("Failed to fetch user", error);
@@ -50,7 +62,7 @@ export default function AdminProfilePage() {
 
   const handleEditToggle = () => {
     if (isEditing) {
-      setEditableUser(JSON.parse(JSON.stringify(user))); // Reset changes on cancel
+      setEditableUser(JSON.parse(JSON.stringify(user))); 
     }
     setIsEditing(!isEditing);
   };
@@ -67,33 +79,32 @@ export default function AdminProfilePage() {
     }
   }
 
-  const handleSaveChanges = () => {
-    setUser(editableUser);
-    setIsEditing(false);
-    toast({
-        title: t('profile.success.profileUpdated'),
-        description: t('profile.success.profileUpdatedDescription'),
-    });
-  };
-  
-  const userStats = useMemo(() => {
-    if (!user) return { totalAssigned: 0, resolvedByYou: 0, overdue: 0 };
-    
-    const assignedReports = reports.filter(r => r.assignedAdminId === user.id);
-    
-    return {
-      totalAssigned: assignedReports.length,
-      resolvedByYou: assignedReports.filter(r => r.status === ReportStatus.Resolved).length,
-      overdue: assignedReports.filter(r => r.status === ReportStatus.Overdue).length,
+  const handleSaveChanges = async () => {
+    if (!editableUser) return;
+    setIsSaving(true);
+    try {
+        await updateUserProfile(editableUser);
+        setUser(editableUser);
+        setIsEditing(false);
+        toast({
+            title: t('profile.success.profileUpdated'),
+            description: "Your admin profile has been updated in the database.",
+        });
+    } catch (error) {
+        toast({
+            title: "Error",
+            description: "Failed to save profile changes.",
+            variant: "destructive"
+        });
+    } finally {
+        setIsSaving(false);
     }
-  }, [user]);
-
+  };
 
   const userInitials = user?.name.split(' ').map(n => n[0]).join('') || 'U';
-  const zoneName = user?.zoneId ? zones.find(z => z.id === user.zoneId)?.name : null;
 
   if (!user || !editableUser) {
-    return <div>{t('common.loading')}</div>;
+    return <div className="flex h-96 items-center justify-center"><Loader2 className="animate-spin" /></div>;
   }
 
   return (
@@ -120,7 +131,7 @@ export default function AdminProfilePage() {
                 {isEditing ? (
                   <div className="space-y-2">
                      <Label htmlFor="name">{t('profile.nameLabel')}</Label>
-                    <Input id="name" name="name" value={editableUser.name} onChange={handleInputChange} className="text-2xl font-bold h-auto p-0 border-none focus-visible:ring-0 focus-visible:ring-offset-0" />
+                    <Input id="name" name="name" value={editableUser.name} onChange={handleInputChange} className="text-2xl font-bold h-auto border-b" />
                   </div>
                 ) : (
                   <CardTitle className="text-2xl">{user.name}</CardTitle>
@@ -206,15 +217,6 @@ export default function AdminProfilePage() {
                         {user.role}
                     </Badge>
                     </li>
-                    {user.role === 'admin' && zoneName && (
-                    <>
-                        <Separator />
-                        <li className="flex justify-between">
-                            <span className="text-muted-foreground">{t('profile.assignedZoneLabel')}</span>
-                            <span className="font-medium">{zoneName}</span>
-                        </li>
-                    </>
-                    )}
                     <Separator />
                     <li className="flex justify-between">
                     <span className="text-muted-foreground">{t('profile.userIdLabel')}</span>
@@ -225,8 +227,11 @@ export default function AdminProfilePage() {
             </CardContent>
             {isEditing && (
                 <CardFooter className="justify-end gap-2">
-                    <Button variant="ghost" onClick={handleEditToggle}>{t('profile.cancelButton')}</Button>
-                    <Button onClick={handleSaveChanges}>{t('profile.saveButton')}</Button>
+                    <Button variant="ghost" onClick={handleEditToggle} disabled={isSaving}>{t('profile.cancelButton')}</Button>
+                    <Button onClick={handleSaveChanges} disabled={isSaving}>
+                        {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {t('profile.saveButton')}
+                    </Button>
                 </CardFooter>
             )}
         </Card>

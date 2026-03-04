@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { pool } from "@/lib/db";
 import type { User } from "@/lib/types";
+import { revalidatePath } from "next/cache";
 
 export async function login(prevState: any, formData: FormData) {
   const email = (formData.get("email") as string || "").toLowerCase();
@@ -93,4 +94,66 @@ export async function getUser(): Promise<User | null> {
         }
     }
     return null;
+}
+
+export async function updateUserProfile(userData: User) {
+  try {
+    const skillsString = Array.isArray(userData.skills) ? userData.skills.join(',') : userData.skills || '';
+    
+    await pool.execute(
+      `UPDATE users SET 
+        name = ?, 
+        email = ?, 
+        mobile = ?, 
+        address = ?, 
+        pincode = ?, 
+        bloodGroup = ?, 
+        emergencyContactName = ?, 
+        emergencyContactNumber = ?, 
+        medicalConditions = ?, 
+        isVolunteer = ?, 
+        skills = ?, 
+        certifications = ? 
+      WHERE id = ?`,
+      [
+        userData.name,
+        userData.email,
+        userData.mobile || null,
+        userData.address || null,
+        userData.pincode || null,
+        userData.bloodGroup || null,
+        userData.emergencyContactName || null,
+        userData.emergencyContactNumber || null,
+        userData.medicalConditions || null,
+        userData.isVolunteer ? 1 : 0,
+        skillsString,
+        userData.certifications || null,
+        userData.id
+      ]
+    );
+
+    // Update the cookie with new info
+    const updatedUserJson = JSON.stringify({
+      id: userData.id,
+      name: userData.name,
+      email: userData.email,
+      role: userData.role,
+    });
+
+    const cookieStore = await cookies();
+    cookieStore.set("user", updatedUserJson, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24 * 7,
+      path: "/",
+    });
+
+    revalidatePath('/dashboard/profile');
+    revalidatePath('/admin/profile');
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Database error during profile update:", error);
+    throw new Error("Failed to update profile");
+  }
 }

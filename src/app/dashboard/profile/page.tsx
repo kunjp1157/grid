@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState, useMemo } from 'react';
@@ -14,9 +13,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { reports } from '@/lib/data';
 import { ReportStatus } from '@/lib/types';
-import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Mail, Heart, ShieldAlert, Stethoscope, HandHeart, Award } from 'lucide-react';
+import { FileText, CheckCircle, Clock, Phone, Home, MapPin, Pencil, Mail, Heart, ShieldAlert, Stethoscope, HandHeart, Award, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -24,12 +22,16 @@ import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { MedicalIdQrCode } from '@/components/shared/MedicalIdQrCode';
 import { useTranslation } from '@/context/LocalizationContext';
+import { updateUserProfile } from '@/actions/auth';
+import { getUserReports } from '@/actions/reports';
 
 export default function CitizenProfilePage() {
   const { t } = useTranslation();
   const [user, setUser] = useState<User | null>(null);
   const [editableUser, setEditableUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [reportStats, setReportStats] = useState({ total: 0, resolved: 0, pending: 0 });
   const { toast } = useToast();
 
   useEffect(() => {
@@ -38,8 +40,21 @@ export default function CitizenProfilePage() {
         const res = await fetch('/api/user');
         if (res.ok) {
           const userData = await res.json();
-          setUser(userData);
-          setEditableUser(JSON.parse(JSON.stringify(userData))); // Deep copy
+          // Fetch full data from DB to ensure we have all fields
+          const [dbUserRows]: any = await fetch(`/api/user/full?id=${userData.id}`).then(r => r.json());
+          const fullUser = dbUserRows || userData;
+          
+          setUser(fullUser);
+          setEditableUser(JSON.parse(JSON.stringify(fullUser)));
+
+          // Load stats
+          const reports = await getUserReports(userData.id);
+          const resolvedCount = reports.filter((r: any) => r.status === ReportStatus.Resolved).length;
+          setReportStats({
+            total: reports.length,
+            resolved: resolvedCount,
+            pending: reports.length - resolvedCount
+          });
         }
       } catch (error) {
         console.error("Failed to fetch user", error);
@@ -67,33 +82,32 @@ export default function CitizenProfilePage() {
     }
   }
 
-  const handleSaveChanges = () => {
-    setUser(editableUser);
-    setIsEditing(false);
-    toast({
-        title: t('profile.success.profileUpdated'),
-        description: t('profile.success.profileUpdatedDescription'),
-    });
-  };
-
-  const userStats = useMemo(() => {
-    if (!user) return { total: 0, resolved: 0, pending: 0 };
-    
-    const userReports = reports.filter(r => r.userId === user.id);
-    const resolvedCount = userReports.filter(r => r.status === ReportStatus.Resolved).length;
-    const pendingCount = userReports.length - resolvedCount;
-    
-    return {
-      total: userReports.length,
-      resolved: resolvedCount,
-      pending: pendingCount,
+  const handleSaveChanges = async () => {
+    if (!editableUser) return;
+    setIsSaving(true);
+    try {
+        await updateUserProfile(editableUser);
+        setUser(editableUser);
+        setIsEditing(false);
+        toast({
+            title: t('profile.success.profileUpdated'),
+            description: "Your profile has been successfully saved to the database.",
+        });
+    } catch (error) {
+        toast({
+            title: "Update Failed",
+            description: "There was an error saving your changes to the database.",
+            variant: "destructive"
+        });
+    } finally {
+        setIsSaving(false);
     }
-  }, [user]);
+  };
 
   const userInitials = user?.name.split(' ').map(n => n[0]).join('') || 'U';
 
   if (!user || !editableUser) {
-    return <div>{t('common.loading')}</div>;
+    return <div className="flex h-96 items-center justify-center"><Loader2 className="animate-spin" /></div>;
   }
 
   return (
@@ -120,7 +134,7 @@ export default function CitizenProfilePage() {
                  {isEditing ? (
                   <div className="space-y-2">
                      <Label htmlFor="name">{t('profile.nameLabel')}</Label>
-                    <Input id="name" name="name" value={editableUser.name} onChange={handleInputChange} className="text-2xl font-bold h-auto p-0 border-none focus-visible:ring-0 focus-visible:ring-offset-0" />
+                    <Input id="name" name="name" value={editableUser.name} onChange={handleInputChange} className="text-2xl font-bold h-auto border-b" />
                   </div>
                 ) : (
                   <CardTitle className="text-2xl">{user.name}</CardTitle>
@@ -216,8 +230,11 @@ export default function CitizenProfilePage() {
           </CardContent>
            {isEditing && (
                 <CardFooter className="justify-end gap-2">
-                    <Button variant="ghost" onClick={handleEditToggle}>{t('profile.cancelButton')}</Button>
-                    <Button onClick={handleSaveChanges}>{t('profile.saveButton')}</Button>
+                    <Button variant="ghost" onClick={handleEditToggle} disabled={isSaving}>{t('profile.cancelButton')}</Button>
+                    <Button onClick={handleSaveChanges} disabled={isSaving}>
+                        {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        {t('profile.saveButton')}
+                    </Button>
                 </CardFooter>
             )}
         </Card>
@@ -233,21 +250,21 @@ export default function CitizenProfilePage() {
                           <FileText className="h-5 w-5 text-muted-foreground" />
                           <span className="text-sm font-medium">{t('citizen.profile.totalReports')}</span>
                       </div>
-                      <span className="text-lg font-bold">{userStats.total}</span>
+                      <span className="text-lg font-bold">{reportStats.total}</span>
                   </div>
                     <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                       <div className='flex items-center gap-3'>
                           <CheckCircle className="h-5 w-5 text-green-500" />
                           <span className="text-sm font-medium">{t('citizen.profile.resolved')}</span>
                       </div>
-                      <span className="text-lg font-bold">{userStats.resolved}</span>
+                      <span className="text-lg font-bold">{reportStats.resolved}</span>
                   </div>
                     <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                       <div className='flex items-center gap-3'>
                           <Clock className="h-5 w-5 text-yellow-500" />
                           <span className="text-sm font-medium">{t('citizen.profile.pending')}</span>
                       </div>
-                      <span className="text-lg font-bold">{userStats.pending}</span>
+                      <span className="text-lg font-bold">{reportStats.pending}</span>
                   </div>
               </CardContent>
           </Card>
