@@ -1,12 +1,13 @@
-
--- The Grid: MySQL Schema for XAMPP
--- Database: the_grid_db
+-- THE GRID: MySQL Database Schema for XAMPP
+-- Import this file into phpMyAdmin (the_grid_db)
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
--- 1. Users Table
+-- --------------------------------------------------------
+-- Table structure for table `users`
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `users` (
   `id` varchar(50) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -21,20 +22,24 @@ CREATE TABLE IF NOT EXISTS `users` (
   `emergencyContactNumber` varchar(20) DEFAULT NULL,
   `medicalConditions` text DEFAULT NULL,
   `isVolunteer` boolean DEFAULT FALSE,
-  `skills` text DEFAULT NULL, -- Comma separated skills
+  `skills` text DEFAULT NULL,
   `certifications` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 2. Zones Table
+-- --------------------------------------------------------
+-- Table structure for table `zones`
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `zones` (
   `id` varchar(50) NOT NULL,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 3. Reports Table
+-- --------------------------------------------------------
+-- Table structure for table `reports`
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `reports` (
   `id` varchar(50) NOT NULL,
   `userId` varchar(50) NOT NULL,
@@ -44,28 +49,30 @@ CREATE TABLE IF NOT EXISTS `reports` (
   `lng` decimal(11,8) NOT NULL,
   `status` varchar(20) NOT NULL DEFAULT 'New',
   `priority` varchar(20) NOT NULL DEFAULT 'Medium',
-  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
   `mediaUrl` varchar(255) DEFAULT NULL,
   `assignedAdminId` varchar(50) DEFAULT NULL,
   `resolutionDeadline` datetime DEFAULT NULL,
-  `rating` int DEFAULT NULL,
+  `rating` int(1) DEFAULT NULL,
   `feedback` text DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE CASCADE
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 4. Report Messages (Chat)
+-- --------------------------------------------------------
+-- Table structure for table `report_messages`
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `report_messages` (
   `id` varchar(50) NOT NULL,
   `reportId` varchar(50) NOT NULL,
   `senderId` varchar(50) NOT NULL,
   `text` text NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`reportId`) REFERENCES `reports`(`id`) ON DELETE CASCADE
+  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 5. Community Resources
+-- --------------------------------------------------------
+-- Table structure for table `community_resources`
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `community_resources` (
   `id` varchar(50) NOT NULL,
   `userId` varchar(50) NOT NULL,
@@ -73,71 +80,79 @@ CREATE TABLE IF NOT EXISTS `community_resources` (
   `description` text NOT NULL,
   `lat` decimal(10,8) NOT NULL,
   `lng` decimal(11,8) NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE CASCADE
+  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 6. Volunteer Tasks
+-- --------------------------------------------------------
+-- Table structure for table `volunteer_tasks`
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `volunteer_tasks` (
   `id` varchar(50) NOT NULL,
   `title` varchar(150) NOT NULL,
   `description` text NOT NULL,
   `location` varchar(255) NOT NULL,
-  `requiredSkills` text DEFAULT NULL, -- Comma separated
-  `volunteersNeeded` int NOT NULL DEFAULT 1,
+  `requiredSkills` text DEFAULT NULL,
+  `volunteersNeeded` int(11) NOT NULL DEFAULT 1,
   `status` varchar(20) NOT NULL DEFAULT 'Open',
-  `createdAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdAt` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 7. Volunteer Assignments
+-- --------------------------------------------------------
+-- Table structure for table `volunteer_assignments`
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `volunteer_assignments` (
   `taskId` varchar(50) NOT NULL,
   `userId` varchar(50) NOT NULL,
-  `assignedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`taskId`, `userId`),
-  FOREIGN KEY (`taskId`) REFERENCES `volunteer_tasks`(`id`) ON DELETE CASCADE,
-  FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE CASCADE
+  PRIMARY KEY (`taskId`,`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 8. Barter Posts
+-- --------------------------------------------------------
+-- Table structure for table `barter_posts`
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `barter_posts` (
   `id` varchar(50) NOT NULL,
   `userId` varchar(50) NOT NULL,
   `have` text NOT NULL,
   `need` text NOT NULL,
-  `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE CASCADE
+  `timestamp` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- INITIAL SAMPLE DATA --
+-- --------------------------------------------------------
+-- INITIAL SAMPLE DATA
+-- --------------------------------------------------------
 
-INSERT IGNORE INTO `users` (`id`, `name`, `email`, `role`, `mobile`, `address`, `pincode`, `isVolunteer`, `skills`) VALUES
-('admin-1', 'Kunj Patel', 'kunjp1157@gmail.com', 'admin', '9876543210', 'Admin HQ, City Center', '380001', FALSE, NULL),
-('citizen-1', 'John Doe', 'citizen@example.com', 'citizen', '9988776655', 'Apartment 402, Green Valley', '380015', TRUE, 'First Aid, Driving');
+-- Default Admin User
+INSERT INTO `users` (`id`, `name`, `email`, `role`, `mobile`, `isVolunteer`) VALUES
+('admin-1', 'Kunj Patel', 'kunjp1157@gmail.com', 'admin', '+91-9876543210', FALSE),
+('citizen-1', 'John Doe', 'citizen@example.com', 'citizen', '+91-8888888888', TRUE);
 
-INSERT IGNORE INTO `zones` (`id`, `name`) VALUES
+-- Initial Zones
+INSERT INTO `zones` (`id`, `name`) VALUES
 ('zone-1', 'North District'),
 ('zone-2', 'South District'),
-('zone-3', 'East Riverside'),
-('zone-4', 'West Industrial');
+('zone-3', 'East District'),
+('zone-4', 'West District');
 
-INSERT IGNORE INTO `reports` (`id`, `userId`, `type`, `description`, `lat`, `lng`, `status`, `priority`, `timestamp`) VALUES
-('rep-101', 'citizen-1', 'Waterlogging', 'Heavy flooding near the metro station. Cars are stranded.', 23.0225, 72.5714, 'New', 'High', NOW()),
-('rep-102', 'citizen-1', 'Road Damage', 'Huge pothole on the main highway causing traffic jams.', 23.0338, 72.5850, 'InProgress', 'Medium', DATE_SUB(NOW(), INTERVAL 1 DAY));
+-- Sample Reports
+INSERT INTO `reports` (`id`, `userId`, `type`, `description`, `lat`, `lng`, `status`, `priority`, `assignedAdminId`) VALUES
+('report-101', 'citizen-1', 'Waterlogging', 'Heavy flooding near main square block A.', 28.6139, 77.2090, 'New', 'High', 'admin-1'),
+('report-102', 'citizen-1', 'Fire', 'Dumpster fire reported behind Sector 4 market.', 28.6145, 77.2100, 'In Progress', 'Critical', 'admin-1');
 
-INSERT IGNORE INTO `volunteer_tasks` (`id`, `title`, `description`, `location`, `requiredSkills`, `volunteersNeeded`, `status`) VALUES
-('task-201', 'Flood Relief Distribution', 'Helping distribute water and food packets to affected families.', 'Riverside Community Center', 'Communication', 10, 'Open'),
-('task-202', 'First Aid Station Assistance', 'Need volunteers with basic medical knowledge.', 'Metro Station Exit 2', 'First Aid', 5, 'InProgress');
+-- Sample Resources
+INSERT INTO `community_resources` (`id`, `userId`, `type`, `description`, `lat`, `lng`) VALUES
+('res-1', 'citizen-1', 'Clean Water', 'Extra 20L water cans available for pickup.', 28.6130, 77.2085),
+('res-2', 'admin-1', 'First Aid Kit', 'Emergency medical kits available at the district office.', 28.6200, 77.2200);
 
-INSERT IGNORE INTO `community_resources` (`id`, `userId`, `type`, `description`, `lat`, `lng`) VALUES
-('res-301', 'citizen-1', 'Clean Water', 'Have 10 extra cases of mineral water available for pickup.', 23.0225, 72.5714),
-('res-302', 'citizen-1', 'First Aid Kit', 'Emergency medical kit with trauma bandages.', 23.0225, 72.5714);
+-- Sample Tasks
+INSERT INTO `volunteer_tasks` (`id`, `title`, `description`, `location`, `volunteersNeeded`, `status`) VALUES
+('task-1', 'Sandbagging', 'Need help placing sandbags near the river bank.', 'Riverfront Park', 10, 'Open'),
+('task-2', 'Food Distribution', 'Help distribute rations at the community center.', 'Central Shelter', 5, 'InProgress');
 
-INSERT IGNORE INTO `barter_posts` (`id`, `userId`, `have`, `need`) VALUES
-('bart-401', 'citizen-1', 'Power bank (20000mAh)', 'Dry baby food or formula'),
-('bart-402', 'citizen-1', 'Pack of 5 blankets', 'Portable gas stove');
+-- Sample Barter
+INSERT INTO `barter_posts` (`id`, `userId`, `have`, `need`) VALUES
+('barter-1', 'citizen-1', 'Extra blankets and power banks.', 'Drinking water and candles.');
 
 COMMIT;
