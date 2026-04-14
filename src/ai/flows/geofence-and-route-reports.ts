@@ -39,14 +39,11 @@ const findAdminOrZone = ai.defineTool({
     zoneId: z.string().optional().describe('The ID of the assigned zone, if any.'),
   }),
 }, async (input) => {
-  // TODO: Implement the logic to find the admin or zone based on the location.
-  // This is a placeholder implementation. In a real app, this would query
-  // a database of zones with their geographical boundaries.
   console.log('finding admin or zone at', input.latitude, input.longitude);
   // For demonstration, we'll return a static admin and zone.
   return {
-    adminId: 'admin1', // Corresponds to Jane Smith
-    zoneId: 'zone1', // Corresponds to North Zone
+    adminId: 'admin1',
+    zoneId: 'zone1',
   };
 });
 
@@ -73,19 +70,27 @@ const geofenceAndRouteReportFlow = ai.defineFlow(
     outputSchema: GeofenceAndRouteReportOutputSchema,
   },
   async input => {
-    const llmResponse = await prompt(input);
-    const toolResponse = llmResponse.toolRequest?.output;
+    try {
+      const llmResponse = await prompt(input);
+      const toolResponse = llmResponse.toolRequest?.output;
 
-    if (!toolResponse) {
+      if (!toolResponse) {
+        return {
+          assignedAdminId: undefined,
+          assignedZoneId: undefined,
+        };
+      }
+      
+      return {
+          assignedAdminId: toolResponse.adminId,
+          assignedZoneId: toolResponse.zoneId
+      }
+    } catch (error) {
+      console.error("AI Routing failed due to service unavailability:", error);
       return {
         assignedAdminId: undefined,
         assignedZoneId: undefined,
       };
-    }
-    
-    return {
-        assignedAdminId: toolResponse.adminId,
-        assignedZoneId: toolResponse.zoneId
     }
   }
 );

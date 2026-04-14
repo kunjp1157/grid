@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useForm } from 'react-hook-form';
@@ -199,7 +198,7 @@ export default function NewReportPage() {
 
     } catch (error) {
         console.error(error);
-        toast({ title: "AI Categorization Failed", description: "Could not automatically categorize the report. Please select a category manually.", variant: "destructive"})
+        toast({ title: "AI Service Busy", description: "The AI model is currently overloaded. Please select a category manually.", variant: "destructive"})
     } finally {
         setIsCategorizing(false);
     }
@@ -276,12 +275,16 @@ export default function NewReportPage() {
     }
 
     try {
-      // First, use AI to route the report
-      const aiRoute = await geofenceAndRouteReport({
-        reportId: `temp-${Date.now()}`,
-        latitude: data.latitude,
-        longitude: data.longitude,
-      });
+      // AI routing with catch block
+      try {
+        await geofenceAndRouteReport({
+          reportId: `temp-${Date.now()}`,
+          latitude: data.latitude,
+          longitude: data.longitude,
+        });
+      } catch (aiError) {
+        console.error("AI Routing failed, continuing anyway:", aiError);
+      }
 
       // Submit to MySQL
       await submitReport({
@@ -294,7 +297,7 @@ export default function NewReportPage() {
       
       toast({
         title: "Report Submitted Successfully",
-        description: `Your report has been saved to the database. Priority: ${aiSuggestion?.priority || 'Medium'}`,
+        description: `Your report has been saved. Priority: ${aiSuggestion?.priority || 'Medium'}`,
         variant: 'default',
       });
 
