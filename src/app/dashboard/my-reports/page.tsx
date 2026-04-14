@@ -107,7 +107,7 @@ export default function MyReportsPage() {
                                         <FeedbackDialog report={report} onSubmit={handleFeedbackSubmit} />
                                     ) : (
                                         <Button variant="outline" size="sm" asChild>
-                                            <Link href={`/dashboard/live/${report.id}`}>
+                                            <Link href={`/dashboard/reports/${report.id}`}>
                                                 {t('citizen.reports.view')}
                                             </Link>
                                         </Button>

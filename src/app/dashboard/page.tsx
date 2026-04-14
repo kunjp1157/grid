@@ -129,7 +129,7 @@ export default function CitizenDashboardPage() {
                                 <TableCell>{formatDate(report.timestamp, 'PP')}</TableCell>
                                 <TableCell className="text-right">
                                     <Button variant="outline" size="sm" asChild>
-                                        <Link href={`/dashboard/my-reports`}>View</Link>
+                                        <Link href={`/dashboard/reports/${report.id}`}>View</Link>
                                     </Button>
                                 </TableCell>
                             </TableRow>
