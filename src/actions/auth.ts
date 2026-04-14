@@ -96,6 +96,23 @@ export async function getUser(): Promise<User | null> {
     return null;
 }
 
+export async function getUserProfile(userId: string): Promise<User | null> {
+  try {
+    const [rows]: any = await pool.execute("SELECT * FROM users WHERE id = ?", [userId]);
+    const user = rows[0];
+    if (!user) return null;
+    
+    return {
+      ...user,
+      isVolunteer: !!user.isVolunteer,
+      skills: user.skills ? user.skills.split(',') : []
+    };
+  } catch (error) {
+    console.error("Error fetching full profile:", error);
+    return null;
+  }
+}
+
 export async function updateUserProfile(userData: User) {
   try {
     const skillsString = Array.isArray(userData.skills) ? userData.skills.join(',') : userData.skills || '';

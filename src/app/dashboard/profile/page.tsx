@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import type { User } from '@/lib/types';
 import {
   Card,
@@ -22,7 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { MedicalIdQrCode } from '@/components/shared/MedicalIdQrCode';
 import { useTranslation } from '@/context/LocalizationContext';
-import { updateUserProfile } from '@/actions/auth';
+import { updateUserProfile, getUser, getUserProfile } from '@/actions/auth';
 import { getUserReports } from '@/actions/reports';
 
 export default function CitizenProfilePage() {
@@ -37,15 +37,13 @@ export default function CitizenProfilePage() {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const res = await fetch('/api/user');
-        if (res.ok) {
-          const userData = await res.json();
-          // Fetch full data from DB to ensure we have all fields
-          const [dbUserRows]: any = await fetch(`/api/user/full?id=${userData.id}`).then(r => r.json());
-          const fullUser = dbUserRows || userData;
+        const sessionUser = await getUser();
+        if (sessionUser) {
+          const fullUser = await getUserProfile(sessionUser.id);
+          const userData = fullUser || sessionUser;
           
-          setUser(fullUser);
-          setEditableUser(JSON.parse(JSON.stringify(fullUser)));
+          setUser(userData);
+          setEditableUser(JSON.parse(JSON.stringify(userData)));
 
           // Load stats
           const reports = await getUserReports(userData.id);

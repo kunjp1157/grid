@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import type { User } from '@/lib/types';
 import {
   Card,
@@ -22,7 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Textarea } from '@/components/ui/textarea';
 import { MedicalIdQrCode } from '@/components/shared/MedicalIdQrCode';
 import { useTranslation } from '@/context/LocalizationContext';
-import { updateUserProfile } from '@/actions/auth';
+import { updateUserProfile, getUser, getUserProfile } from '@/actions/auth';
 import { getAllReports } from '@/actions/reports';
 
 export default function AdminProfilePage() {
@@ -37,10 +37,11 @@ export default function AdminProfilePage() {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const res = await fetch('/api/user');
-        if (res.ok) {
-          const userData = await res.json();
-          // In a real app we'd fetch the full DB record here
+        const sessionUser = await getUser();
+        if (sessionUser) {
+          const fullUser = await getUserProfile(sessionUser.id);
+          const userData = fullUser || sessionUser;
+          
           setUser(userData);
           setEditableUser(JSON.parse(JSON.stringify(userData))); 
 
